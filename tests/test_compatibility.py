@@ -29,10 +29,47 @@ def _ordered_shape(value):
 
 
 def assert_same(document, **kwargs):
-    expected = xmltodict.parse(document, **kwargs)
+    try:
+        expected = xmltodict.parse(document, **kwargs)
+    except ValueError as expected_error:
+        # xmltodict 1.x rejects entity declarations with disable_entities=True;
+        # 0.14.2 accepts the document without expanding its text entities.
+        # Match the installed reference's exact rejection, not any exception.
+        with pytest.raises(type(expected_error)) as actual_error:
+            rapidxmltodict.parse(document, **kwargs)
+        assert type(actual_error.value) is type(expected_error)
+        assert actual_error.value.args == expected_error.args
+        return None
     actual = rapidxmltodict.parse(document, **kwargs)
     assert _ordered_shape(actual) == _ordered_shape(expected)
     return actual
+
+
+def test_differential_helper_matches_exact_reference_rejection(monkeypatch):
+    def reject(*args, **kwargs):
+        raise ValueError('entities are disabled')
+    monkeypatch.setattr(xmltodict, 'parse', reject)
+    monkeypatch.setattr(rapidxmltodict, 'parse', reject)
+    assert assert_same('<root/>') is None
+
+
+def test_differential_helper_does_not_accept_a_different_rejection(monkeypatch):
+    def reference_reject(*args, **kwargs):
+        raise ValueError('entities are disabled')
+    def different_reject(*args, **kwargs):
+        raise ValueError('an unrelated error')
+    monkeypatch.setattr(xmltodict, 'parse', reference_reject)
+    monkeypatch.setattr(rapidxmltodict, 'parse', different_reject)
+    with pytest.raises(AssertionError):
+        assert_same('<root/>')
+
+
+def test_differential_helper_does_not_swallow_unexpected_errors(monkeypatch):
+    def fail(*args, **kwargs):
+        raise RuntimeError('unexpected reference failure')
+    monkeypatch.setattr(xmltodict, 'parse', fail)
+    with pytest.raises(RuntimeError, match='unexpected reference failure'):
+        assert_same('<root/>')
 
 
 DEFAULT_CASES = [

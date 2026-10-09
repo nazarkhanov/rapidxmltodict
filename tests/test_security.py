@@ -16,6 +16,27 @@ import xmltodict
 import rapidxmltodict
 
 
+_ENTITIES_REJECTED = object()
+
+
+def _assert_same_entity_outcome(document, **kwargs):
+    """Require matching values or the reference's exact entity-policy error."""
+    try:
+        expected = xmltodict.parse(document, **kwargs)
+    except ValueError as expected_error:
+        # Do not treat unrelated failures as successful security checks.
+        assert type(expected_error) is ValueError
+        assert expected_error.args == ('entities are disabled',)
+        with pytest.raises(ValueError) as actual_error:
+            rapidxmltodict.parse(document, **kwargs)
+        assert type(actual_error.value) is type(expected_error)
+        assert actual_error.value.args == expected_error.args
+        return _ENTITIES_REJECTED
+    actual = rapidxmltodict.parse(document, **kwargs)
+    assert actual == expected
+    return actual
+
+
 MALFORMED = [
     b'', b' ', b'text', b'<', b'>', b'<>', b'</root>',
     b'<root>', b'<root></wrong>', b'<root><child></root></child>',
@@ -50,7 +71,7 @@ def test_malformed_xml_is_rejected(document):
 @pytest.mark.parametrize('disable_entities', [True, False])
 def test_internal_entity_policy_matches_reference(disable_entities):
     document = '<!DOCTYPE root [<!ENTITY word "hello"><!ENTITY twice "&word; &word;">]><root a="&word;">before &twice; after</root>'
-    assert rapidxmltodict.parse(document, disable_entities=disable_entities) == xmltodict.parse(document, disable_entities=disable_entities)
+    _assert_same_entity_outcome(document, disable_entities=disable_entities)
 
 
 @pytest.mark.parametrize('disable_entities', [True, False])
@@ -58,8 +79,7 @@ def test_external_file_entities_are_not_loaded(tmp_path, disable_entities):
     secret = tmp_path / 'external-entity.txt'
     secret.write_text('ENTITY_FILE_CONTENT_MUST_NOT_APPEAR', encoding='utf-8')
     document = '<!DOCTYPE root [<!ENTITY secret SYSTEM "%s">]><root>before&secret;after</root>' % secret.as_uri()
-    actual = rapidxmltodict.parse(document, disable_entities=disable_entities)
-    assert actual == xmltodict.parse(document, disable_entities=disable_entities)
+    actual = _assert_same_entity_outcome(document, disable_entities=disable_entities)
     assert 'ENTITY_FILE_CONTENT_MUST_NOT_APPEAR' not in repr(actual)
 
 
@@ -71,7 +91,9 @@ def test_entity_expansion_disabled_by_default():
         declarations.append('<!ENTITY %s "%s">' % (name, ('&%s;' % previous) * 10))
         previous = name
     document = '<!DOCTYPE root [%s]><root>&%s;</root>' % (''.join(declarations), previous)
-    assert rapidxmltodict.parse(document) == {'root': None}
+    actual = _assert_same_entity_outcome(document)
+    if actual is not _ENTITIES_REJECTED:
+        assert actual == {'root': None}
 
 
 def _run_isolated(program):

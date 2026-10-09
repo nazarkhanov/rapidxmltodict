@@ -66,7 +66,10 @@ native buffers/DOM allocations and temporary references are freed on exit.
 
 The default path does not fetch external entities. DTD-containing inputs go to
 xmltodict with the original `disable_entities` setting (default `True`), preserving
-its behavior, including DTD-supplied default attributes. `disable_entities=False`
+its behavior, including DTD-supplied default attributes. With xmltodict 1.0.4,
+entity declarations are rejected with `ValueError("entities are disabled")`;
+0.14.2 instead suppressed their expansion. The fallback preserves the installed
+version's policy, including its rejection. `disable_entities=False`
 explicitly opts into reference-parser entity behavior and its risks. There is no
 application-level input-size or output-size limit: callers handling untrusted
 large documents should enforce their own resource limits. Deep/streaming inputs
