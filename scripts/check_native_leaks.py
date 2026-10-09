@@ -35,14 +35,20 @@ def main():
         # A volatile write and escaped return prevent allocation elimination.
         probe = directory / "leak_probe.cpp"
         probe.write_text('''#include <cstdlib>
+#include <Python.h>
 extern "C" __attribute__((noinline)) void* intentional_leak() {
     void* p = std::malloc(4096);
     if (!p) std::abort();
     static_cast<volatile char*>(p)[0] = 42;
     return p;
 }
+extern "C" void intentional_python_leak() {
+    PyObject* p = PyList_New(0);
+    if (!p) std::abort();
+    // Deliberately lose the owned reference; the GC still sees the live list.
+}
 ''')
-        subprocess.run(flags + [str(probe), "-o", str(directory / "leak_probe.so")], check=True)
+        subprocess.run(flags + ["-I" + sysconfig.get_path("include"), str(probe), "-o", str(directory / "leak_probe.so")], check=True)
         libraries = [subprocess.check_output([compiler, "-print-file-name=" + name],
                      text=True).strip() for name in ("libasan.so", "libstdc++.so")]
         if not all(Path(name).is_file() for name in libraries):
@@ -63,6 +69,12 @@ extern "C" __attribute__((noinline)) void* intentional_leak() {
                 or "4096 byte(s)" not in result.stdout or "intentional_leak" not in result.stdout):
             raise SystemExit("LSan positive control did not detect the intentional 4096-byte leak")
         print("PASS: LSan detected intentional leak and returned exit code 23", flush=True)
+        result = subprocess.run(command + ["--intentional-python-leak"], env=env,
+                                text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        print(result.stdout, flush=True)
+        if result.returncode != 24 or "ERROR: retained Python containers after cleanup" not in result.stdout:
+            raise SystemExit("Python-reference positive control did not detect the leaked list")
+        print("PASS: Python cleanup guard detected intentional leaked reference", flush=True)
         subprocess.run(command, env=env, check=True)
         print("PASS: native workload exited cleanly with ASan/UBSan/LSan enabled", flush=True)
 

@@ -11,14 +11,14 @@ import rapidxmltodict._native as native
 import xmltodict
 
 
-def exercise():
+def exercise(iterations=1000):
     documents = [
         '<root/>',
         '<root a="1"><item>one</item><item><![CDATA[two]]></item></root>',
         '<root xmlns="urn:default" xmlns:p="urn:p"><p:item p:a="v">text</p:item></root>',
         '<root:/>',  # Native ValueError -> successful reference fallback.
         '<r>before<a/> after <b/>tail</r>',  # NotImplemented mixed-content fallback.
-        '<n>' * 300 + 'deep' + '</n>' * 300,  # Depth fallback, partial DOM cleanup.
+        '<n>' * 300 + 'deep' + '</n>' * 300,  # Depth guard fallback.
         '<r>' + ''.join(f'<item id="{i}">value {i}</item>' for i in range(1000)) + '</r>',
     ]
     malformed = ['<root>', '<r><a></r>', '<r a="1" a="2"/>', '<r>&missing;</r>',
@@ -27,7 +27,7 @@ def exercise():
     cases += [(documents[2], {"process_namespaces": True}),
               (documents[1], {"force_list": ("item",)})]
     expected = [xmltodict.parse(document, **options) for document, options in cases]
-    for _ in range(1000):
+    for _ in range(iterations):
         for (document, options), reference in zip(cases, expected):
             result = rapid.parse(document, **options)
             assert result == reference
@@ -40,7 +40,7 @@ def exercise():
             else:
                 raise AssertionError("Malformed XML accepted")
         # Exercise native error cleanup directly, rather than stopping at Expat.
-        for data in (b'<root:/>', b'<r a="\xff"/>', b'<r>\xff</r>'):
+        for data in (b'<root:/>', b'<r a="\xff"/>', b'<r><item>one</item><item>two</item><bad>\xff</bad></r>'):
             try:
                 native.convert(data)
             except (ValueError, UnicodeDecodeError):
@@ -54,11 +54,20 @@ def exercise():
         else:
             raise AssertionError("Expected reference callback exception")
     # All result trees, exception tracebacks and reference fixtures die on return.
-    print("PASS: 9000 valid/fallback parses, 6000 malformed, 3000 native errors, 1000 callback errors")
+
 
 
 def raise_callback(path, key, value):
     raise RuntimeError('callback failure')
+
+
+def container_counts():
+    gc.collect()
+    lists = dictionaries = 0
+    for obj in gc.get_objects():
+        lists += type(obj) is list
+        dictionaries += type(obj) is dict
+    return lists, dictionaries
 
 
 def main():
@@ -66,20 +75,33 @@ def main():
     assert Path(rapid.__file__).resolve().is_relative_to(directory)
     assert Path(native.__file__).resolve().is_relative_to(directory)
     print('Instrumented native extension:', native.__file__, flush=True)
+    probe = ctypes.PyDLL(str(directory / 'leak_probe.so'))
+    probe.intentional_python_leak.restype = None
+    probe.intentional_leak.restype = ctypes.c_void_p
+    exercise(10)  # Warm lazy interpreter/reference caches before measuring.
+    before = container_counts()
     exercise()
+    if sys.argv[1:] == ['--intentional-python-leak']:
+        probe.intentional_python_leak()
+    after = container_counts()
+    print('PASS: 9000 valid/fallback parses, 6000 malformed, 3000 native errors, 1000 callback errors', flush=True)
+    print('GC-tracked (lists, dicts) before/after:', before, after, flush=True)
+    if any(end > start for start, end in zip(before, after)):
+        print('ERROR: retained Python containers after cleanup', flush=True)
+        return 24
+    if sys.argv[1:] == ['--intentional-python-leak']:
+        raise SystemExit('Python-reference positive control was not detected')
     gc.collect()
     if sys.argv[1:] == ['--intentional-leak']:
-        probe = ctypes.CDLL(str(directory / 'leak_probe.so'))
-        probe.intentional_leak.restype = ctypes.c_void_p
         probe.intentional_leak()  # Deliberately discard pointer in this process only.
-        del probe
         gc.collect()
     elif sys.argv[1:]:
         raise SystemExit('Unexpected arguments')
+    return 0
 
 
 if __name__ == '__main__':
-    main()
+    status = main()
     # CPython 3.12 immortal/interned strings can be orphaned during interpreter
     # shutdown. Check after our frames/results are gone, before that teardown.
     # This is LSan's supported early exit checkpoint, not a suppression: it
@@ -90,3 +112,4 @@ if __name__ == '__main__':
     check.restype = None
     check()
     print('PASS: explicit LSan cleanup checkpoint completed', flush=True)
+    raise SystemExit(status)

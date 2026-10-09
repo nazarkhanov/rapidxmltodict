@@ -158,10 +158,17 @@ There is no allocation-stack suppression or disabled tracking. Objects still
 reachable at the checkpoint, and leaks created later by interpreter finalization,
 are outside this check; ASan remains active through shutdown.
 
-Each process exercises 9,000 successful parses (including namespace, large
+A second positive control loses a `PyList_New` owned reference. Python GC
+keeps such containers reachable to LSan, so a separate exact list/dict count
+guard compares warmed, garbage-collected snapshots after the scoped workload.
+The leaked-list control must fail with code 24; clean counts must not increase.
+No tolerances are used. Balanced unrelated allocation/deallocation could conceal
+a count change, so this complements LSan rather than proving all refcounts.
+
+After a 10-iteration warmup, each process exercises 9,000 successful parses (including namespace, large
 1,000-record input, unusual-name native exception, depth/mixed-content and option
 fallbacks), 6,000 malformed inputs, 3,000 direct native exceptions (including
-Unicode decoding failure), and 1,000 failing reference callbacks. Results and
+Unicode decoding failure after partial dictionary/list construction), and 1,000 failing reference callbacks. Results and
 exception objects are released; fixtures leave scope and garbage collection
 runs before process exit. The regular pytest suite remains a separate gate.
 
