@@ -69,6 +69,16 @@ jobs:
         env:
           TAG: ${{ github.ref_name }}
         run: python scripts/release_checks.py "$TAG" --dist dist
+      - name: Compose curated release notes from the tagged source
+        env:
+          VERSION: ${{ needs.validate.outputs.version }}
+        run: python scripts/prepare_release_notes.py "$VERSION" --output release-notes.md
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-notes
+          path: release-notes.md
+          if-no-files-found: error
+          retention-days: 7
 
   publish:
     needs: [validate, verify]
@@ -106,18 +116,19 @@ jobs:
           pattern: dist-*
           path: dist
           merge-multiple: true
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: release-notes
+          path: notes
       - name: Create release notes after successful PyPI publication
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           TAG: ${{ github.ref_name }}
-          VERSION: ${{ needs.validate.outputs.version }}
           PRERELEASE: ${{ needs.validate.outputs.prerelease }}
         run: |
           args=(--verify-tag --title "$TAG" --generate-notes
-                --notes "Install: pip install rapidxmltodict==$VERSION
-
-          Package: https://pypi.org/project/rapidxmltodict/$VERSION/")
+                --notes-file notes/release-notes.md)
           if [ "$PRERELEASE" = true ]; then
             args+=(--prerelease --latest=false)
           fi
@@ -130,6 +141,9 @@ jobs:
           release = json.loads(Path("existing-release.json").read_text())
           if release["draft"]:
               raise SystemExit("Existing release is still a draft; inspect and repair it manually.")
+          expected_notes = Path("notes/release-notes.md").read_text(encoding="utf-8").strip()
+          if not release.get("body", "").startswith(expected_notes):
+              raise SystemExit("Existing release lacks the expected curated notes; inspect it manually.")
           assets = {asset["name"]: asset for asset in release["assets"]}
           for path in Path("dist").iterdir():
               digest = "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
