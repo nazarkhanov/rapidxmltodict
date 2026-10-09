@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rapidxmltodict"
+version = "0.1.0"
+description = "RapidXML accelerated XML-to-dict with xmltodict-compatible output"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE", "vendor/rapidxml/license.txt"]
+authors = [{name = "Alisher Nazarkhanov"}]
+dependencies = ["xmltodict>=0.14.2,<2"]
+
+[project.optional-dependencies]
+test = ["pytest>=8", "build"]
+
+[project.urls]
+Homepage = "https://github.com/nazarkhanov/rapidxmltodict"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

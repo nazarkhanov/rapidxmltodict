@@ -1,0 +1,2 @@
+# Preserve vendored source/license byte-for-byte.
+vendor/rapidxml/* -whitespace

@@ -1,0 +1,4 @@
+# Required reference implementation.
+xmltodict==0.14.2
+# Optional historical comparator. Pin the repaired source, not only its version.
+rapidxmltojson @ git+https://github.com/nazarkhanov/rapidxmltojson.git@ed40f6bb23a262a26a50653698184541c89f3b50

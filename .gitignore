@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.egg-info/
+build/
+dist/
+.venv/
+.pytest_cache/
+benchmarks/fixtures/
+benchmarks/baseline-results.*
+benchmarks/optimization-check.*

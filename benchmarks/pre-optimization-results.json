@@ -1,0 +1,2277 @@
+{
+  "metadata": {
+    "timestamp_utc": "2026-10-09T03:56:42Z",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "executable": "/workspace/shared/rapidxml-benchmark/venv/bin/python",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "cpu": "INTEL(R) XEON(R) PLATINUM 8573C",
+    "cpu_affinity": [
+      0
+    ],
+    "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+    "packages": {
+      "rapidxmltodict": "0.1.0",
+      "xmltodict": "0.14.2",
+      "rapidxmltojson": "0.2.5"
+    },
+    "rapidxmltodict_distribution_version": "0.1.0",
+    "implementation_hashes_start": {
+      "src/rapidxmltodict/__init__.py": "8f06bfeaf64e9117756b5ce5866582771a321a2cdf5d57429fecb92372a538cd",
+      "src/native.cpp": "c74f8ccf4f45c8ed98cf593ef6107d75d66a222589bb9bbf5b17643b517940e3",
+      "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "2f6bade4af40b7538baacdfe3968f482a45138efd42e29da35221bd4b57af7bd"
+    },
+    "benchmark_sha256": "471fcdda49495561e0c0f3b4e64c5760feed62332ad4cd1dc3006e9229a45e74",
+    "argv": [
+      "/workspace/shared/rapidxmltodict/benchmarks/benchmark.py",
+      "--output",
+      "/workspace/shared/rapidxmltodict/benchmarks/results.json"
+    ],
+    "method": {
+      "default_public_api": true,
+      "validation_and_preprocessing_included": true,
+      "timing_processes": 3,
+      "batches_per_process": 9,
+      "target_batch_seconds": 0.1,
+      "warmup_calls": 3,
+      "calibration_calls": 3,
+      "memory_processes": 5,
+      "gc_enabled": true,
+      "fixture_loading_timed": false,
+      "output_destruction_timed": true,
+      "memory": "Fresh subprocess per measurement, one parse, retained output; ru_maxrss normalized to bytes; post-import/input-load baseline peak and Linux current RSS reported.",
+      "tracemalloc": "Separate fresh subprocess, supplemental Python-visible allocation measure, excludes untraced native memory.",
+      "ordering_seed": 20261009
+    },
+    "implementation_hashes_end": {
+      "src/rapidxmltodict/__init__.py": "8f06bfeaf64e9117756b5ce5866582771a321a2cdf5d57429fecb92372a538cd",
+      "src/native.cpp": "c74f8ccf4f45c8ed98cf593ef6107d75d66a222589bb9bbf5b17643b517940e3",
+      "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "2f6bade4af40b7538baacdfe3968f482a45138efd42e29da35221bd4b57af7bd"
+    },
+    "implementation_unchanged_during_run": true,
+    "historical_comparator_provenance": {
+      "verification_time_utc": "2026-10-09T04:01:48Z",
+      "verified_after_measurements": true,
+      "installed_distribution_direct_url": {
+        "dir_info": {},
+        "url": "file:///workspace/shared/rapidxml-benchmark/repo"
+      },
+      "source_repository": "https://github.com/nazarkhanov/rapidxmltojson",
+      "source_checkout_commit": "ed40f6bb23a262a26a50653698184541c89f3b50",
+      "installed_native_sha256": "7da8eb485a9bfda80511ea6bdb2276dce0d6addf8fb477f528c6423cf46c23bd"
+    }
+  },
+  "workloads": {
+    "small": {
+      "input_type": "str",
+      "bytes": 1077,
+      "sha256": "2c6cc7dfd743a4e5286a1d207af3727366a4b39fb6ede3435f2935c200668e1c",
+      "description": "6 realistic catalog records",
+      "equality": {
+        "rapidxmltodict": {
+          "equal_to_xmltodict": true
+        },
+        "rapidxmltojson+json.loads": {
+          "equal_to_xmltodict": true
+        }
+      },
+      "timing": {
+        "rapidxmltodict": [
+          {
+            "loops_per_batch": 4601,
+            "batch_ns_per_call": [
+              29063.786568137362,
+              24304.133449250163,
+              23644.182351662683,
+              23591.675722668984,
+              23944.702021299716,
+              25476.798739404476,
+              23721.53901325799,
+              24067.671158443816,
+              24939.717018039555
+            ],
+            "median_ns_per_call": 24067.671158443816,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 4402,
+            "batch_ns_per_call": [
+              25494.529304861426,
+              26142.183098591548,
+              24345.21058609723,
+              23698.307360290775,
+              24205.930258973192,
+              23373.003634711495,
+              25146.129486597,
+              23637.647887323943,
+              26055.376419809178
+            ],
+            "median_ns_per_call": 24345.21058609723,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 2999,
+            "batch_ns_per_call": [
+              26919.46682227409,
+              23437.31010336779,
+              23423.434478159386,
+              25710.972990996997,
+              24883.10703567856,
+              22867.478492830942,
+              25277.26775591864,
+              29195.398799599865,
+              25054.440813604535
+            ],
+            "median_ns_per_call": 25054.440813604535,
+            "gc_enabled": true
+          }
+        ],
+        "xmltodict": [
+          {
+            "loops_per_batch": 723,
+            "batch_ns_per_call": [
+              121677.09681881052,
+              126587.74273858921,
+              111279.04011065006,
+              119933.4744121715,
+              116678.0041493776,
+              118173.98755186722,
+              126362.78146611342,
+              115579.61134163209,
+              121942.26002766252
+            ],
+            "median_ns_per_call": 119933.4744121715,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 961,
+            "batch_ns_per_call": [
+              121887.89906347555,
+              122580.60145681581,
+              113950.37981269512,
+              117071.19458896983,
+              114136.87825182102,
+              124806.30385015608,
+              123315.0239334027,
+              124679.80645161291,
+              118006.01873048907
+            ],
+            "median_ns_per_call": 121887.89906347555,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 893,
+            "batch_ns_per_call": [
+              127733.22060470325,
+              130014.14781634939,
+              129181.72116461366,
+              126948.97200447928,
+              132014.00895856664,
+              124648.00223964166,
+              128102.84994400897,
+              125730.27995520717,
+              125166.23292273236
+            ],
+            "median_ns_per_call": 127733.22060470325,
+            "gc_enabled": true
+          }
+        ],
+        "rapidxmltojson+json.loads": [
+          {
+            "loops_per_batch": 6375,
+            "batch_ns_per_call": [
+              17720.879843137256,
+              17453.666980392158,
+              17906.73380392157,
+              17732.380549019606,
+              19353.169098039216,
+              17240.836078431374,
+              17763.627921568626,
+              18226.302431372547,
+              18045.694274509802
+            ],
+            "median_ns_per_call": 17763.627921568626,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 3554,
+            "batch_ns_per_call": [
+              17788.159257175015,
+              17383.677265053462,
+              17955.075970737198,
+              17814.669949352843,
+              18309.306696679796,
+              17882.46961170512,
+              18906.63815419246,
+              16785.10410804727,
+              20355.437535171637
+            ],
+            "median_ns_per_call": 17882.46961170512,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 3733,
+            "batch_ns_per_call": [
+              17903.565764800427,
+              16509.42057326547,
+              17844.24270024109,
+              18242.10875971069,
+              16188.713099383873,
+              17608.798821323333,
+              17476.98687382802,
+              18740.709616930082,
+              17827.491293865525
+            ],
+            "median_ns_per_call": 17827.491293865525,
+            "gc_enabled": true
+          }
+        ]
+      },
+      "rss": {
+        "rapidxmltodict": [
+          {
+            "baseline_current_rss_bytes": 20701184,
+            "baseline_peak_rss_bytes": 20570112,
+            "peak_rss_bytes": 20701184,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 20815872,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20701184,
+            "baseline_peak_rss_bytes": 20570112,
+            "peak_rss_bytes": 20701184,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 20811776,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20701184,
+            "baseline_peak_rss_bytes": 20570112,
+            "peak_rss_bytes": 20701184,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 20811776,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20697088,
+            "baseline_peak_rss_bytes": 20570112,
+            "peak_rss_bytes": 20701184,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 20811776,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20697088,
+            "baseline_peak_rss_bytes": 20570112,
+            "peak_rss_bytes": 20701184,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 20811776,
+            "result_type": "dict"
+          }
+        ],
+        "xmltodict": [
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 19783680,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 19857408,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 19783680,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 19857408,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19755008,
+            "baseline_peak_rss_bytes": 19656704,
+            "peak_rss_bytes": 19787776,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 19861504,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 19783680,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 19857408,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 19783680,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 19857408,
+            "result_type": "dict"
+          }
+        ],
+        "rapidxmltojson+json.loads": [
+          {
+            "baseline_current_rss_bytes": 19623936,
+            "baseline_peak_rss_bytes": 19587072,
+            "peak_rss_bytes": 19587072,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19660800,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19615744,
+            "baseline_peak_rss_bytes": 19582976,
+            "peak_rss_bytes": 19582976,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19652608,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19619840,
+            "baseline_peak_rss_bytes": 19587072,
+            "peak_rss_bytes": 19587072,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19656704,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19611648,
+            "baseline_peak_rss_bytes": 19582976,
+            "peak_rss_bytes": 19582976,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19648512,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19615744,
+            "baseline_peak_rss_bytes": 19587072,
+            "peak_rss_bytes": 19587072,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19652608,
+            "result_type": "dict"
+          }
+        ]
+      },
+      "tracemalloc": {
+        "rapidxmltodict": {
+          "python_traced_retained_bytes": 2749,
+          "python_traced_peak_bytes": 14203,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        },
+        "xmltodict": {
+          "python_traced_retained_bytes": 7637,
+          "python_traced_peak_bytes": 29123,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        },
+        "rapidxmltojson+json.loads": {
+          "python_traced_retained_bytes": 2845,
+          "python_traced_peak_bytes": 5079,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        }
+      },
+      "summary": {
+        "rapidxmltodict": {
+          "median_ms": 0.02434521058609723,
+          "min_ms": 0.022867478492830943,
+          "max_ms": 0.029195398799599866,
+          "median_peak_rss_mib": 19.7421875,
+          "median_baseline_peak_mib": 19.6171875,
+          "median_incremental_peak_mib": 0.125
+        },
+        "xmltodict": {
+          "median_ms": 0.1233150239334027,
+          "min_ms": 0.11127904011065007,
+          "max_ms": 0.13201400895856663,
+          "median_peak_rss_mib": 18.8671875,
+          "median_baseline_peak_mib": 18.7421875,
+          "median_incremental_peak_mib": 0.125
+        },
+        "rapidxmltojson+json.loads": {
+          "median_ms": 0.017827491293865527,
+          "min_ms": 0.016188713099383873,
+          "max_ms": 0.020355437535171637,
+          "median_peak_rss_mib": 18.6796875,
+          "median_baseline_peak_mib": 18.6796875,
+          "median_incremental_peak_mib": 0.0
+        }
+      },
+      "speedup_vs_xmltodict": 5.065268320325147,
+      "implementation_hashes_after_workload": {
+        "src/rapidxmltodict/__init__.py": "8f06bfeaf64e9117756b5ce5866582771a321a2cdf5d57429fecb92372a538cd",
+        "src/native.cpp": "c74f8ccf4f45c8ed98cf593ef6107d75d66a222589bb9bbf5b17643b517940e3",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "2f6bade4af40b7538baacdfe3968f482a45138efd42e29da35221bd4b57af7bd"
+      }
+    },
+    "medium": {
+      "input_type": "str",
+      "bytes": 105501,
+      "sha256": "a1f0ca482576f8151786790cd9312667d9ae39462ac8f16b2570152d7e4302fd",
+      "description": "600 realistic catalog records",
+      "equality": {
+        "rapidxmltodict": {
+          "equal_to_xmltodict": true
+        },
+        "rapidxmltojson+json.loads": {
+          "equal_to_xmltodict": true
+        }
+      },
+      "timing": {
+        "rapidxmltodict": [
+          {
+            "loops_per_batch": 39,
+            "batch_ns_per_call": [
+              2125362.0,
+              2216546.6923076925,
+              2311609.205128205,
+              2268162.4615384615,
+              2513846.3076923075,
+              2176371.282051282,
+              2419690.230769231,
+              2117726.512820513,
+              2226578.205128205
+            ],
+            "median_ns_per_call": 2226578.205128205,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 46,
+            "batch_ns_per_call": [
+              2173578.6739130435,
+              2231367.282608696,
+              2224441.9782608696,
+              2277968.4565217393,
+              2117849.065217391,
+              2242266.913043478,
+              2207304.2608695654,
+              2170742.282608696,
+              2444621.717391304
+            ],
+            "median_ns_per_call": 2224441.9782608696,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 37,
+            "batch_ns_per_call": [
+              2161894.4054054054,
+              2223207.243243243,
+              2155888.864864865,
+              2313967.2162162163,
+              2315400.621621622,
+              2190040.6486486485,
+              2223072.081081081,
+              2337682.189189189,
+              2275552.5405405406
+            ],
+            "median_ns_per_call": 2223207.243243243,
+            "gc_enabled": true
+          }
+        ],
+        "xmltodict": [
+          {
+            "loops_per_batch": 9,
+            "batch_ns_per_call": [
+              10778783.666666666,
+              10574695.0,
+              10354899.0,
+              10454456.555555556,
+              11067281.333333334,
+              10565406.0,
+              10062622.222222222,
+              10605085.888888888,
+              10741255.555555556
+            ],
+            "median_ns_per_call": 10574695.0,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 9,
+            "batch_ns_per_call": [
+              10959832.555555556,
+              10929621.555555556,
+              10653385.555555556,
+              11025471.555555556,
+              11103218.777777778,
+              10359074.555555556,
+              10461911.111111112,
+              10482714.666666666,
+              10788181.222222222
+            ],
+            "median_ns_per_call": 10788181.222222222,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 9,
+            "batch_ns_per_call": [
+              10462660.555555556,
+              11038484.444444444,
+              10326692.111111112,
+              10283370.0,
+              11524700.666666666,
+              10601197.444444444,
+              10643788.555555556,
+              10710717.444444444,
+              10629508.111111112
+            ],
+            "median_ns_per_call": 10629508.111111112,
+            "gc_enabled": true
+          }
+        ],
+        "rapidxmltojson+json.loads": [
+          {
+            "loops_per_batch": 37,
+            "batch_ns_per_call": [
+              2182413.189189189,
+              2171935.4324324327,
+              2886220.2702702703,
+              2400288.3243243243,
+              2248784.081081081,
+              2422794.4594594594,
+              2179927.4594594594,
+              2664644.7297297297,
+              3063096.7027027025
+            ],
+            "median_ns_per_call": 2400288.3243243243,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 42,
+            "batch_ns_per_call": [
+              2315931.5,
+              2156981.6904761903,
+              2191469.095238095,
+              2462642.619047619,
+              2130482.3333333335,
+              2154985.761904762,
+              2335744.880952381,
+              2188850.238095238,
+              2357054.6666666665
+            ],
+            "median_ns_per_call": 2191469.095238095,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 40,
+            "batch_ns_per_call": [
+              2322891.625,
+              2359410.0,
+              2186177.25,
+              2340348.1,
+              2325613.575,
+              2218406.675,
+              2386112.3,
+              2320012.625,
+              2284257.325
+            ],
+            "median_ns_per_call": 2322891.625,
+            "gc_enabled": true
+          }
+        ]
+      },
+      "rss": {
+        "rapidxmltodict": [
+          {
+            "baseline_current_rss_bytes": 20697088,
+            "baseline_peak_rss_bytes": 20570112,
+            "peak_rss_bytes": 22142976,
+            "incremental_peak_rss_bytes": 1572864,
+            "retained_output_current_rss_bytes": 21446656,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20697088,
+            "baseline_peak_rss_bytes": 20570112,
+            "peak_rss_bytes": 22142976,
+            "incremental_peak_rss_bytes": 1572864,
+            "retained_output_current_rss_bytes": 21446656,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20705280,
+            "baseline_peak_rss_bytes": 20574208,
+            "peak_rss_bytes": 22147072,
+            "incremental_peak_rss_bytes": 1572864,
+            "retained_output_current_rss_bytes": 21446656,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20697088,
+            "baseline_peak_rss_bytes": 20570112,
+            "peak_rss_bytes": 22142976,
+            "incremental_peak_rss_bytes": 1572864,
+            "retained_output_current_rss_bytes": 21446656,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20697088,
+            "baseline_peak_rss_bytes": 20570112,
+            "peak_rss_bytes": 22142976,
+            "incremental_peak_rss_bytes": 1572864,
+            "retained_output_current_rss_bytes": 21446656,
+            "result_type": "dict"
+          }
+        ],
+        "xmltodict": [
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 20439040,
+            "incremental_peak_rss_bytes": 786432,
+            "retained_output_current_rss_bytes": 20582400,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 20439040,
+            "incremental_peak_rss_bytes": 786432,
+            "retained_output_current_rss_bytes": 20578304,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 20439040,
+            "incremental_peak_rss_bytes": 786432,
+            "retained_output_current_rss_bytes": 20578304,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19759104,
+            "baseline_peak_rss_bytes": 19656704,
+            "peak_rss_bytes": 20443136,
+            "incremental_peak_rss_bytes": 786432,
+            "retained_output_current_rss_bytes": 20586496,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 20439040,
+            "incremental_peak_rss_bytes": 786432,
+            "retained_output_current_rss_bytes": 20578304,
+            "result_type": "dict"
+          }
+        ],
+        "rapidxmltojson+json.loads": [
+          {
+            "baseline_current_rss_bytes": 19623936,
+            "baseline_peak_rss_bytes": 19582976,
+            "peak_rss_bytes": 21286912,
+            "incremental_peak_rss_bytes": 1703936,
+            "retained_output_current_rss_bytes": 20156416,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19615744,
+            "baseline_peak_rss_bytes": 19587072,
+            "peak_rss_bytes": 21291008,
+            "incremental_peak_rss_bytes": 1703936,
+            "retained_output_current_rss_bytes": 20156416,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19615744,
+            "baseline_peak_rss_bytes": 19587072,
+            "peak_rss_bytes": 21291008,
+            "incremental_peak_rss_bytes": 1703936,
+            "retained_output_current_rss_bytes": 20156416,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19611648,
+            "baseline_peak_rss_bytes": 19582976,
+            "peak_rss_bytes": 21286912,
+            "incremental_peak_rss_bytes": 1703936,
+            "retained_output_current_rss_bytes": 20152320,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19632128,
+            "baseline_peak_rss_bytes": 19587072,
+            "peak_rss_bytes": 21291008,
+            "incremental_peak_rss_bytes": 1703936,
+            "retained_output_current_rss_bytes": 20156416,
+            "result_type": "dict"
+          }
+        ]
+      },
+      "tracemalloc": {
+        "rapidxmltodict": {
+          "python_traced_retained_bytes": 589283,
+          "python_traced_peak_bytes": 834231,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        },
+        "xmltodict": {
+          "python_traced_retained_bytes": 679679,
+          "python_traced_peak_bytes": 934613,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        },
+        "rapidxmltojson+json.loads": {
+          "python_traced_retained_bytes": 598699,
+          "python_traced_peak_bytes": 692289,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        }
+      },
+      "summary": {
+        "rapidxmltodict": {
+          "median_ms": 2.2244419782608698,
+          "min_ms": 2.117726512820513,
+          "max_ms": 2.5138463076923077,
+          "median_peak_rss_mib": 21.1171875,
+          "median_baseline_peak_mib": 19.6171875,
+          "median_incremental_peak_mib": 1.5
+        },
+        "xmltodict": {
+          "median_ms": 10.629508111111113,
+          "min_ms": 10.062622222222222,
+          "max_ms": 11.524700666666666,
+          "median_peak_rss_mib": 19.4921875,
+          "median_baseline_peak_mib": 18.7421875,
+          "median_incremental_peak_mib": 0.75
+        },
+        "rapidxmltojson+json.loads": {
+          "median_ms": 2.320012625,
+          "min_ms": 2.1304823333333336,
+          "max_ms": 3.0630967027027025,
+          "median_peak_rss_mib": 20.3046875,
+          "median_baseline_peak_mib": 18.6796875,
+          "median_incremental_peak_mib": 1.625
+        }
+      },
+      "speedup_vs_xmltodict": 4.778505447654587,
+      "implementation_hashes_after_workload": {
+        "src/rapidxmltodict/__init__.py": "8f06bfeaf64e9117756b5ce5866582771a321a2cdf5d57429fecb92372a538cd",
+        "src/native.cpp": "c74f8ccf4f45c8ed98cf593ef6107d75d66a222589bb9bbf5b17643b517940e3",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "2f6bade4af40b7538baacdfe3968f482a45138efd42e29da35221bd4b57af7bd"
+      }
+    },
+    "large": {
+      "input_type": "str",
+      "bytes": 1055391,
+      "sha256": "b105b19a85dddc0d0261bdb7e96e92c70b2bf08bc7331b1661713e374c2abedb",
+      "description": "6000 realistic catalog records",
+      "equality": {
+        "rapidxmltodict": {
+          "equal_to_xmltodict": true
+        },
+        "rapidxmltojson+json.loads": {
+          "equal_to_xmltodict": true
+        }
+      },
+      "timing": {
+        "rapidxmltodict": [
+          {
+            "loops_per_batch": 4,
+            "batch_ns_per_call": [
+              26775551.5,
+              28527095.0,
+              26895799.0,
+              27263091.0,
+              25640248.5,
+              29426226.75,
+              27149237.0,
+              26858871.75,
+              34680143.25
+            ],
+            "median_ns_per_call": 27149237.0,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 3,
+            "batch_ns_per_call": [
+              27245921.666666668,
+              28411238.333333332,
+              32808406.333333332,
+              29240890.333333332,
+              29048826.0,
+              27076407.0,
+              26703078.0,
+              28845220.333333332,
+              27556378.333333332
+            ],
+            "median_ns_per_call": 28411238.333333332,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 4,
+            "batch_ns_per_call": [
+              41678364.0,
+              26773309.5,
+              28129807.75,
+              27034712.75,
+              30983518.25,
+              27330212.5,
+              32930251.75,
+              27718032.75,
+              28411955.0
+            ],
+            "median_ns_per_call": 28129807.75,
+            "gc_enabled": true
+          }
+        ],
+        "xmltodict": [
+          {
+            "loops_per_batch": 1,
+            "batch_ns_per_call": [
+              116221083.0,
+              127377030.0,
+              112022802.0,
+              110246554.0,
+              109817073.0,
+              146266910.0,
+              107041832.0,
+              111298844.0,
+              109699013.0
+            ],
+            "median_ns_per_call": 111298844.0,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 1,
+            "batch_ns_per_call": [
+              112209333.0,
+              135064255.0,
+              105629854.0,
+              106881021.0,
+              115293822.0,
+              118516666.0,
+              114796345.0,
+              108469073.0,
+              119288477.0
+            ],
+            "median_ns_per_call": 114796345.0,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 1,
+            "batch_ns_per_call": [
+              241435841.0,
+              249718436.0,
+              235335899.0,
+              108093194.0,
+              124466550.0,
+              115622971.0,
+              115843041.0,
+              105024553.0,
+              109877610.0
+            ],
+            "median_ns_per_call": 115843041.0,
+            "gc_enabled": true
+          }
+        ],
+        "rapidxmltojson+json.loads": [
+          {
+            "loops_per_batch": 3,
+            "batch_ns_per_call": [
+              25851697.0,
+              24425878.666666668,
+              24009049.333333332,
+              24623990.666666668,
+              23925030.666666668,
+              26117527.0,
+              25465703.333333332,
+              27397714.333333332,
+              25146830.0
+            ],
+            "median_ns_per_call": 25146830.0,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 4,
+            "batch_ns_per_call": [
+              28816674.75,
+              25590885.75,
+              35812608.0,
+              34338507.5,
+              39599711.0,
+              36858635.75,
+              34947874.5,
+              41268355.5,
+              26028885.75
+            ],
+            "median_ns_per_call": 34947874.5,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 4,
+            "batch_ns_per_call": [
+              27392997.25,
+              28667687.25,
+              31118523.75,
+              28098115.75,
+              27217320.25,
+              28270293.0,
+              25399740.0,
+              27319111.75,
+              24254317.0
+            ],
+            "median_ns_per_call": 27392997.25,
+            "gc_enabled": true
+          }
+        ]
+      },
+      "rss": {
+        "rapidxmltodict": [
+          {
+            "baseline_current_rss_bytes": 21618688,
+            "baseline_peak_rss_bytes": 21590016,
+            "peak_rss_bytes": 41381888,
+            "incremental_peak_rss_bytes": 19791872,
+            "retained_output_current_rss_bytes": 41447424,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 21618688,
+            "baseline_peak_rss_bytes": 21467136,
+            "peak_rss_bytes": 41390080,
+            "incremental_peak_rss_bytes": 19922944,
+            "retained_output_current_rss_bytes": 41447424,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 21622784,
+            "baseline_peak_rss_bytes": 21585920,
+            "peak_rss_bytes": 41377792,
+            "incremental_peak_rss_bytes": 19791872,
+            "retained_output_current_rss_bytes": 41447424,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 21618688,
+            "baseline_peak_rss_bytes": 21590016,
+            "peak_rss_bytes": 41381888,
+            "incremental_peak_rss_bytes": 19791872,
+            "retained_output_current_rss_bytes": 41447424,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 21622784,
+            "baseline_peak_rss_bytes": 21594112,
+            "peak_rss_bytes": 41385984,
+            "incremental_peak_rss_bytes": 19791872,
+            "retained_output_current_rss_bytes": 41451520,
+            "result_type": "dict"
+          }
+        ],
+        "xmltodict": [
+          {
+            "baseline_current_rss_bytes": 20680704,
+            "baseline_peak_rss_bytes": 20578304,
+            "peak_rss_bytes": 30113792,
+            "incremental_peak_rss_bytes": 9535488,
+            "retained_output_current_rss_bytes": 28229632,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20676608,
+            "baseline_peak_rss_bytes": 20578304,
+            "peak_rss_bytes": 30117888,
+            "incremental_peak_rss_bytes": 9539584,
+            "retained_output_current_rss_bytes": 28221440,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20672512,
+            "baseline_peak_rss_bytes": 20541440,
+            "peak_rss_bytes": 30109696,
+            "incremental_peak_rss_bytes": 9568256,
+            "retained_output_current_rss_bytes": 28221440,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20676608,
+            "baseline_peak_rss_bytes": 20541440,
+            "peak_rss_bytes": 30109696,
+            "incremental_peak_rss_bytes": 9568256,
+            "retained_output_current_rss_bytes": 28225536,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20672512,
+            "baseline_peak_rss_bytes": 20549632,
+            "peak_rss_bytes": 30117888,
+            "incremental_peak_rss_bytes": 9568256,
+            "retained_output_current_rss_bytes": 28221440,
+            "result_type": "dict"
+          }
+        ],
+        "rapidxmltojson+json.loads": [
+          {
+            "baseline_current_rss_bytes": 20672512,
+            "baseline_peak_rss_bytes": 20590592,
+            "peak_rss_bytes": 44707840,
+            "incremental_peak_rss_bytes": 24117248,
+            "retained_output_current_rss_bytes": 28868608,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20676608,
+            "baseline_peak_rss_bytes": 20594688,
+            "peak_rss_bytes": 44711936,
+            "incremental_peak_rss_bytes": 24117248,
+            "retained_output_current_rss_bytes": 28872704,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20672512,
+            "baseline_peak_rss_bytes": 20590592,
+            "peak_rss_bytes": 44707840,
+            "incremental_peak_rss_bytes": 24117248,
+            "retained_output_current_rss_bytes": 28868608,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20672512,
+            "baseline_peak_rss_bytes": 20590592,
+            "peak_rss_bytes": 44707840,
+            "incremental_peak_rss_bytes": 24117248,
+            "retained_output_current_rss_bytes": 28856320,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20672512,
+            "baseline_peak_rss_bytes": 20590592,
+            "peak_rss_bytes": 44707840,
+            "incremental_peak_rss_bytes": 24117248,
+            "retained_output_current_rss_bytes": 28856320,
+            "result_type": "dict"
+          }
+        ]
+      },
+      "tracemalloc": {
+        "rapidxmltodict": {
+          "python_traced_retained_bytes": 6022201,
+          "python_traced_peak_bytes": 8134543,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        },
+        "xmltodict": {
+          "python_traced_retained_bytes": 6879397,
+          "python_traced_peak_bytes": 9001725,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        },
+        "rapidxmltojson+json.loads": {
+          "python_traced_retained_bytes": 6118017,
+          "python_traced_peak_bytes": 7042697,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        }
+      },
+      "summary": {
+        "rapidxmltodict": {
+          "median_ms": 27.71803275,
+          "min_ms": 25.6402485,
+          "max_ms": 41.678364,
+          "median_peak_rss_mib": 39.46484375,
+          "median_baseline_peak_mib": 20.58984375,
+          "median_incremental_peak_mib": 18.875
+        },
+        "xmltodict": {
+          "median_ms": 114.796345,
+          "min_ms": 105.024553,
+          "max_ms": 249.718436,
+          "median_peak_rss_mib": 28.71875,
+          "median_baseline_peak_mib": 19.59765625,
+          "median_incremental_peak_mib": 9.125
+        },
+        "rapidxmltojson+json.loads": {
+          "median_ms": 27.31911175,
+          "min_ms": 23.925030666666668,
+          "max_ms": 41.2683555,
+          "median_peak_rss_mib": 42.63671875,
+          "median_baseline_peak_mib": 19.63671875,
+          "median_incremental_peak_mib": 23.0
+        }
+      },
+      "speedup_vs_xmltodict": 4.141576209083597,
+      "implementation_hashes_after_workload": {
+        "src/rapidxmltodict/__init__.py": "8f06bfeaf64e9117756b5ce5866582771a321a2cdf5d57429fecb92372a538cd",
+        "src/native.cpp": "c74f8ccf4f45c8ed98cf593ef6107d75d66a222589bb9bbf5b17643b517940e3",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "2f6bade4af40b7538baacdfe3968f482a45138efd42e29da35221bd4b57af7bd"
+      }
+    },
+    "unicode_mixed": {
+      "input_type": "str",
+      "bytes": 91903,
+      "sha256": "8776d86160f8a8b2c5c9d4aa7fe370f60ae3fb10b2477c02475cc2d81de67d86",
+      "description": "500 Unicode and mixed-content records; empty/whitespace nodes",
+      "equality": {
+        "rapidxmltodict": {
+          "equal_to_xmltodict": true
+        },
+        "rapidxmltojson+json.loads": {
+          "equal_to_xmltodict": false,
+          "difference": "$.root.entry[0].name: unequal values 'Zo\u00eb \ud83d\ude42 & \u674e' / '  Zo\u00eb \ud83d\ude42 & \u674e  '"
+        }
+      },
+      "timing": {
+        "rapidxmltodict": [
+          {
+            "loops_per_batch": 58,
+            "batch_ns_per_call": [
+              1905957.6724137932,
+              1901509.7068965517,
+              2017533.5344827587,
+              1983180.551724138,
+              1965050.896551724,
+              2071657.8620689656,
+              1935494.2931034483,
+              1958976.051724138,
+              1821420.0862068965
+            ],
+            "median_ns_per_call": 1958976.051724138,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 53,
+            "batch_ns_per_call": [
+              1855736.5849056605,
+              1924595.1132075472,
+              2062496.716981132,
+              1876430.3773584906,
+              2217512.3396226414,
+              1911115.6603773586,
+              2061623.2075471699,
+              2229953.849056604,
+              2002901.075471698
+            ],
+            "median_ns_per_call": 2002901.075471698,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 53,
+            "batch_ns_per_call": [
+              2015882.6792452831,
+              1882071.1132075472,
+              2172168.150943396,
+              2005374.716981132,
+              1996801.3018867925,
+              1970526.3773584906,
+              1868473.9056603773,
+              2075594.283018868,
+              1991450.7924528301
+            ],
+            "median_ns_per_call": 1996801.3018867925,
+            "gc_enabled": true
+          }
+        ],
+        "xmltodict": [
+          {
+            "loops_per_batch": 9,
+            "batch_ns_per_call": [
+              8619625.777777778,
+              8948326.111111112,
+              9170976.111111112,
+              9162390.111111112,
+              8726753.888888888,
+              9503896.555555556,
+              9632925.444444444,
+              9013078.0,
+              10444054.888888888
+            ],
+            "median_ns_per_call": 9162390.111111112,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 11,
+            "batch_ns_per_call": [
+              9428756.727272727,
+              8952233.545454545,
+              8940262.363636363,
+              9767927.090909092,
+              8901519.545454545,
+              9510790.272727273,
+              8737619.545454545,
+              9015680.727272727,
+              9541049.909090908
+            ],
+            "median_ns_per_call": 9015680.727272727,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 10,
+            "batch_ns_per_call": [
+              9230719.2,
+              9088233.5,
+              9691021.9,
+              9412280.3,
+              8724419.0,
+              9195809.4,
+              8752670.4,
+              9211478.9,
+              9222523.3
+            ],
+            "median_ns_per_call": 9211478.9,
+            "gc_enabled": true
+          }
+        ]
+      },
+      "rss": {
+        "rapidxmltodict": [
+          {
+            "baseline_current_rss_bytes": 21045248,
+            "baseline_peak_rss_bytes": 20918272,
+            "peak_rss_bytes": 22097920,
+            "incremental_peak_rss_bytes": 1179648,
+            "retained_output_current_rss_bytes": 21872640,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 21045248,
+            "baseline_peak_rss_bytes": 20918272,
+            "peak_rss_bytes": 22097920,
+            "incremental_peak_rss_bytes": 1179648,
+            "retained_output_current_rss_bytes": 21872640,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 21049344,
+            "baseline_peak_rss_bytes": 20918272,
+            "peak_rss_bytes": 22097920,
+            "incremental_peak_rss_bytes": 1179648,
+            "retained_output_current_rss_bytes": 21876736,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 21045248,
+            "baseline_peak_rss_bytes": 20914176,
+            "peak_rss_bytes": 22093824,
+            "incremental_peak_rss_bytes": 1179648,
+            "retained_output_current_rss_bytes": 21868544,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 21045248,
+            "baseline_peak_rss_bytes": 20914176,
+            "peak_rss_bytes": 22093824,
+            "incremental_peak_rss_bytes": 1179648,
+            "retained_output_current_rss_bytes": 21872640,
+            "result_type": "dict"
+          }
+        ],
+        "xmltodict": [
+          {
+            "baseline_current_rss_bytes": 20099072,
+            "baseline_peak_rss_bytes": 20000768,
+            "peak_rss_bytes": 20656128,
+            "incremental_peak_rss_bytes": 655360,
+            "retained_output_current_rss_bytes": 20692992,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20107264,
+            "baseline_peak_rss_bytes": 19886080,
+            "peak_rss_bytes": 20672512,
+            "incremental_peak_rss_bytes": 786432,
+            "retained_output_current_rss_bytes": 20697088,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20099072,
+            "baseline_peak_rss_bytes": 19894272,
+            "peak_rss_bytes": 20680704,
+            "incremental_peak_rss_bytes": 786432,
+            "retained_output_current_rss_bytes": 20692992,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20103168,
+            "baseline_peak_rss_bytes": 20000768,
+            "peak_rss_bytes": 20656128,
+            "incremental_peak_rss_bytes": 655360,
+            "retained_output_current_rss_bytes": 20697088,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20103168,
+            "baseline_peak_rss_bytes": 20004864,
+            "peak_rss_bytes": 20660224,
+            "incremental_peak_rss_bytes": 655360,
+            "retained_output_current_rss_bytes": 20697088,
+            "result_type": "dict"
+          }
+        ]
+      },
+      "tracemalloc": {
+        "rapidxmltodict": {
+          "python_traced_retained_bytes": 406593,
+          "python_traced_peak_bytes": 637975,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        },
+        "xmltodict": {
+          "python_traced_retained_bytes": 456836,
+          "python_traced_peak_bytes": 697851,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        }
+      },
+      "summary": {
+        "rapidxmltodict": {
+          "median_ms": 1.9831805517241379,
+          "min_ms": 1.8214200862068965,
+          "max_ms": 2.2299538490566038,
+          "median_peak_rss_mib": 21.07421875,
+          "median_baseline_peak_mib": 19.94921875,
+          "median_incremental_peak_mib": 1.125
+        },
+        "xmltodict": {
+          "median_ms": 9.170976111111113,
+          "min_ms": 8.619625777777777,
+          "max_ms": 10.444054888888887,
+          "median_peak_rss_mib": 19.703125,
+          "median_baseline_peak_mib": 19.07421875,
+          "median_incremental_peak_mib": 0.625
+        }
+      },
+      "speedup_vs_xmltodict": 4.624377797139069,
+      "implementation_hashes_after_workload": {
+        "src/rapidxmltodict/__init__.py": "8f06bfeaf64e9117756b5ce5866582771a321a2cdf5d57429fecb92372a538cd",
+        "src/native.cpp": "c74f8ccf4f45c8ed98cf593ef6107d75d66a222589bb9bbf5b17643b517940e3",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "2f6bade4af40b7538baacdfe3968f482a45138efd42e29da35221bd4b57af7bd"
+      }
+    },
+    "deep": {
+      "input_type": "str",
+      "bytes": 900,
+      "sha256": "d27ff0a7f4fc55b3f1038928feec430e7993a1d4129e47b85f2b9e3fcad6d7be",
+      "description": "128 nested elements; native supported depth",
+      "equality": {
+        "rapidxmltodict": {
+          "equal_to_xmltodict": true
+        },
+        "rapidxmltojson+json.loads": {
+          "equal_to_xmltodict": true
+        }
+      },
+      "timing": {
+        "rapidxmltodict": [
+          {
+            "loops_per_batch": 2661,
+            "batch_ns_per_call": [
+              34698.66516347238,
+              31691.42051860203,
+              32282.05561818865,
+              33883.034949267196,
+              32375.639609169484,
+              32399.106350995866,
+              35875.54565952649,
+              31706.400977076286,
+              33126.786170612555
+            ],
+            "median_ns_per_call": 32399.106350995866,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 3254,
+            "batch_ns_per_call": [
+              31023.646896127844,
+              33318.10571604179,
+              32065.79409956976,
+              34013.33650891211,
+              31713.05193607867,
+              34013.487707437,
+              32007.257529194838,
+              32158.14167178857,
+              32875.89827904118
+            ],
+            "median_ns_per_call": 32158.14167178857,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 3171,
+            "batch_ns_per_call": [
+              31820.1110059918,
+              34048.88426363923,
+              32744.187322611164,
+              35252.76821192053,
+              44433.113528855254,
+              41441.87732576474,
+              50928.07915484074,
+              63670.85178177231,
+              34292.444023967204
+            ],
+            "median_ns_per_call": 35252.76821192053,
+            "gc_enabled": true
+          }
+        ],
+        "xmltodict": [
+          {
+            "loops_per_batch": 379,
+            "batch_ns_per_call": [
+              228499.15567282322,
+              231280.12928759895,
+              226054.7387862797,
+              226247.39577836412,
+              238775.81530343008,
+              235094.83377308707,
+              238595.39050131926,
+              247132.99472295513,
+              221989.5672823219
+            ],
+            "median_ns_per_call": 231280.12928759895,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 466,
+            "batch_ns_per_call": [
+              219734.6416309013,
+              225222.36909871246,
+              230603.8068669528,
+              226617.21244635194,
+              238667.09442060086,
+              230378.14377682403,
+              240128.6824034335,
+              220297.1094420601,
+              251138.9635193133
+            ],
+            "median_ns_per_call": 230378.14377682403,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 374,
+            "batch_ns_per_call": [
+              241861.1256684492,
+              221430.7860962567,
+              239765.2192513369,
+              309396.83689839573,
+              226803.20855614974,
+              230364.78877005348,
+              232737.88235294117,
+              239750.6550802139,
+              240992.5347593583
+            ],
+            "median_ns_per_call": 239750.6550802139,
+            "gc_enabled": true
+          }
+        ],
+        "rapidxmltojson+json.loads": [
+          {
+            "loops_per_batch": 4001,
+            "batch_ns_per_call": [
+              27723.276180954763,
+              27874.990752311922,
+              27896.170957260685,
+              27297.687078230443,
+              28749.63984003999,
+              27145.621094726317,
+              30058.32816795801,
+              27620.98500374906,
+              29302.366408397902
+            ],
+            "median_ns_per_call": 27874.990752311922,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 3971,
+            "batch_ns_per_call": [
+              28306.182070007555,
+              28786.313523042056,
+              28333.539410727775,
+              29384.627549735582,
+              28516.57919919416,
+              30789.29690254344,
+              27641.62175774364,
+              29247.21934021657,
+              27749.248552002016
+            ],
+            "median_ns_per_call": 28516.57919919416,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 4032,
+            "batch_ns_per_call": [
+              29279.42931547619,
+              28150.602678571428,
+              28180.562251984127,
+              28198.733134920636,
+              27583.71552579365,
+              37163.14136904762,
+              37993.47371031746,
+              27849.724206349205,
+              29374.457589285714
+            ],
+            "median_ns_per_call": 28198.733134920636,
+            "gc_enabled": true
+          }
+        ]
+      },
+      "rss": {
+        "rapidxmltodict": [
+          {
+            "baseline_current_rss_bytes": 20697088,
+            "baseline_peak_rss_bytes": 20570112,
+            "peak_rss_bytes": 20701184,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 20824064,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20701184,
+            "baseline_peak_rss_bytes": 20574208,
+            "peak_rss_bytes": 20705280,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 20828160,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20705280,
+            "baseline_peak_rss_bytes": 20574208,
+            "peak_rss_bytes": 20705280,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 20832256,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20701184,
+            "baseline_peak_rss_bytes": 20570112,
+            "peak_rss_bytes": 20701184,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 20824064,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20697088,
+            "baseline_peak_rss_bytes": 20570112,
+            "peak_rss_bytes": 20701184,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 20824064,
+            "result_type": "dict"
+          }
+        ],
+        "xmltodict": [
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 19783680,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 19890176,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19755008,
+            "baseline_peak_rss_bytes": 19656704,
+            "peak_rss_bytes": 19787776,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 19894272,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 19783680,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 19894272,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 19783680,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 19890176,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19755008,
+            "baseline_peak_rss_bytes": 19656704,
+            "peak_rss_bytes": 19787776,
+            "incremental_peak_rss_bytes": 131072,
+            "retained_output_current_rss_bytes": 19894272,
+            "result_type": "dict"
+          }
+        ],
+        "rapidxmltojson+json.loads": [
+          {
+            "baseline_current_rss_bytes": 19632128,
+            "baseline_peak_rss_bytes": 19582976,
+            "peak_rss_bytes": 19582976,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19668992,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19615744,
+            "baseline_peak_rss_bytes": 19582976,
+            "peak_rss_bytes": 19582976,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19652608,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19623936,
+            "baseline_peak_rss_bytes": 19582976,
+            "peak_rss_bytes": 19582976,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19660800,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19619840,
+            "baseline_peak_rss_bytes": 19587072,
+            "peak_rss_bytes": 19587072,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19656704,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19619840,
+            "baseline_peak_rss_bytes": 19582976,
+            "peak_rss_bytes": 19582976,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19656704,
+            "result_type": "dict"
+          }
+        ]
+      },
+      "tracemalloc": {
+        "rapidxmltodict": {
+          "python_traced_retained_bytes": 12781,
+          "python_traced_peak_bytes": 39692,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        },
+        "xmltodict": {
+          "python_traced_retained_bytes": 28245,
+          "python_traced_peak_bytes": 64460,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        },
+        "rapidxmltojson+json.loads": {
+          "python_traced_retained_bytes": 12717,
+          "python_traced_peak_bytes": 14774,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        }
+      },
+      "summary": {
+        "rapidxmltodict": {
+          "median_ms": 0.03312678617061256,
+          "min_ms": 0.031023646896127844,
+          "max_ms": 0.06367085178177231,
+          "median_peak_rss_mib": 19.7421875,
+          "median_baseline_peak_mib": 19.6171875,
+          "median_incremental_peak_mib": 0.125
+        },
+        "xmltodict": {
+          "median_ms": 0.23128012928759895,
+          "min_ms": 0.21973464163090128,
+          "max_ms": 0.30939683689839576,
+          "median_peak_rss_mib": 18.8671875,
+          "median_baseline_peak_mib": 18.7421875,
+          "median_incremental_peak_mib": 0.125
+        },
+        "rapidxmltojson+json.loads": {
+          "median_ms": 0.028306182070007554,
+          "min_ms": 0.02714562109472632,
+          "max_ms": 0.037993473710317464,
+          "median_peak_rss_mib": 18.67578125,
+          "median_baseline_peak_mib": 18.67578125,
+          "median_incremental_peak_mib": 0.0
+        }
+      },
+      "speedup_vs_xmltodict": 6.98166517260199,
+      "implementation_hashes_after_workload": {
+        "src/rapidxmltodict/__init__.py": "8f06bfeaf64e9117756b5ce5866582771a321a2cdf5d57429fecb92372a538cd",
+        "src/native.cpp": "c74f8ccf4f45c8ed98cf593ef6107d75d66a222589bb9bbf5b17643b517940e3",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "2f6bade4af40b7538baacdfe3968f482a45138efd42e29da35221bd4b57af7bd"
+      }
+    },
+    "deep_fallback": {
+      "input_type": "str",
+      "bytes": 2104,
+      "sha256": "c67a1e874577e8e48e220de6ef1928725407b974c9afa289cc08c92ee9df353f",
+      "description": "300 nested elements; documented xmltodict fallback",
+      "equality": {
+        "rapidxmltodict": {
+          "equal_to_xmltodict": true
+        },
+        "rapidxmltojson+json.loads": {
+          "equal_to_xmltodict": true
+        }
+      },
+      "timing": {
+        "rapidxmltodict": [
+          {
+            "loops_per_batch": 200,
+            "batch_ns_per_call": [
+              558047.38,
+              562629.475,
+              566807.75,
+              554170.87,
+              571767.49,
+              552719.4,
+              608840.635,
+              589097.92,
+              631704.735
+            ],
+            "median_ns_per_call": 566807.75,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 162,
+            "batch_ns_per_call": [
+              635468.0802469136,
+              546613.1790123457,
+              646493.4814814815,
+              581996.6419753087,
+              554680.7654320988,
+              600694.061728395,
+              578855.5925925926,
+              571432.1111111111,
+              574584.0679012346
+            ],
+            "median_ns_per_call": 578855.5925925926,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 200,
+            "batch_ns_per_call": [
+              532212.085,
+              563112.685,
+              558271.275,
+              620006.385,
+              600801.4,
+              580358.35,
+              605873.555,
+              555822.685,
+              564596.38
+            ],
+            "median_ns_per_call": 564596.38,
+            "gc_enabled": true
+          }
+        ],
+        "xmltodict": [
+          {
+            "loops_per_batch": 213,
+            "batch_ns_per_call": [
+              518996.23474178405,
+              536622.5868544601,
+              525016.4929577465,
+              514107.0234741784,
+              533429.0422535212,
+              535793.0422535212,
+              560162.9154929577,
+              524241.3661971831,
+              524849.4647887324
+            ],
+            "median_ns_per_call": 525016.4929577465,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 175,
+            "batch_ns_per_call": [
+              528306.4742857143,
+              546585.3371428571,
+              524482.7142857143,
+              540508.5828571429,
+              519091.08,
+              520421.9885714286,
+              594191.8,
+              521298.70857142855,
+              540365.7885714286
+            ],
+            "median_ns_per_call": 528306.4742857143,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 187,
+            "batch_ns_per_call": [
+              563496.3048128342,
+              517666.13903743314,
+              628292.7058823529,
+              669992.0962566845,
+              546002.4171122995,
+              520168.4331550802,
+              525033.7486631016,
+              586420.973262032,
+              539022.1229946524
+            ],
+            "median_ns_per_call": 546002.4171122995,
+            "gc_enabled": true
+          }
+        ],
+        "rapidxmltojson+json.loads": [
+          {
+            "loops_per_batch": 1233,
+            "batch_ns_per_call": [
+              66065.21573398216,
+              65748.17599351176,
+              65537.8094079481,
+              63799.92538523925,
+              66930.39334955394,
+              63857.79480940795,
+              70052.77291159773,
+              66442.84266017843,
+              64105.48256285483
+            ],
+            "median_ns_per_call": 65748.17599351176,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 1819,
+            "batch_ns_per_call": [
+              63181.18361737218,
+              66890.9615173172,
+              61698.30841121495,
+              64825.95711929632,
+              62853.42166025288,
+              66995.90929081914,
+              63536.814183617375,
+              65484.80758658604,
+              91000.78394722375
+            ],
+            "median_ns_per_call": 64825.95711929632,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 898,
+            "batch_ns_per_call": [
+              69812.34409799555,
+              66090.42427616926,
+              62816.475501113586,
+              67856.8886414254,
+              64816.201559020046,
+              62704.19042316258,
+              65457.73719376392,
+              67818.36080178173,
+              72778.56681514476
+            ],
+            "median_ns_per_call": 66090.42427616926,
+            "gc_enabled": true
+          }
+        ]
+      },
+      "rss": {
+        "rapidxmltodict": [
+          {
+            "baseline_current_rss_bytes": 20692992,
+            "baseline_peak_rss_bytes": 20566016,
+            "peak_rss_bytes": 20959232,
+            "incremental_peak_rss_bytes": 393216,
+            "retained_output_current_rss_bytes": 20979712,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20692992,
+            "baseline_peak_rss_bytes": 20566016,
+            "peak_rss_bytes": 20959232,
+            "incremental_peak_rss_bytes": 393216,
+            "retained_output_current_rss_bytes": 20979712,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20692992,
+            "baseline_peak_rss_bytes": 20566016,
+            "peak_rss_bytes": 20959232,
+            "incremental_peak_rss_bytes": 393216,
+            "retained_output_current_rss_bytes": 20979712,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20692992,
+            "baseline_peak_rss_bytes": 20566016,
+            "peak_rss_bytes": 20959232,
+            "incremental_peak_rss_bytes": 393216,
+            "retained_output_current_rss_bytes": 20979712,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20692992,
+            "baseline_peak_rss_bytes": 20566016,
+            "peak_rss_bytes": 20959232,
+            "incremental_peak_rss_bytes": 393216,
+            "retained_output_current_rss_bytes": 20979712,
+            "result_type": "dict"
+          }
+        ],
+        "xmltodict": [
+          {
+            "baseline_current_rss_bytes": 19755008,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 19914752,
+            "incremental_peak_rss_bytes": 262144,
+            "retained_output_current_rss_bytes": 19972096,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 19914752,
+            "incremental_peak_rss_bytes": 262144,
+            "retained_output_current_rss_bytes": 19976192,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 19914752,
+            "incremental_peak_rss_bytes": 262144,
+            "retained_output_current_rss_bytes": 19980288,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 19914752,
+            "incremental_peak_rss_bytes": 262144,
+            "retained_output_current_rss_bytes": 19980288,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 19914752,
+            "incremental_peak_rss_bytes": 262144,
+            "retained_output_current_rss_bytes": 19972096,
+            "result_type": "dict"
+          }
+        ],
+        "rapidxmltojson+json.loads": [
+          {
+            "baseline_current_rss_bytes": 19611648,
+            "baseline_peak_rss_bytes": 19582976,
+            "peak_rss_bytes": 19582976,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19677184,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19632128,
+            "baseline_peak_rss_bytes": 19582976,
+            "peak_rss_bytes": 19582976,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19689472,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19628032,
+            "baseline_peak_rss_bytes": 19582976,
+            "peak_rss_bytes": 19582976,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19685376,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19611648,
+            "baseline_peak_rss_bytes": 19582976,
+            "peak_rss_bytes": 19582976,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19677184,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19628032,
+            "baseline_peak_rss_bytes": 19587072,
+            "peak_rss_bytes": 19587072,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19685376,
+            "result_type": "dict"
+          }
+        ]
+      },
+      "tracemalloc": {
+        "rapidxmltodict": {
+          "python_traced_retained_bytes": 80661,
+          "python_traced_peak_bytes": 199781,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        },
+        "xmltodict": {
+          "python_traced_retained_bytes": 80445,
+          "python_traced_peak_bytes": 144680,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        },
+        "rapidxmltojson+json.loads": {
+          "python_traced_retained_bytes": 44365,
+          "python_traced_peak_bytes": 47454,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        }
+      },
+      "summary": {
+        "rapidxmltodict": {
+          "median_ms": 0.57176749,
+          "min_ms": 0.532212085,
+          "max_ms": 0.6464934814814814,
+          "median_peak_rss_mib": 19.98828125,
+          "median_baseline_peak_mib": 19.61328125,
+          "median_incremental_peak_mib": 0.375
+        },
+        "xmltodict": {
+          "median_ms": 0.5334290422535212,
+          "min_ms": 0.5141070234741784,
+          "max_ms": 0.6699920962566845,
+          "median_peak_rss_mib": 18.9921875,
+          "median_baseline_peak_mib": 18.7421875,
+          "median_incremental_peak_mib": 0.25
+        },
+        "rapidxmltojson+json.loads": {
+          "median_ms": 0.0655378094079481,
+          "min_ms": 0.06169830841121495,
+          "max_ms": 0.09100078394722376,
+          "median_peak_rss_mib": 18.67578125,
+          "median_baseline_peak_mib": 18.67578125,
+          "median_incremental_peak_mib": 0.0
+        }
+      },
+      "speedup_vs_xmltodict": 0.9329474857927321,
+      "implementation_hashes_after_workload": {
+        "src/rapidxmltodict/__init__.py": "8f06bfeaf64e9117756b5ce5866582771a321a2cdf5d57429fecb92372a538cd",
+        "src/native.cpp": "c74f8ccf4f45c8ed98cf593ef6107d75d66a222589bb9bbf5b17643b517940e3",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "2f6bade4af40b7538baacdfe3968f482a45138efd42e29da35221bd4b57af7bd"
+      }
+    },
+    "medium_bytes": {
+      "input_type": "bytes",
+      "bytes": 105501,
+      "sha256": "a1f0ca482576f8151786790cd9312667d9ae39462ac8f16b2570152d7e4302fd",
+      "description": "Same medium records supplied as UTF-8 bytes",
+      "equality": {
+        "rapidxmltodict": {
+          "equal_to_xmltodict": true
+        },
+        "rapidxmltojson+json.loads": {
+          "equal_to_xmltodict": false,
+          "omitted": "str-only comparator; bytes workload"
+        }
+      },
+      "timing": {
+        "rapidxmltodict": [
+          {
+            "loops_per_batch": 41,
+            "batch_ns_per_call": [
+              2171436.5853658537,
+              2210839.7073170734,
+              2142506.048780488,
+              2416406.8780487804,
+              2101061.951219512,
+              2190614.1951219514,
+              2337911.1707317075,
+              2117553.048780488,
+              2097124.512195122
+            ],
+            "median_ns_per_call": 2171436.5853658537,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 47,
+            "batch_ns_per_call": [
+              2158415.510638298,
+              2169841.6170212766,
+              2346821.1276595746,
+              2194816.1914893617,
+              2208360.085106383,
+              2271253.0,
+              2366075.595744681,
+              2571228.8723404254,
+              2364895.787234043
+            ],
+            "median_ns_per_call": 2271253.0,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 45,
+            "batch_ns_per_call": [
+              2241247.0222222223,
+              2238195.8,
+              2224540.933333333,
+              2223917.488888889,
+              2175672.466666667,
+              2337118.355555556,
+              2193670.066666667,
+              2252313.511111111,
+              2464426.688888889
+            ],
+            "median_ns_per_call": 2238195.8,
+            "gc_enabled": true
+          }
+        ],
+        "xmltodict": [
+          {
+            "loops_per_batch": 9,
+            "batch_ns_per_call": [
+              10950221.777777778,
+              10793289.777777778,
+              10499651.444444444,
+              11129128.333333334,
+              11411715.888888888,
+              10614956.888888888,
+              10899529.444444444,
+              10668829.0,
+              10775158.222222222
+            ],
+            "median_ns_per_call": 10793289.777777778,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 9,
+            "batch_ns_per_call": [
+              12250029.888888888,
+              11934390.222222222,
+              11390141.666666666,
+              10649080.444444444,
+              11476101.111111112,
+              10662038.111111112,
+              10701924.555555556,
+              10466762.888888888,
+              10414006.111111112
+            ],
+            "median_ns_per_call": 10701924.555555556,
+            "gc_enabled": true
+          },
+          {
+            "loops_per_batch": 9,
+            "batch_ns_per_call": [
+              11655335.777777778,
+              13341923.666666666,
+              16848308.222222224,
+              12641542.666666666,
+              11631240.888888888,
+              14542114.444444444,
+              15863779.111111112,
+              10800619.666666666,
+              11445633.333333334
+            ],
+            "median_ns_per_call": 12641542.666666666,
+            "gc_enabled": true
+          }
+        ]
+      },
+      "rss": {
+        "rapidxmltodict": [
+          {
+            "baseline_current_rss_bytes": 20701184,
+            "baseline_peak_rss_bytes": 20566016,
+            "peak_rss_bytes": 22007808,
+            "incremental_peak_rss_bytes": 1441792,
+            "retained_output_current_rss_bytes": 21573632,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20692992,
+            "baseline_peak_rss_bytes": 20566016,
+            "peak_rss_bytes": 22007808,
+            "incremental_peak_rss_bytes": 1441792,
+            "retained_output_current_rss_bytes": 21569536,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20697088,
+            "baseline_peak_rss_bytes": 20570112,
+            "peak_rss_bytes": 22011904,
+            "incremental_peak_rss_bytes": 1441792,
+            "retained_output_current_rss_bytes": 21577728,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20692992,
+            "baseline_peak_rss_bytes": 20566016,
+            "peak_rss_bytes": 22007808,
+            "incremental_peak_rss_bytes": 1441792,
+            "retained_output_current_rss_bytes": 21573632,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 20692992,
+            "baseline_peak_rss_bytes": 20566016,
+            "peak_rss_bytes": 22007808,
+            "incremental_peak_rss_bytes": 1441792,
+            "retained_output_current_rss_bytes": 21569536,
+            "result_type": "dict"
+          }
+        ],
+        "xmltodict": [
+          {
+            "baseline_current_rss_bytes": 19755008,
+            "baseline_peak_rss_bytes": 19656704,
+            "peak_rss_bytes": 20443136,
+            "incremental_peak_rss_bytes": 786432,
+            "retained_output_current_rss_bytes": 20582400,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 20439040,
+            "incremental_peak_rss_bytes": 786432,
+            "retained_output_current_rss_bytes": 20578304,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19755008,
+            "baseline_peak_rss_bytes": 19656704,
+            "peak_rss_bytes": 20443136,
+            "incremental_peak_rss_bytes": 786432,
+            "retained_output_current_rss_bytes": 20582400,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 20439040,
+            "incremental_peak_rss_bytes": 786432,
+            "retained_output_current_rss_bytes": 20578304,
+            "result_type": "dict"
+          },
+          {
+            "baseline_current_rss_bytes": 19750912,
+            "baseline_peak_rss_bytes": 19652608,
+            "peak_rss_bytes": 20439040,
+            "incremental_peak_rss_bytes": 786432,
+            "retained_output_current_rss_bytes": 20578304,
+            "result_type": "dict"
+          }
+        ]
+      },
+      "tracemalloc": {
+        "rapidxmltodict": {
+          "python_traced_retained_bytes": 589283,
+          "python_traced_peak_bytes": 728697,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        },
+        "xmltodict": {
+          "python_traced_retained_bytes": 679679,
+          "python_traced_peak_bytes": 829065,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true
+        }
+      },
+      "summary": {
+        "rapidxmltodict": {
+          "median_ms": 2.223917488888889,
+          "min_ms": 2.097124512195122,
+          "max_ms": 2.5712288723404253,
+          "median_peak_rss_mib": 20.98828125,
+          "median_baseline_peak_mib": 19.61328125,
+          "median_incremental_peak_mib": 1.375
+        },
+        "xmltodict": {
+          "median_ms": 11.129128333333334,
+          "min_ms": 10.414006111111112,
+          "max_ms": 16.848308222222222,
+          "median_peak_rss_mib": 19.4921875,
+          "median_baseline_peak_mib": 18.7421875,
+          "median_incremental_peak_mib": 0.75
+        }
+      },
+      "speedup_vs_xmltodict": 5.00429012719067,
+      "implementation_hashes_after_workload": {
+        "src/rapidxmltodict/__init__.py": "8f06bfeaf64e9117756b5ce5866582771a321a2cdf5d57429fecb92372a538cd",
+        "src/native.cpp": "c74f8ccf4f45c8ed98cf593ef6107d75d66a222589bb9bbf5b17643b517940e3",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "2f6bade4af40b7538baacdfe3968f482a45138efd42e29da35221bd4b57af7bd"
+      }
+    }
+  }
+}
