@@ -1,0 +1,4092 @@
+{
+  "schema_version": 1,
+  "metadata": {
+    "timestamp_utc": "2026-10-09T16:43:24Z",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "executable": ".venv/bin/python",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "cpu_affinity": [
+      0
+    ],
+    "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+    "build_flags": "CC=gcc CXX=g++; setup.py build_ext --inplace --force; -O3 -std=c++17 -Wall -Wextra",
+    "baseline_commit": "f5ae82c43ba445a52932432198a559b319b67188",
+    "snapshot_roots": {
+      "pr5": "snapshots/pr5",
+      "standalone": "snapshots/candidate"
+    },
+    "xmltodict_version": "1.0.4",
+    "xmltodict_source_sha256": "701d42ae7298bbdf154163aed261e4f0fd3cc6c803748ec52f312a5bc402c46e",
+    "reference_expat_provenance": {
+      "version": "expat_2.8.3",
+      "version_info": [
+        2,
+        8,
+        3
+      ],
+      "module_origin": "built-in",
+      "features": [
+        [
+          "sizeof(XML_Char)",
+          1
+        ],
+        [
+          "sizeof(XML_LChar)",
+          1
+        ],
+        [
+          "XML_DTD",
+          0
+        ],
+        [
+          "XML_CONTEXT_BYTES",
+          1024
+        ],
+        [
+          "XML_NS",
+          0
+        ],
+        [
+          "XML_BLAP_MAX_AMP",
+          100
+        ],
+        [
+          "XML_BLAP_ACT_THRES",
+          8388608
+        ],
+        [
+          "XML_GE",
+          0
+        ],
+        [
+          "XML_AT_MAX_AMP",
+          100
+        ],
+        [
+          "XML_AT_ACT_THRES",
+          67108864
+        ]
+      ]
+    },
+    "source_and_binary_hashes_start": {
+      "pr5": {
+        "pyproject.toml": "354435189cc894e8406c1c5e2ffec8f204f71334acd785953b6084e56ec65d5a",
+        "setup.py": "bd802b394b471c377bbe1b7b85f721b93de8e0cfc6f8dd08ac1e6eca6c202d00",
+        "src/native.cpp": "a72fc4ec289d9356ed913f2e25b82c582a37a50d72b6cfcd64389c8e8690cfae",
+        "src/rapidxmltodict/__init__.py": "51576fe66e28594de4935ac61c44a18ca3823e72044687ba96924844591b4add",
+        "src/rapidxmltodict/__init__.pyi": "84393b269b04bdafaddbad9f4864762cb241c02d9937efccce04c4e0666b6808",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "b78ea8e95b7fa69ced3ae9e779088f445a757efb2f25820045cf0ca8d247152f",
+        "src/rapidxmltodict/_version.py": "2ea63d5332c1051a079f9c28b0cbd48365153fdf2ff33226f27b8bdbd9f3de85",
+        "vendor/rapidxml/rapidxml.hpp": "d61c53fd63f11aef0e18d253746ee800903dc82e4ad3cc533d0fdca69f07c4f9"
+      },
+      "standalone": {
+        "pyproject.toml": "8dca44d37d9dbd6a417a349255d0c9d55134e9d25d1ed9ddc0442a4ba3bbb33e",
+        "setup.py": "6a15758b33a50d8f326b0b25ef8ce687232d89d4a567f53df24a032494e2520d",
+        "src/native.cpp": "f373492adcf49fa0a13c61decb783dac74686b56ec84af478c6b563ebcd787fc",
+        "src/native_events_binding.hpp": "c1c43434f14f861dae5f8f854b0d02bea5b2fcb2437f88c6400306952e47bdd0",
+        "src/native_fast_validation.hpp": "273c66a3a8660c829c87393e0b2ddd9e3ea894e538b1417c6af4be3ad58d0a14",
+        "src/rapidxml_events.hpp": "7d8a510d03a74e32cb7a50c66a079e05318f5ed3c2080f141631c2736cc48ef0",
+        "src/rapidxmltodict/__init__.py": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+        "src/rapidxmltodict/__init__.pyi": "17aab90b5e72dd5d87640e367083ab93e4ae6789759c4ca16bd0f80675003f3a",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "ca4cc2b3ea73a46ba875e6e79d38a23358aa098a532dd9a104bebe11b611e588",
+        "src/rapidxmltodict/_parse.py": "85250304d086c447fa251257ef7fdd94944f2d3cc8608f67bb0b9777cdba66a4",
+        "src/rapidxmltodict/_serialize.py": "a70e17d97e15fd1e973bc7e07a18f3e7cb94f13ff0792bd390aa0270d59c3b26",
+        "src/rapidxmltodict/_version.py": "2ea63d5332c1051a079f9c28b0cbd48365153fdf2ff33226f27b8bdbd9f3de85",
+        "vendor/rapidxml/rapidxml.hpp": "d61c53fd63f11aef0e18d253746ee800903dc82e4ad3cc533d0fdca69f07c4f9"
+      }
+    },
+    "common_harness_sha256": "1e771ec789e739ef2ddcf3bfe60f4e41cc0a06ba12ae83cff9bf8ee3be4b5701",
+    "argv": [
+      "benchmarks/standalone-benchmark.py",
+      "--before",
+      "snapshots/pr5",
+      "--after",
+      "snapshots/candidate",
+      "--output",
+      "benchmarks/standalone-standard.json"
+    ],
+    "script_sha256": "f727563d34df8eb5a3025853414d1173b22111b42cabb12f510f2a5c13538bf6",
+    "original_harness_sha256": "38ff9389da978b21b0f97a8cecff489c4c6a2605cfc7e6c3c49402fa3eed34e1",
+    "method": {
+      "timing_processes": 3,
+      "memory_processes": 5,
+      "batches_per_process": 9,
+      "target_batch_seconds": 0.1,
+      "warmup_calls": 3,
+      "calibration_calls": 3,
+      "default_public_api": true,
+      "gc_enabled": true,
+      "output_destruction_timed": true,
+      "fixture_loading_timed": false,
+      "ordering_seed": 20261009,
+      "memory": "Fresh-process ru_maxrss and Linux current RSS with retained output; separate tracemalloc excludes untraced native allocations.",
+      "validation_and_preprocessing_included": true,
+      "internal_pass_count": "All internal passes are included; one parse means one public API invocation, not a single-pass implementation."
+    },
+    "source_and_binary_hashes_end": {
+      "pr5": {
+        "pyproject.toml": "354435189cc894e8406c1c5e2ffec8f204f71334acd785953b6084e56ec65d5a",
+        "setup.py": "bd802b394b471c377bbe1b7b85f721b93de8e0cfc6f8dd08ac1e6eca6c202d00",
+        "src/native.cpp": "a72fc4ec289d9356ed913f2e25b82c582a37a50d72b6cfcd64389c8e8690cfae",
+        "src/rapidxmltodict/__init__.py": "51576fe66e28594de4935ac61c44a18ca3823e72044687ba96924844591b4add",
+        "src/rapidxmltodict/__init__.pyi": "84393b269b04bdafaddbad9f4864762cb241c02d9937efccce04c4e0666b6808",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "b78ea8e95b7fa69ced3ae9e779088f445a757efb2f25820045cf0ca8d247152f",
+        "src/rapidxmltodict/_version.py": "2ea63d5332c1051a079f9c28b0cbd48365153fdf2ff33226f27b8bdbd9f3de85",
+        "vendor/rapidxml/rapidxml.hpp": "d61c53fd63f11aef0e18d253746ee800903dc82e4ad3cc533d0fdca69f07c4f9"
+      },
+      "standalone": {
+        "pyproject.toml": "8dca44d37d9dbd6a417a349255d0c9d55134e9d25d1ed9ddc0442a4ba3bbb33e",
+        "setup.py": "6a15758b33a50d8f326b0b25ef8ce687232d89d4a567f53df24a032494e2520d",
+        "src/native.cpp": "f373492adcf49fa0a13c61decb783dac74686b56ec84af478c6b563ebcd787fc",
+        "src/native_events_binding.hpp": "c1c43434f14f861dae5f8f854b0d02bea5b2fcb2437f88c6400306952e47bdd0",
+        "src/native_fast_validation.hpp": "273c66a3a8660c829c87393e0b2ddd9e3ea894e538b1417c6af4be3ad58d0a14",
+        "src/rapidxml_events.hpp": "7d8a510d03a74e32cb7a50c66a079e05318f5ed3c2080f141631c2736cc48ef0",
+        "src/rapidxmltodict/__init__.py": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+        "src/rapidxmltodict/__init__.pyi": "17aab90b5e72dd5d87640e367083ab93e4ae6789759c4ca16bd0f80675003f3a",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "ca4cc2b3ea73a46ba875e6e79d38a23358aa098a532dd9a104bebe11b611e588",
+        "src/rapidxmltodict/_parse.py": "85250304d086c447fa251257ef7fdd94944f2d3cc8608f67bb0b9777cdba66a4",
+        "src/rapidxmltodict/_serialize.py": "a70e17d97e15fd1e973bc7e07a18f3e7cb94f13ff0792bd390aa0270d59c3b26",
+        "src/rapidxmltodict/_version.py": "2ea63d5332c1051a079f9c28b0cbd48365153fdf2ff33226f27b8bdbd9f3de85",
+        "vendor/rapidxml/rapidxml.hpp": "d61c53fd63f11aef0e18d253746ee800903dc82e4ad3cc533d0fdca69f07c4f9"
+      }
+    },
+    "source_and_binary_hashes_unchanged": true,
+    "candidate_commit": "8db94cc3d4a887038c3644c889c9823027214d35",
+    "candidate_tracked_sources_match_commit": true,
+    "baseline_tracked_sources_match_commit": true,
+    "commit_hash_matches": {
+      "standalone": {
+        "pyproject.toml": true,
+        "setup.py": true,
+        "src/native.cpp": true,
+        "src/native_events_binding.hpp": true,
+        "src/native_fast_validation.hpp": true,
+        "src/rapidxml_events.hpp": true,
+        "src/rapidxmltodict/__init__.py": true,
+        "src/rapidxmltodict/__init__.pyi": true,
+        "src/rapidxmltodict/_parse.py": true,
+        "src/rapidxmltodict/_serialize.py": true,
+        "vendor/rapidxml/rapidxml.hpp": true
+      },
+      "pr5": {
+        "pyproject.toml": true,
+        "setup.py": true,
+        "src/native.cpp": true,
+        "src/rapidxmltodict/__init__.py": true,
+        "src/rapidxmltodict/__init__.pyi": true,
+        "vendor/rapidxml/rapidxml.hpp": true
+      }
+    },
+    "artifact_sanitization": {
+      "local_absolute_paths_replaced": true,
+      "path_values_changed": 222,
+      "measurement_samples_and_source_binary_hashes_unchanged": true,
+      "path_convention": "snapshots/pr5, snapshots/hybrid, snapshots/candidate, .venv and repository-relative benchmark paths; execution-specific identities omitted.",
+      "unsanitized_artifact_sha256": "c5c9a7231cfbfbad3fff0511e8a20b3a6bdac46abdfe2858b6dfac668201f955"
+    }
+  },
+  "workloads": {
+    "small": {
+      "name": "small",
+      "path": "benchmarks/fixtures/standalone-standard/fixtures/small.xml",
+      "input_type": "str",
+      "bytes": 1077,
+      "sha256": "2c6cc7dfd743a4e5286a1d207af3727366a4b39fb6ede3435f2935c200668e1c",
+      "description": "6 realistic catalog records",
+      "equality": {
+        "pr5": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py"
+        },
+        "standalone": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py"
+        },
+        "xmltodict": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py"
+        }
+      },
+      "timing": {
+        "pr5": [
+          {
+            "loops_per_batch": 5718,
+            "batch_ns_per_call": [
+              17652.292934592515,
+              18047.156873032527,
+              18461.025008744316,
+              18146.04267226303,
+              17745.98740818468,
+              19148.133788037776,
+              19359.894543546696,
+              19787.12014690451,
+              23764.397866386847
+            ],
+            "median_ns_per_call": 18461.025008744316,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 5656,
+            "batch_ns_per_call": [
+              17382.09777227723,
+              17309.35891089109,
+              17598.767680339464,
+              16919.972241867043,
+              17235.493988684582,
+              16902.883840169732,
+              16774.618635077793,
+              16737.90753182461,
+              17308.03429985856
+            ],
+            "median_ns_per_call": 17235.493988684582,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 5612,
+            "batch_ns_per_call": [
+              19463.335709194584,
+              16898.955274411976,
+              16946.642017106202,
+              17548.294369208837,
+              16863.36992159658,
+              17007.960620099788,
+              17120.635067712046,
+              16801.61903064861,
+              17479.923200285102
+            ],
+            "median_ns_per_call": 17007.960620099788,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "standalone": [
+          {
+            "loops_per_batch": 8200,
+            "batch_ns_per_call": [
+              12112.59475609756,
+              12068.136097560975,
+              12133.44756097561,
+              15859.640609756098,
+              11612.838170731708,
+              11736.192073170732,
+              11478.343292682926,
+              11627.878780487805,
+              11721.989268292682
+            ],
+            "median_ns_per_call": 11736.192073170732,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 8147,
+            "batch_ns_per_call": [
+              11913.830489750828,
+              11799.666871240948,
+              11482.12286731312,
+              11755.901067877747,
+              11717.097950165706,
+              11925.190254081257,
+              12174.53676199828,
+              12359.696943660243,
+              13467.96943660243
+            ],
+            "median_ns_per_call": 11913.830489750828,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 8079,
+            "batch_ns_per_call": [
+              11980.139126129472,
+              12784.778437925486,
+              12222.216487189009,
+              12053.219457853695,
+              12380.945785369477,
+              12656.284688699096,
+              11324.413665057556,
+              11775.76581260057,
+              12047.570615175146
+            ],
+            "median_ns_per_call": 12053.219457853695,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "xmltodict": [
+          {
+            "loops_per_batch": 1155,
+            "batch_ns_per_call": [
+              100437.33593073594,
+              93769.3670995671,
+              86934.2632034632,
+              86228.7264069264,
+              85263.11948051948,
+              87654.85194805195,
+              96307.2051948052,
+              86134.03203463204,
+              84105.02251082251
+            ],
+            "median_ns_per_call": 86934.2632034632,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 863,
+            "batch_ns_per_call": [
+              86395.76477404403,
+              97318.28621089224,
+              92074.83545770567,
+              100980.57358053302,
+              86628.02317497104,
+              86429.45422943222,
+              102174.97682502896,
+              88729.3348783314,
+              89973.56894553882
+            ],
+            "median_ns_per_call": 89973.56894553882,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 1038,
+            "batch_ns_per_call": [
+              91934.23988439306,
+              91470.20712909441,
+              88937.4007707129,
+              90949.65606936417,
+              93872.12620423893,
+              88982.18786127168,
+              89086.57225433526,
+              89094.9373795761,
+              88768.45953757226
+            ],
+            "median_ns_per_call": 89094.9373795761,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ]
+      },
+      "rss": {
+        "pr5": [
+          {
+            "baseline_current_rss_bytes": 19374080,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19496960,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19374080,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19496960,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19374080,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19496960,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19374080,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19496960,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19378176,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19501056,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "standalone": [
+          {
+            "baseline_current_rss_bytes": 19533824,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19615744,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19529728,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19611648,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19533824,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19615744,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19529728,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19611648,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19529728,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19611648,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "xmltodict": [
+          {
+            "baseline_current_rss_bytes": 18407424,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 18513920,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18411520,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 18522112,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18407424,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 18513920,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18411520,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 18518016,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18415616,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 18522112,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ]
+      },
+      "tracemalloc": {
+        "pr5": {
+          "python_traced_retained_bytes": 2749,
+          "python_traced_peak_bytes": 14203,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+          "xmltodict_version": "1.0.4"
+        },
+        "standalone": {
+          "python_traced_retained_bytes": 2749,
+          "python_traced_peak_bytes": 3859,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+          "xmltodict_version": "1.0.4"
+        },
+        "xmltodict": {
+          "python_traced_retained_bytes": 7637,
+          "python_traced_peak_bytes": 28691,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+          "xmltodict_version": "1.0.4"
+        }
+      },
+      "summary": {
+        "pr5": {
+          "median_ms": 0.01738209777227723,
+          "min_ms": 0.016737907531824612,
+          "max_ms": 0.023764397866386847,
+          "median_peak_rss_mib": 19.5,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.0
+        },
+        "standalone": {
+          "median_ms": 0.011980139126129472,
+          "min_ms": 0.011324413665057556,
+          "max_ms": 0.015859640609756098,
+          "median_peak_rss_mib": 19.5,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.0
+        },
+        "xmltodict": {
+          "median_ms": 0.08908657225433526,
+          "min_ms": 0.08410502251082251,
+          "max_ms": 0.10217497682502896,
+          "median_peak_rss_mib": 19.5,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.0
+        }
+      },
+      "standalone_speedup_vs_pr5": 1.4509095085853996,
+      "standalone_speedup_vs_xmltodict": 7.436188454609145
+    },
+    "medium": {
+      "name": "medium",
+      "path": "benchmarks/fixtures/standalone-standard/fixtures/medium.xml",
+      "input_type": "str",
+      "bytes": 105501,
+      "sha256": "a1f0ca482576f8151786790cd9312667d9ae39462ac8f16b2570152d7e4302fd",
+      "description": "600 realistic catalog records",
+      "equality": {
+        "pr5": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py"
+        },
+        "standalone": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py"
+        },
+        "xmltodict": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py"
+        }
+      },
+      "timing": {
+        "pr5": [
+          {
+            "loops_per_batch": 63,
+            "batch_ns_per_call": [
+              1522681.7301587302,
+              1947320.365079365,
+              1571921.8253968253,
+              1500607.9841269841,
+              1632891.0793650793,
+              1739664.8412698412,
+              1692998.3333333333,
+              1582374.0158730159,
+              1585085.1587301588
+            ],
+            "median_ns_per_call": 1585085.1587301588,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 60,
+            "batch_ns_per_call": [
+              1551680.0166666666,
+              1574207.6833333333,
+              1577276.4,
+              1498016.55,
+              1620254.0333333334,
+              1550225.2166666666,
+              1637976.35,
+              1517007.9,
+              1575925.8833333333
+            ],
+            "median_ns_per_call": 1574207.6833333333,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 56,
+            "batch_ns_per_call": [
+              1549868.875,
+              1497761.875,
+              1553107.607142857,
+              1520962.392857143,
+              1579831.0535714286,
+              1635417.875,
+              1671235.3392857143,
+              1769797.75,
+              1551864.5357142857
+            ],
+            "median_ns_per_call": 1553107.607142857,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "standalone": [
+          {
+            "loops_per_batch": 89,
+            "batch_ns_per_call": [
+              1152406.97752809,
+              1164903.5056179776,
+              1171527.1460674158,
+              1145275.370786517,
+              1191266.9101123596,
+              1363721.168539326,
+              1348786.3483146068,
+              1258977.0561797754,
+              1321288.2808988765
+            ],
+            "median_ns_per_call": 1191266.9101123596,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 72,
+            "batch_ns_per_call": [
+              1268266.0833333333,
+              1228419.9722222222,
+              1206506.2083333333,
+              1310725.513888889,
+              1334859.8333333333,
+              1406263.6944444445,
+              1376907.111111111,
+              1302883.1805555555,
+              1181410.5972222222
+            ],
+            "median_ns_per_call": 1302883.1805555555,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 83,
+            "batch_ns_per_call": [
+              1245893.060240964,
+              1296434.4939759036,
+              1241609.8915662651,
+              1414201.21686747,
+              1231212.3373493976,
+              1135573.8915662651,
+              1198749.1445783132,
+              1212124.903614458,
+              1153385.7590361445
+            ],
+            "median_ns_per_call": 1231212.3373493976,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "xmltodict": [
+          {
+            "loops_per_batch": 13,
+            "batch_ns_per_call": [
+              8525896.384615384,
+              8498762.23076923,
+              11428085.384615384,
+              8574288.23076923,
+              8099386.153846154,
+              8572660.461538462,
+              8646184.923076924,
+              7921760.538461538,
+              7754907.846153846
+            ],
+            "median_ns_per_call": 8525896.384615384,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 13,
+            "batch_ns_per_call": [
+              7612701.615384615,
+              7632323.0,
+              8116793.153846154,
+              8259390.230769231,
+              7784957.384615385,
+              8082019.153846154,
+              7873493.461538462,
+              7834935.384615385,
+              7505894.461538462
+            ],
+            "median_ns_per_call": 7834935.384615385,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 13,
+            "batch_ns_per_call": [
+              7737320.461538462,
+              7764680.307692308,
+              8052874.307692308,
+              8286212.769230769,
+              9389276.692307692,
+              7907646.461538462,
+              8052684.076923077,
+              7916681.384615385,
+              7848537.153846154
+            ],
+            "median_ns_per_call": 7916681.384615385,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ]
+      },
+      "rss": {
+        "pr5": [
+          {
+            "baseline_current_rss_bytes": 19578880,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20860928,
+            "incremental_peak_rss_bytes": 413696,
+            "retained_output_current_rss_bytes": 21053440,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19574784,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20860928,
+            "incremental_peak_rss_bytes": 413696,
+            "retained_output_current_rss_bytes": 21049344,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19570688,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20860928,
+            "incremental_peak_rss_bytes": 413696,
+            "retained_output_current_rss_bytes": 21045248,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19578880,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20860928,
+            "incremental_peak_rss_bytes": 413696,
+            "retained_output_current_rss_bytes": 21049344,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19574784,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20860928,
+            "incremental_peak_rss_bytes": 413696,
+            "retained_output_current_rss_bytes": 21045248,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "standalone": [
+          {
+            "baseline_current_rss_bytes": 19677184,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20840448,
+            "incremental_peak_rss_bytes": 393216,
+            "retained_output_current_rss_bytes": 20516864,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19681280,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20840448,
+            "incremental_peak_rss_bytes": 393216,
+            "retained_output_current_rss_bytes": 20520960,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19681280,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20840448,
+            "incremental_peak_rss_bytes": 393216,
+            "retained_output_current_rss_bytes": 20520960,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19677184,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20840448,
+            "incremental_peak_rss_bytes": 393216,
+            "retained_output_current_rss_bytes": 20516864,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19677184,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20840448,
+            "incremental_peak_rss_bytes": 393216,
+            "retained_output_current_rss_bytes": 20516864,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "xmltodict": [
+          {
+            "baseline_current_rss_bytes": 18550784,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19496960,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18554880,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19496960,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18550784,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19496960,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18550784,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19501056,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18550784,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19496960,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ]
+      },
+      "tracemalloc": {
+        "pr5": {
+          "python_traced_retained_bytes": 589043,
+          "python_traced_peak_bytes": 833991,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+          "xmltodict_version": "1.0.4"
+        },
+        "standalone": {
+          "python_traced_retained_bytes": 588979,
+          "python_traced_peak_bytes": 694559,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+          "xmltodict_version": "1.0.4"
+        },
+        "xmltodict": {
+          "python_traced_retained_bytes": 679439,
+          "python_traced_peak_bytes": 933941,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+          "xmltodict_version": "1.0.4"
+        }
+      },
+      "summary": {
+        "pr5": {
+          "median_ms": 1.5759258833333334,
+          "min_ms": 1.497761875,
+          "max_ms": 1.947320365079365,
+          "median_peak_rss_mib": 19.89453125,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.39453125
+        },
+        "standalone": {
+          "median_ms": 1.2416098915662652,
+          "min_ms": 1.1355738915662652,
+          "max_ms": 1.41420121686747,
+          "median_peak_rss_mib": 19.875,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.375
+        },
+        "xmltodict": {
+          "median_ms": 8.052684076923077,
+          "min_ms": 7.505894461538462,
+          "max_ms": 11.428085384615384,
+          "median_peak_rss_mib": 19.5,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.0
+        }
+      },
+      "standalone_speedup_vs_pr5": 1.269260090498583,
+      "standalone_speedup_vs_xmltodict": 6.485679706340598
+    },
+    "large": {
+      "name": "large",
+      "path": "benchmarks/fixtures/standalone-standard/fixtures/large.xml",
+      "input_type": "str",
+      "bytes": 1055391,
+      "sha256": "b105b19a85dddc0d0261bdb7e96e92c70b2bf08bc7331b1661713e374c2abedb",
+      "description": "6000 realistic catalog records",
+      "equality": {
+        "pr5": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py"
+        },
+        "standalone": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py"
+        },
+        "xmltodict": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py"
+        }
+      },
+      "timing": {
+        "pr5": [
+          {
+            "loops_per_batch": 5,
+            "batch_ns_per_call": [
+              22505861.0,
+              24080885.6,
+              19108594.0,
+              17582654.2,
+              22481351.6,
+              19456430.2,
+              22467875.6,
+              25787775.0,
+              27121429.2
+            ],
+            "median_ns_per_call": 22481351.6,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 5,
+            "batch_ns_per_call": [
+              21345077.4,
+              18702848.4,
+              20428160.0,
+              19176539.4,
+              17829365.2,
+              18118594.6,
+              18795986.6,
+              19597059.8,
+              20360651.8
+            ],
+            "median_ns_per_call": 19176539.4,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 6,
+            "batch_ns_per_call": [
+              18475843.833333332,
+              18019990.5,
+              18324707.833333332,
+              19814224.833333332,
+              22326874.166666668,
+              18965586.333333332,
+              17265239.5,
+              17469947.0,
+              25625829.833333332
+            ],
+            "median_ns_per_call": 18475843.833333332,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "standalone": [
+          {
+            "loops_per_batch": 7,
+            "batch_ns_per_call": [
+              13436599.42857143,
+              17745635.42857143,
+              20500711.14285714,
+              16274975.285714285,
+              15588634.0,
+              14147793.857142856,
+              14573867.42857143,
+              16349789.285714285,
+              19884470.285714287
+            ],
+            "median_ns_per_call": 16274975.285714285,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 8,
+            "batch_ns_per_call": [
+              14019450.125,
+              13866197.5,
+              14294321.875,
+              16112004.0,
+              16200877.875,
+              15746274.625,
+              16571231.0,
+              13346749.875,
+              13260055.0
+            ],
+            "median_ns_per_call": 14294321.875,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 6,
+            "batch_ns_per_call": [
+              18135612.833333332,
+              21438116.166666668,
+              14506037.333333334,
+              12742857.5,
+              12695305.166666666,
+              13050449.333333334,
+              13051056.666666666,
+              13469987.333333334,
+              22138429.5
+            ],
+            "median_ns_per_call": 13469987.333333334,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "xmltodict": [
+          {
+            "loops_per_batch": 1,
+            "batch_ns_per_call": [
+              131898244.0,
+              83823663.0,
+              94364254.0,
+              107305689.0,
+              85179736.0,
+              107131905.0,
+              127135438.0,
+              89787142.0,
+              87146996.0
+            ],
+            "median_ns_per_call": 94364254.0,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 1,
+            "batch_ns_per_call": [
+              89958251.0,
+              89931682.0,
+              82413979.0,
+              81122161.0,
+              92381620.0,
+              84366448.0,
+              84558083.0,
+              91844467.0,
+              83448565.0
+            ],
+            "median_ns_per_call": 84558083.0,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 1,
+            "batch_ns_per_call": [
+              89404218.0,
+              93134247.0,
+              87780147.0,
+              98859868.0,
+              84653420.0,
+              89759726.0,
+              83476287.0,
+              81896252.0,
+              84610492.0
+            ],
+            "median_ns_per_call": 87780147.0,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ]
+      },
+      "rss": {
+        "pr5": [
+          {
+            "baseline_current_rss_bytes": 20426752,
+            "baseline_peak_rss_bytes": 21516288,
+            "peak_rss_bytes": 35012608,
+            "incremental_peak_rss_bytes": 13496320,
+            "retained_output_current_rss_bytes": 35147776,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 20430848,
+            "baseline_peak_rss_bytes": 21516288,
+            "peak_rss_bytes": 35016704,
+            "incremental_peak_rss_bytes": 13500416,
+            "retained_output_current_rss_bytes": 35151872,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 20426752,
+            "baseline_peak_rss_bytes": 21516288,
+            "peak_rss_bytes": 35012608,
+            "incremental_peak_rss_bytes": 13496320,
+            "retained_output_current_rss_bytes": 35147776,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 20426752,
+            "baseline_peak_rss_bytes": 21516288,
+            "peak_rss_bytes": 35012608,
+            "incremental_peak_rss_bytes": 13496320,
+            "retained_output_current_rss_bytes": 35147776,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 20426752,
+            "baseline_peak_rss_bytes": 21516288,
+            "peak_rss_bytes": 35012608,
+            "incremental_peak_rss_bytes": 13496320,
+            "retained_output_current_rss_bytes": 35147776,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "standalone": [
+          {
+            "baseline_current_rss_bytes": 20594688,
+            "baseline_peak_rss_bytes": 21495808,
+            "peak_rss_bytes": 33931264,
+            "incremental_peak_rss_bytes": 12435456,
+            "retained_output_current_rss_bytes": 34172928,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 20570112,
+            "baseline_peak_rss_bytes": 21495808,
+            "peak_rss_bytes": 33927168,
+            "incremental_peak_rss_bytes": 12431360,
+            "retained_output_current_rss_bytes": 34164736,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 20590592,
+            "baseline_peak_rss_bytes": 21495808,
+            "peak_rss_bytes": 33931264,
+            "incremental_peak_rss_bytes": 12435456,
+            "retained_output_current_rss_bytes": 34168832,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 20586496,
+            "baseline_peak_rss_bytes": 21495808,
+            "peak_rss_bytes": 33927168,
+            "incremental_peak_rss_bytes": 12431360,
+            "retained_output_current_rss_bytes": 34164736,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 20586496,
+            "baseline_peak_rss_bytes": 21495808,
+            "peak_rss_bytes": 33927168,
+            "incremental_peak_rss_bytes": 12431360,
+            "retained_output_current_rss_bytes": 34168832,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "xmltodict": [
+          {
+            "baseline_current_rss_bytes": 19464192,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 28864512,
+            "incremental_peak_rss_bytes": 8417280,
+            "retained_output_current_rss_bytes": 28979200,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19460096,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 28864512,
+            "incremental_peak_rss_bytes": 8417280,
+            "retained_output_current_rss_bytes": 28975104,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19460096,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 28864512,
+            "incremental_peak_rss_bytes": 8417280,
+            "retained_output_current_rss_bytes": 28979200,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19468288,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 28868608,
+            "incremental_peak_rss_bytes": 8421376,
+            "retained_output_current_rss_bytes": 28983296,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19468288,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 28872704,
+            "incremental_peak_rss_bytes": 8425472,
+            "retained_output_current_rss_bytes": 28979200,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ]
+      },
+      "tracemalloc": {
+        "pr5": {
+          "python_traced_retained_bytes": 6021961,
+          "python_traced_peak_bytes": 8134303,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+          "xmltodict_version": "1.0.4"
+        },
+        "standalone": {
+          "python_traced_retained_bytes": 6021897,
+          "python_traced_peak_bytes": 7077367,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+          "xmltodict_version": "1.0.4"
+        },
+        "xmltodict": {
+          "python_traced_retained_bytes": 6879157,
+          "python_traced_peak_bytes": 9001053,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+          "xmltodict_version": "1.0.4"
+        }
+      },
+      "summary": {
+        "pr5": {
+          "median_ms": 19.4564302,
+          "min_ms": 17.2652395,
+          "max_ms": 27.121429199999998,
+          "median_peak_rss_mib": 33.390625,
+          "median_baseline_peak_mib": 20.51953125,
+          "median_incremental_peak_mib": 12.87109375
+        },
+        "standalone": {
+          "median_ms": 14.573867428571429,
+          "min_ms": 12.695305166666666,
+          "max_ms": 22.1384295,
+          "median_peak_rss_mib": 32.35546875,
+          "median_baseline_peak_mib": 20.5,
+          "median_incremental_peak_mib": 11.85546875
+        },
+        "xmltodict": {
+          "median_ms": 89.404218,
+          "min_ms": 81.122161,
+          "max_ms": 131.898244,
+          "median_peak_rss_mib": 27.52734375,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 8.02734375
+        }
+      },
+      "standalone_speedup_vs_pr5": 1.3350217638083162,
+      "standalone_speedup_vs_xmltodict": 6.1345568318212464
+    },
+    "unicode_mixed": {
+      "name": "unicode_mixed",
+      "path": "benchmarks/fixtures/standalone-standard/fixtures/unicode_mixed.xml",
+      "input_type": "str",
+      "bytes": 91903,
+      "sha256": "8776d86160f8a8b2c5c9d4aa7fe370f60ae3fb10b2477c02475cc2d81de67d86",
+      "description": "500 Unicode and mixed-content records; empty/whitespace nodes",
+      "equality": {
+        "pr5": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py"
+        },
+        "standalone": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py"
+        },
+        "xmltodict": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py"
+        }
+      },
+      "timing": {
+        "pr5": [
+          {
+            "loops_per_batch": 64,
+            "batch_ns_per_call": [
+              1473190.0625,
+              1583349.921875,
+              1451283.140625,
+              1495893.46875,
+              1554999.21875,
+              1492851.296875,
+              1663733.0625,
+              1547318.125,
+              1692853.5
+            ],
+            "median_ns_per_call": 1547318.125,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 68,
+            "batch_ns_per_call": [
+              1566168.7205882352,
+              1501375.75,
+              1442493.9117647058,
+              1509843.0147058824,
+              1512845.5735294118,
+              1507033.1176470588,
+              1513429.8235294118,
+              1514152.2205882352,
+              1490614.1911764706
+            ],
+            "median_ns_per_call": 1509843.0147058824,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 71,
+            "batch_ns_per_call": [
+              1422055.014084507,
+              1470147.5492957747,
+              1405307.1971830986,
+              1531357.5915492957,
+              1492171.8169014084,
+              1535157.9014084507,
+              1427889.4647887324,
+              1516414.5774647887,
+              1461314.8732394367
+            ],
+            "median_ns_per_call": 1470147.5492957747,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "standalone": [
+          {
+            "loops_per_batch": 87,
+            "batch_ns_per_call": [
+              1276646.5862068965,
+              1339319.6436781608,
+              1233284.6091954024,
+              1193657.632183908,
+              1247892.9885057472,
+              1177459.4367816092,
+              1275201.6896551724,
+              1312803.6091954024,
+              1202226.816091954
+            ],
+            "median_ns_per_call": 1247892.9885057472,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 77,
+            "batch_ns_per_call": [
+              1256257.3896103897,
+              1310162.0649350649,
+              1237450.4935064935,
+              1302219.038961039,
+              1324612.3896103897,
+              1347194.8961038962,
+              1339516.2077922078,
+              1279633.4675324676,
+              1267747.1948051949
+            ],
+            "median_ns_per_call": 1302219.038961039,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 90,
+            "batch_ns_per_call": [
+              1454059.911111111,
+              1244805.7666666666,
+              1256470.0777777778,
+              1190970.3777777778,
+              1273003.6888888888,
+              1285930.3777777778,
+              1265139.288888889,
+              1353037.8444444444,
+              1267961.7
+            ],
+            "median_ns_per_call": 1267961.7,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "xmltodict": [
+          {
+            "loops_per_batch": 14,
+            "batch_ns_per_call": [
+              7472012.928571428,
+              6722389.214285715,
+              6613424.928571428,
+              6759388.5,
+              7607217.357142857,
+              6383925.285714285,
+              6565014.071428572,
+              6399117.785714285,
+              6682083.642857143
+            ],
+            "median_ns_per_call": 6682083.642857143,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 16,
+            "batch_ns_per_call": [
+              6375759.375,
+              6555076.875,
+              6610129.9375,
+              6750020.6875,
+              6723105.125,
+              6585921.4375,
+              6572194.75,
+              7222068.4375,
+              6258061.8125
+            ],
+            "median_ns_per_call": 6585921.4375,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 15,
+            "batch_ns_per_call": [
+              7413404.933333334,
+              8247639.266666667,
+              8438977.4,
+              7622125.133333334,
+              6681595.0,
+              6527376.0,
+              6743154.4,
+              6645605.533333333,
+              6587422.466666667
+            ],
+            "median_ns_per_call": 6743154.4,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ]
+      },
+      "rss": {
+        "pr5": [
+          {
+            "baseline_current_rss_bytes": 19824640,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 21123072,
+            "incremental_peak_rss_bytes": 675840,
+            "retained_output_current_rss_bytes": 21213184,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19824640,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 21123072,
+            "incremental_peak_rss_bytes": 675840,
+            "retained_output_current_rss_bytes": 21213184,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19812352,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 21110784,
+            "incremental_peak_rss_bytes": 663552,
+            "retained_output_current_rss_bytes": 21213184,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19824640,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 21123072,
+            "incremental_peak_rss_bytes": 675840,
+            "retained_output_current_rss_bytes": 21213184,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19828736,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 21123072,
+            "incremental_peak_rss_bytes": 675840,
+            "retained_output_current_rss_bytes": 21217280,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "standalone": [
+          {
+            "baseline_current_rss_bytes": 19918848,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 21233664,
+            "incremental_peak_rss_bytes": 786432,
+            "retained_output_current_rss_bytes": 20553728,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19914752,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 21102592,
+            "incremental_peak_rss_bytes": 655360,
+            "retained_output_current_rss_bytes": 20553728,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19910656,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 21102592,
+            "incremental_peak_rss_bytes": 655360,
+            "retained_output_current_rss_bytes": 20549632,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19910656,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 21102592,
+            "incremental_peak_rss_bytes": 655360,
+            "retained_output_current_rss_bytes": 20545536,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19910656,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 21102592,
+            "incremental_peak_rss_bytes": 655360,
+            "retained_output_current_rss_bytes": 20545536,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "xmltodict": [
+          {
+            "baseline_current_rss_bytes": 18788352,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19382272,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18780160,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19374080,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18784256,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19378176,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18784256,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19378176,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18784256,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19378176,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ]
+      },
+      "tracemalloc": {
+        "pr5": {
+          "python_traced_retained_bytes": 406353,
+          "python_traced_peak_bytes": 637735,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+          "xmltodict_version": "1.0.4"
+        },
+        "standalone": {
+          "python_traced_retained_bytes": 406289,
+          "python_traced_peak_bytes": 498271,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+          "xmltodict_version": "1.0.4"
+        },
+        "xmltodict": {
+          "python_traced_retained_bytes": 456596,
+          "python_traced_peak_bytes": 697179,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+          "xmltodict_version": "1.0.4"
+        }
+      },
+      "summary": {
+        "pr5": {
+          "median_ms": 1.5070331176470588,
+          "min_ms": 1.4053071971830986,
+          "max_ms": 1.6928535,
+          "median_peak_rss_mib": 20.14453125,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.64453125
+        },
+        "standalone": {
+          "median_ms": 1.2730036888888887,
+          "min_ms": 1.1774594367816091,
+          "max_ms": 1.454059911111111,
+          "median_peak_rss_mib": 20.125,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.625
+        },
+        "xmltodict": {
+          "median_ms": 6.681595,
+          "min_ms": 6.2580618125,
+          "max_ms": 8.4389774,
+          "median_peak_rss_mib": 19.5,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.0
+        }
+      },
+      "standalone_speedup_vs_pr5": 1.1838403382494809,
+      "standalone_speedup_vs_xmltodict": 5.248684711850185
+    },
+    "deep": {
+      "name": "deep",
+      "path": "benchmarks/fixtures/standalone-standard/fixtures/deep.xml",
+      "input_type": "str",
+      "bytes": 900,
+      "sha256": "d27ff0a7f4fc55b3f1038928feec430e7993a1d4129e47b85f2b9e3fcad6d7be",
+      "description": "128 nested elements; native supported depth",
+      "equality": {
+        "pr5": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py"
+        },
+        "standalone": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py"
+        },
+        "xmltodict": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py"
+        }
+      },
+      "timing": {
+        "pr5": [
+          {
+            "loops_per_batch": 4200,
+            "batch_ns_per_call": [
+              25458.883095238096,
+              24254.783333333333,
+              24575.85761904762,
+              24841.201666666668,
+              25349.66619047619,
+              24688.13880952381,
+              24844.314523809524,
+              25158.75880952381,
+              24929.060714285715
+            ],
+            "median_ns_per_call": 24844.314523809524,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 4242,
+            "batch_ns_per_call": [
+              24117.361386138615,
+              24111.940829797266,
+              24197.879302215937,
+              23894.668552569543,
+              23673.120933521925,
+              29914.337812352664,
+              23645.90240452617,
+              23504.119283356908,
+              23544.535360678925
+            ],
+            "median_ns_per_call": 23894.668552569543,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 4221,
+            "batch_ns_per_call": [
+              23727.059701492537,
+              24688.809760720207,
+              23249.951907131013,
+              23381.414593698177,
+              23493.775408670932,
+              23551.442312248284,
+              23736.8964700308,
+              23632.7403458896,
+              23961.235963041934
+            ],
+            "median_ns_per_call": 23632.7403458896,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "standalone": [
+          {
+            "loops_per_batch": 5249,
+            "batch_ns_per_call": [
+              20381.15031434559,
+              21502.808344446563,
+              20177.90321966089,
+              20679.07220422938,
+              21803.709277957707,
+              20987.93617831968,
+              19903.529434177937,
+              19905.226519337015,
+              19616.6622213755
+            ],
+            "median_ns_per_call": 20381.15031434559,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 5191,
+            "batch_ns_per_call": [
+              19732.329416297438,
+              19475.774417260644,
+              20002.061452513968,
+              21599.598343286456,
+              20511.654401849355,
+              20208.380080909265,
+              19882.267000577922,
+              20411.390098246968,
+              19828.135234058947
+            ],
+            "median_ns_per_call": 20002.061452513968,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 5135,
+            "batch_ns_per_call": [
+              20474.492502434274,
+              20017.32112950341,
+              19314.36494644596,
+              19372.092307692306,
+              19717.672833495617,
+              19451.088023369037,
+              19839.63953261928,
+              19785.093086660174,
+              19690.0852969815
+            ],
+            "median_ns_per_call": 19717.672833495617,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "xmltodict": [
+          {
+            "loops_per_batch": 616,
+            "batch_ns_per_call": [
+              177273.61201298703,
+              174480.38798701297,
+              177458.35064935064,
+              177664.28896103895,
+              178756.49512987013,
+              183208.70616883118,
+              173066.32467532466,
+              177180.09577922078,
+              174612.46753246753
+            ],
+            "median_ns_per_call": 177273.61201298703,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 580,
+            "batch_ns_per_call": [
+              171913.7103448276,
+              170030.48448275862,
+              175567.01551724138,
+              179064.1551724138,
+              176772.10689655173,
+              175579.61896551723,
+              182665.0896551724,
+              179184.04137931034,
+              165108.48448275862
+            ],
+            "median_ns_per_call": 175579.61896551723,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 592,
+            "batch_ns_per_call": [
+              175121.2939189189,
+              172591.57263513515,
+              171727.62162162163,
+              172313.88006756757,
+              171641.05743243243,
+              168929.59797297296,
+              172041.00844594595,
+              175901.40202702704,
+              175802.57263513515
+            ],
+            "median_ns_per_call": 172313.88006756757,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ]
+      },
+      "rss": {
+        "pr5": [
+          {
+            "baseline_current_rss_bytes": 19369984,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19513344,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19369984,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19513344,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19369984,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19509248,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19374080,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19513344,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19365888,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19509248,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "standalone": [
+          {
+            "baseline_current_rss_bytes": 19529728,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19615744,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19529728,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19615744,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19529728,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19615744,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19476480,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19615744,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19533824,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19619840,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "xmltodict": [
+          {
+            "baseline_current_rss_bytes": 18411520,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 18558976,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18403328,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 18554880,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18407424,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 18558976,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18403328,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 18554880,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18407424,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 18554880,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ]
+      },
+      "tracemalloc": {
+        "pr5": {
+          "python_traced_retained_bytes": 12541,
+          "python_traced_peak_bytes": 39452,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+          "xmltodict_version": "1.0.4"
+        },
+        "standalone": {
+          "python_traced_retained_bytes": 12477,
+          "python_traced_peak_bytes": 13456,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+          "xmltodict_version": "1.0.4"
+        },
+        "xmltodict": {
+          "python_traced_retained_bytes": 28005,
+          "python_traced_peak_bytes": 63788,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+          "xmltodict_version": "1.0.4"
+        }
+      },
+      "summary": {
+        "pr5": {
+          "median_ms": 0.024111940829797267,
+          "min_ms": 0.023249951907131014,
+          "max_ms": 0.029914337812352663,
+          "median_peak_rss_mib": 19.5,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.0
+        },
+        "standalone": {
+          "median_ms": 0.019905226519337016,
+          "min_ms": 0.01931436494644596,
+          "max_ms": 0.021803709277957706,
+          "median_peak_rss_mib": 19.5,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.0
+        },
+        "xmltodict": {
+          "median_ms": 0.17556701551724138,
+          "min_ms": 0.1651084844827586,
+          "max_ms": 0.18320870616883117,
+          "median_peak_rss_mib": 19.5,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.0
+        }
+      },
+      "standalone_speedup_vs_pr5": 1.211337173499313,
+      "standalone_speedup_vs_xmltodict": 8.820146575407522
+    },
+    "deep_fallback": {
+      "name": "deep_fallback",
+      "path": "benchmarks/fixtures/standalone-standard/fixtures/deep_fallback.xml",
+      "input_type": "str",
+      "bytes": 2104,
+      "sha256": "c67a1e874577e8e48e220de6ef1928725407b974c9afa289cc08c92ee9df353f",
+      "description": "300 nested elements; documented xmltodict fallback",
+      "equality": {
+        "pr5": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py"
+        },
+        "standalone": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py"
+        },
+        "xmltodict": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py"
+        }
+      },
+      "timing": {
+        "pr5": [
+          {
+            "loops_per_batch": 233,
+            "batch_ns_per_call": [
+              412965.88412017166,
+              448303.8068669528,
+              412418.2489270386,
+              428610.1459227468,
+              435404.9098712446,
+              422951.8283261803,
+              423997.9356223176,
+              411539.2618025751,
+              416390.62660944206
+            ],
+            "median_ns_per_call": 422951.8283261803,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 243,
+            "batch_ns_per_call": [
+              417276.6172839506,
+              417219.86831275723,
+              420396.27160493826,
+              416511.81893004116,
+              421368.0864197531,
+              412272.81481481483,
+              420038.25514403294,
+              430220.8600823045,
+              420660.2469135802
+            ],
+            "median_ns_per_call": 420038.25514403294,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 241,
+            "batch_ns_per_call": [
+              440184.3858921162,
+              433894.9834024896,
+              424973.377593361,
+              417262.132780083,
+              426581.41078838176,
+              448161.5809128631,
+              425931.1867219917,
+              478661.5601659751,
+              435568.85892116185
+            ],
+            "median_ns_per_call": 433894.9834024896,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "standalone": [
+          {
+            "loops_per_batch": 210,
+            "batch_ns_per_call": [
+              479464.5904761905,
+              476123.00952380954,
+              495347.7428571429,
+              478681.28095238097,
+              502804.9619047619,
+              483415.1666666667,
+              517938.9809523809,
+              477076.5190476191,
+              471459.6523809524
+            ],
+            "median_ns_per_call": 479464.5904761905,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 177,
+            "batch_ns_per_call": [
+              512071.2429378531,
+              533512.231638418,
+              515941.85310734465,
+              514693.4406779661,
+              492224.6497175141,
+              516892.1525423729,
+              524233.02824858757,
+              491942.1412429378,
+              482845.1920903955
+            ],
+            "median_ns_per_call": 514693.4406779661,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 202,
+            "batch_ns_per_call": [
+              487182.3366336634,
+              483346.0,
+              487124.5346534653,
+              474475.702970297,
+              475351.50495049503,
+              474255.9207920792,
+              483503.21287128713,
+              483044.71287128713,
+              482009.90594059404
+            ],
+            "median_ns_per_call": 483044.71287128713,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "xmltodict": [
+          {
+            "loops_per_batch": 252,
+            "batch_ns_per_call": [
+              405504.6626984127,
+              451562.73412698414,
+              382298.95634920633,
+              396302.6865079365,
+              405116.5238095238,
+              389497.18253968254,
+              442925.1666666667,
+              384388.96428571426,
+              385010.2103174603
+            ],
+            "median_ns_per_call": 396302.6865079365,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 261,
+            "batch_ns_per_call": [
+              408245.0804597701,
+              439396.42911877396,
+              439278.19157088123,
+              505552.9770114943,
+              422377.5785440613,
+              426911.59003831417,
+              444759.91187739465,
+              512417.0574712644,
+              560285.030651341
+            ],
+            "median_ns_per_call": 439396.42911877396,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 132,
+            "batch_ns_per_call": [
+              414262.07575757575,
+              398751.24242424243,
+              416502.3712121212,
+              394965.3181818182,
+              405835.55303030304,
+              424941.11363636365,
+              428858.0681818182,
+              401562.8484848485,
+              404252.5227272727
+            ],
+            "median_ns_per_call": 405835.55303030304,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ]
+      },
+      "rss": {
+        "pr5": [
+          {
+            "baseline_current_rss_bytes": 19386368,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19693568,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19382272,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19689472,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19386368,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19693568,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19382272,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19685376,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19382272,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19685376,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "standalone": [
+          {
+            "baseline_current_rss_bytes": 19533824,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19750912,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19529728,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19746816,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19533824,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19750912,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19529728,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19746816,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19529728,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19750912,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "xmltodict": [
+          {
+            "baseline_current_rss_bytes": 18407424,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 18640896,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18407424,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 18636800,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18403328,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 18636800,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18411520,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 18644992,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18407424,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 18640896,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ]
+      },
+      "tracemalloc": {
+        "pr5": {
+          "python_traced_retained_bytes": 80421,
+          "python_traced_peak_bytes": 199109,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+          "xmltodict_version": "1.0.4"
+        },
+        "standalone": {
+          "python_traced_retained_bytes": 80284,
+          "python_traced_peak_bytes": 90817,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+          "xmltodict_version": "1.0.4"
+        },
+        "xmltodict": {
+          "python_traced_retained_bytes": 80205,
+          "python_traced_peak_bytes": 144008,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+          "xmltodict_version": "1.0.4"
+        }
+      },
+      "summary": {
+        "pr5": {
+          "median_ms": 0.4229518283261803,
+          "min_ms": 0.4115392618025751,
+          "max_ms": 0.4786615601659751,
+          "median_peak_rss_mib": 19.5,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.0
+        },
+        "standalone": {
+          "median_ms": 0.4835032128712871,
+          "min_ms": 0.4714596523809524,
+          "max_ms": 0.5335122316384181,
+          "median_peak_rss_mib": 19.5,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.0
+        },
+        "xmltodict": {
+          "median_ms": 0.41426207575757573,
+          "min_ms": 0.38229895634920635,
+          "max_ms": 0.5602850306513409,
+          "median_peak_rss_mib": 19.5,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.0
+        }
+      },
+      "standalone_speedup_vs_pr5": 0.8747652902128157,
+      "standalone_speedup_vs_xmltodict": 0.8567928086712756
+    },
+    "medium_bytes": {
+      "name": "medium_bytes",
+      "path": "benchmarks/fixtures/standalone-standard/fixtures/medium_bytes.xml",
+      "input_type": "bytes",
+      "bytes": 105501,
+      "sha256": "a1f0ca482576f8151786790cd9312667d9ae39462ac8f16b2570152d7e4302fd",
+      "description": "Same medium records supplied as UTF-8 bytes",
+      "equality": {
+        "pr5": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py"
+        },
+        "standalone": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py"
+        },
+        "xmltodict": {
+          "equal_to_xmltodict": true,
+          "difference": null,
+          "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py"
+        }
+      },
+      "timing": {
+        "pr5": [
+          {
+            "loops_per_batch": 66,
+            "batch_ns_per_call": [
+              1512966.0,
+              1585848.7424242424,
+              1576768.1363636365,
+              1581996.8181818181,
+              1533472.803030303,
+              1637597.106060606,
+              1527353.8636363635,
+              1585326.9242424243,
+              1626174.8484848484
+            ],
+            "median_ns_per_call": 1581996.8181818181,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 68,
+            "batch_ns_per_call": [
+              1484127.3088235294,
+              1565118.7352941176,
+              1495466.794117647,
+              2975571.4411764704,
+              2123698.5588235296,
+              1819345.9264705882,
+              1722706.7647058824,
+              1651582.1029411764,
+              1601473.6029411764
+            ],
+            "median_ns_per_call": 1651582.1029411764,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 64,
+            "batch_ns_per_call": [
+              1605006.59375,
+              1718050.53125,
+              1572042.796875,
+              1589633.140625,
+              1549020.5625,
+              1470576.359375,
+              1545631.390625,
+              1555699.78125,
+              1540779.34375
+            ],
+            "median_ns_per_call": 1555699.78125,
+            "gc_enabled": true,
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "standalone": [
+          {
+            "loops_per_batch": 80,
+            "batch_ns_per_call": [
+              1209498.1375,
+              1412016.925,
+              1296325.1875,
+              1340220.9875,
+              1334855.1375,
+              1234221.975,
+              1258911.6375,
+              1148331.1375,
+              1371148.1
+            ],
+            "median_ns_per_call": 1296325.1875,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 93,
+            "batch_ns_per_call": [
+              1138204.8494623655,
+              1195690.7311827957,
+              1236252.8924731184,
+              1661436.1397849463,
+              1411570.9247311829,
+              1530977.322580645,
+              1215018.2795698924,
+              1230232.6989247312,
+              1228124.8387096773
+            ],
+            "median_ns_per_call": 1230232.6989247312,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 93,
+            "batch_ns_per_call": [
+              1115415.0107526882,
+              1176979.9784946237,
+              1233617.5161290322,
+              1258028.8064516129,
+              2202522.2258064514,
+              1830561.9784946237,
+              1407334.2258064516,
+              1315390.6989247312,
+              1589527.5376344086
+            ],
+            "median_ns_per_call": 1315390.6989247312,
+            "gc_enabled": true,
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "xmltodict": [
+          {
+            "loops_per_batch": 12,
+            "batch_ns_per_call": [
+              7938821.916666667,
+              7923172.916666667,
+              8510057.583333334,
+              8313837.75,
+              7904465.666666667,
+              8467515.083333334,
+              8279063.583333333,
+              7782790.916666667,
+              7920264.083333333
+            ],
+            "median_ns_per_call": 7938821.916666667,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 13,
+            "batch_ns_per_call": [
+              8574815.153846154,
+              8131722.615384615,
+              8139642.846153846,
+              7993150.769230769,
+              8452470.076923076,
+              8012084.923076923,
+              8120399.692307692,
+              7916902.846153846,
+              7731028.384615385
+            ],
+            "median_ns_per_call": 8120399.692307692,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "loops_per_batch": 11,
+            "batch_ns_per_call": [
+              10679973.272727273,
+              9021610.909090908,
+              8813495.545454545,
+              10243089.181818182,
+              8388110.545454546,
+              10135737.545454545,
+              8264258.636363637,
+              8569953.454545455,
+              8515137.454545455
+            ],
+            "median_ns_per_call": 8813495.545454545,
+            "gc_enabled": true,
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ]
+      },
+      "rss": {
+        "pr5": [
+          {
+            "baseline_current_rss_bytes": 19480576,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20860928,
+            "incremental_peak_rss_bytes": 413696,
+            "retained_output_current_rss_bytes": 20951040,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19488768,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20840448,
+            "incremental_peak_rss_bytes": 393216,
+            "retained_output_current_rss_bytes": 20955136,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19480576,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20860928,
+            "incremental_peak_rss_bytes": 413696,
+            "retained_output_current_rss_bytes": 20946944,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19480576,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20860928,
+            "incremental_peak_rss_bytes": 413696,
+            "retained_output_current_rss_bytes": 20946944,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19484672,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20860928,
+            "incremental_peak_rss_bytes": 413696,
+            "retained_output_current_rss_bytes": 20955136,
+            "result_type": "dict",
+            "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "standalone": [
+          {
+            "baseline_current_rss_bytes": 19574784,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20709376,
+            "incremental_peak_rss_bytes": 262144,
+            "retained_output_current_rss_bytes": 20414464,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19574784,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20709376,
+            "incremental_peak_rss_bytes": 262144,
+            "retained_output_current_rss_bytes": 20414464,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19570688,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20709376,
+            "incremental_peak_rss_bytes": 262144,
+            "retained_output_current_rss_bytes": 20410368,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19578880,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20709376,
+            "incremental_peak_rss_bytes": 262144,
+            "retained_output_current_rss_bytes": 20418560,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 19570688,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20709376,
+            "incremental_peak_rss_bytes": 262144,
+            "retained_output_current_rss_bytes": 20410368,
+            "result_type": "dict",
+            "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ],
+        "xmltodict": [
+          {
+            "baseline_current_rss_bytes": 18448384,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19390464,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18444288,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19386368,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18448384,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19390464,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18448384,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19390464,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          },
+          {
+            "baseline_current_rss_bytes": 18456576,
+            "baseline_peak_rss_bytes": 20447232,
+            "peak_rss_bytes": 20447232,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 19394560,
+            "result_type": "dict",
+            "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+            "xmltodict_version": "1.0.4"
+          }
+        ]
+      },
+      "tracemalloc": {
+        "pr5": {
+          "python_traced_retained_bytes": 589043,
+          "python_traced_peak_bytes": 728457,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": "snapshots/pr5/src/rapidxmltodict/__init__.py",
+          "xmltodict_version": "1.0.4"
+        },
+        "standalone": {
+          "python_traced_retained_bytes": 588979,
+          "python_traced_peak_bytes": 589025,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": "snapshots/candidate/src/rapidxmltodict/__init__.py",
+          "xmltodict_version": "1.0.4"
+        },
+        "xmltodict": {
+          "python_traced_retained_bytes": 679439,
+          "python_traced_peak_bytes": 828393,
+          "result_type": "dict",
+          "excludes_untraced_native_allocations": true,
+          "parser_module": ".venv/lib/python3.12/site-packages/xmltodict.py",
+          "xmltodict_version": "1.0.4"
+        }
+      },
+      "summary": {
+        "pr5": {
+          "median_ms": 1.581996818181818,
+          "min_ms": 1.470576359375,
+          "max_ms": 2.9755714411764704,
+          "median_peak_rss_mib": 19.89453125,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.39453125
+        },
+        "standalone": {
+          "median_ms": 1.2589116375,
+          "min_ms": 1.1154150107526881,
+          "max_ms": 2.2025222258064514,
+          "median_peak_rss_mib": 19.75,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.25
+        },
+        "xmltodict": {
+          "median_ms": 8.279063583333333,
+          "min_ms": 7.731028384615385,
+          "max_ms": 10.679973272727274,
+          "median_peak_rss_mib": 19.5,
+          "median_baseline_peak_mib": 19.5,
+          "median_incremental_peak_mib": 0.0
+        }
+      },
+      "standalone_speedup_vs_pr5": 1.25663848919803,
+      "standalone_speedup_vs_xmltodict": 6.57636591538247
+    }
+  },
+  "run_order": [
+    {
+      "workload": "small",
+      "mode": "check",
+      "version": "pr5"
+    },
+    {
+      "workload": "small",
+      "mode": "check",
+      "version": "standalone"
+    },
+    {
+      "workload": "small",
+      "mode": "check",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "small",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "small",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "small",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "small",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "small",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "small",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "small",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "small",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "small",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "small",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "small",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "small",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "small",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "small",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "small",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "small",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "small",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "small",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "small",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "small",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "small",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "small",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "small",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "small",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "small",
+      "mode": "tracemalloc",
+      "version": "pr5"
+    },
+    {
+      "workload": "small",
+      "mode": "tracemalloc",
+      "version": "standalone"
+    },
+    {
+      "workload": "small",
+      "mode": "tracemalloc",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium",
+      "mode": "check",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium",
+      "mode": "check",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium",
+      "mode": "check",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium",
+      "mode": "tracemalloc",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium",
+      "mode": "tracemalloc",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium",
+      "mode": "tracemalloc",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "large",
+      "mode": "check",
+      "version": "pr5"
+    },
+    {
+      "workload": "large",
+      "mode": "check",
+      "version": "standalone"
+    },
+    {
+      "workload": "large",
+      "mode": "check",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "large",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "large",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "large",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "large",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "large",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "large",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "large",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "large",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "large",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "large",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "large",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "large",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "large",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "large",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "large",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "large",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "large",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "large",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "large",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "large",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "large",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "large",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "large",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "large",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "large",
+      "mode": "tracemalloc",
+      "version": "pr5"
+    },
+    {
+      "workload": "large",
+      "mode": "tracemalloc",
+      "version": "standalone"
+    },
+    {
+      "workload": "large",
+      "mode": "tracemalloc",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "check",
+      "version": "pr5"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "check",
+      "version": "standalone"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "check",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "tracemalloc",
+      "version": "pr5"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "tracemalloc",
+      "version": "standalone"
+    },
+    {
+      "workload": "unicode_mixed",
+      "mode": "tracemalloc",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep",
+      "mode": "check",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep",
+      "mode": "check",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep",
+      "mode": "check",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep",
+      "mode": "tracemalloc",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep",
+      "mode": "tracemalloc",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep",
+      "mode": "tracemalloc",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "check",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "check",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "check",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "tracemalloc",
+      "version": "pr5"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "tracemalloc",
+      "version": "standalone"
+    },
+    {
+      "workload": "deep_fallback",
+      "mode": "tracemalloc",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "check",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "check",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "check",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "time",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "time",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "time",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "rss",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "rss",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "rss",
+      "version": "xmltodict"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "tracemalloc",
+      "version": "pr5"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "tracemalloc",
+      "version": "standalone"
+    },
+    {
+      "workload": "medium_bytes",
+      "mode": "tracemalloc",
+      "version": "xmltodict"
+    }
+  ]
+}

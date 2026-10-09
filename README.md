@@ -94,23 +94,31 @@ also require substantial memory. See [API details](docs/typing.md).
 
 ## Performance
 
-Historical measurements of the earlier Expat-validated implementation on **CPython 3.12.14 / Linux x86-64**,
-compared with **xmltodict 0.14.2**:
+Integrated-parser measurements on **CPython 3.12.14 / Linux x86-64**, compared
+with **xmltodict 1.0.4**:
 
 | Input size | rapidxmltodict | xmltodict | Speedup |
 | --- | ---: | ---: | ---: |
-| 1,077 bytes | 0.026 ms | 0.134 ms | 5.09× |
-| 105,501 bytes | 2.166 ms | 11.383 ms | 5.26× |
-| 1,055,391 bytes | 26.866 ms | 120.036 ms | 4.47× |
+| 1,077 bytes | 0.013 ms | 0.084 ms | 6.5× |
+| 105,501 bytes | 1.279 ms | 7.851 ms | 6.1× |
+| 1,055,391 bytes | 12.597 ms | 86.012 ms | 6.8× |
 
-Outputs are checked for equality before timing complete parse calls, including
-validation and conversion. Results depend on the workload and machine.
+These catalog-shaped inputs are checked for equal output before timing complete
+parse calls, including validation and conversion. Results depend on input shape,
+options and machine. Deep XML can trigger an event-path restart and remains
+slower than the earlier implementation; some record-shaped inputs also regressed
+relative to the pre-refactor hybrid parser.
 
-**Faster parsing can use more memory.** The ~1 MiB case used 35.75 MiB
-whole-process peak RSS versus 28.75 MiB for `xmltodict`.
+**Faster parsing can use more memory.** The ~1 MiB case used 32.38 MiB
+whole-process peak RSS versus 27.54 MiB for `xmltodict`. At 100 MiB, repeated
+records used 1403.80 MiB versus 918.11 MiB; increasing input size did not reverse
+that difference. Non-retaining callback parsing stayed near 20.63 MiB across
+10/50/100 MiB, with a different output-retention contract.
 
-See the [benchmark guide](benchmarks/README.md) for reproduction commands,
-methodology and [full results](benchmarks/results.md).
+See the [complete comparison](benchmarks/standalone-results.md) for raw data,
+reproduction commands, total and incremental RSS, retained output, streaming
+results and all slower cases. The benchmark reference uses Expat 2.8.3; the
+separate compatibility gate uses the exact modern oracle described above.
 
 ## Type hints
 
