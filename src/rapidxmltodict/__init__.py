@@ -11,7 +11,7 @@ from ._native import convert as _convert
 
 _encoding_re = _re.compile(br"\bencoding\s*=\s*(['\"])([^'\"]+)\1")
 
-__version__ = "0.1.0"
+from ._version import __version__
 ParsingInterrupted = _reference.ParsingInterrupted
 unparse = _reference.unparse
 
