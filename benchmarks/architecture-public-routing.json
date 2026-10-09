@@ -1,0 +1,401 @@
+{
+  "schema_version": 1,
+  "verification_script_sha256": "900268c0cf635b40cb782ce4bcfe8519bed0613c39a9a1351f48de4606e2346b",
+  "method": "Untimed isolated public-API calls, actual native entry points observed, complete output/callback fingerprints compared with the measured architectures.",
+  "source_and_binary_hashes_start": {
+    "pyproject.toml": "8dca44d37d9dbd6a417a349255d0c9d55134e9d25d1ed9ddc0442a4ba3bbb33e",
+    "setup.py": "5dd3d51c3d7c4fac3e77749b482ca3c8962ac249ff47c96c2807a2cb3dc78951",
+    "src/native.cpp": "2313a787f89beab4fe2944287c9fda026d7352c2b7b9627312a06715164713ee",
+    "src/native_events_binding.hpp": "ce4ec872242ff906cdfa2915e346b5021ad191129ce7cc73e8ea617bbe91131f",
+    "src/native_mapping.hpp": "d8f36b843a656aea8b3e999a8cdef6bba3b3947b98e35f21310458fbe763de5d",
+    "src/rapidxml_events.hpp": "7fc93cdc6f20fb2b3c5d52b7d61d22817ace4136904177d41c3fdbca323ec64e",
+    "src/rapidxmltodict/__init__.py": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+    "src/rapidxmltodict/__init__.pyi": "17aab90b5e72dd5d87640e367083ab93e4ae6789759c4ca16bd0f80675003f3a",
+    "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "590332f374b10ba7f39c2ba443ed13979aece63452cf5bb8b231186fcda71328",
+    "src/rapidxmltodict/_parse.py": "f9da6bc087bea8bd9602ea15c63081e6f21ad464a045c835a49411f109c3b6e9",
+    "src/rapidxmltodict/_serialize.py": "a70e17d97e15fd1e973bc7e07a18f3e7cb94f13ff0792bd390aa0270d59c3b26",
+    "src/rapidxmltodict/_version.py": "2dc27d19a83888874e005d68290caf9c395edc4947b98b2ee79564e93f921195",
+    "vendor/rapidxml/rapidxml.hpp": "e83aa6118e9b0689ab1b54f1fbd33fc435e300e6931b11aebc49732b8b111503",
+    "vendor/rapidxml/rapidxml_lexical.hpp": "8abe9f25bdabffea03c94aa832421484dac6e17f4922ec475898e3b01dc5dd49",
+    "vendor/rapidxml/rapidxml_parse_core.hpp": "b4f3ea1399630842bc4352e96afe6481ed3ef61d7656766d6a816c0f232dbedd",
+    "vendor/rapidxml/rapidxml_stream.hpp": "7945a36e287e2689f0aa45ca027419f139e679b7a1aac858b4421999fd5eaed1"
+  },
+  "public_dispatch": "Default str/bytes -> iterative DOM; files/generators/options -> direct native events.",
+  "checks": {
+    "small": {
+      "entrypoint": "rapidxmltodict:parse",
+      "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+      "loaded_extension_sha256": "590332f374b10ba7f39c2ba443ed13979aece63452cf5bb8b231186fcda71328",
+      "output_fingerprint": {
+        "sha256": "7b541b648a36f9e32f5bea833e3d4ce1e5b7d7394ca2d39a19178f3d6debb971",
+        "type_counts": {
+          "dict": 20,
+          "list": 7,
+          "str": 106,
+          "none": 0
+        }
+      },
+      "native_entrypoint_calls": {
+        "iterative_dom": 1,
+        "native_events": 0
+      },
+      "expected_route": "iterative_dom",
+      "source_workload": "small",
+      "parse_options": {},
+      "generator_input": false,
+      "correct_route": true,
+      "content_matches_selected_architecture": true
+    },
+    "medium_bytes": {
+      "entrypoint": "rapidxmltodict:parse",
+      "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+      "loaded_extension_sha256": "590332f374b10ba7f39c2ba443ed13979aece63452cf5bb8b231186fcda71328",
+      "output_fingerprint": {
+        "sha256": "e9e9b64ae67c36b24b110e47d4346dafa00bc795b2fbd05bd18834b6e84a3527",
+        "type_counts": {
+          "dict": 1802,
+          "list": 601,
+          "str": 10204,
+          "none": 0
+        }
+      },
+      "native_entrypoint_calls": {
+        "iterative_dom": 1,
+        "native_events": 0
+      },
+      "expected_route": "iterative_dom",
+      "source_workload": "medium_bytes",
+      "parse_options": {},
+      "generator_input": false,
+      "correct_route": true,
+      "content_matches_selected_architecture": true
+    },
+    "medium_explicit_default_option": {
+      "entrypoint": "rapidxmltodict:parse",
+      "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+      "loaded_extension_sha256": "590332f374b10ba7f39c2ba443ed13979aece63452cf5bb8b231186fcda71328",
+      "output_fingerprint": {
+        "sha256": "e9e9b64ae67c36b24b110e47d4346dafa00bc795b2fbd05bd18834b6e84a3527",
+        "type_counts": {
+          "dict": 1802,
+          "list": 601,
+          "str": 10204,
+          "none": 0
+        }
+      },
+      "native_entrypoint_calls": {
+        "iterative_dom": 0,
+        "native_events": 1
+      },
+      "expected_route": "native_events",
+      "source_workload": "medium",
+      "parse_options": {
+        "force_list": false
+      },
+      "generator_input": false,
+      "correct_route": true,
+      "content_matches_selected_architecture": true
+    },
+    "medium_bytes_generator": {
+      "entrypoint": "rapidxmltodict:parse",
+      "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+      "loaded_extension_sha256": "590332f374b10ba7f39c2ba443ed13979aece63452cf5bb8b231186fcda71328",
+      "output_fingerprint": {
+        "sha256": "e9e9b64ae67c36b24b110e47d4346dafa00bc795b2fbd05bd18834b6e84a3527",
+        "type_counts": {
+          "dict": 1802,
+          "list": 601,
+          "str": 10204,
+          "none": 0
+        }
+      },
+      "native_entrypoint_calls": {
+        "iterative_dom": 0,
+        "native_events": 1
+      },
+      "expected_route": "native_events",
+      "source_workload": "medium_bytes",
+      "parse_options": {},
+      "generator_input": true,
+      "correct_route": true,
+      "content_matches_selected_architecture": true
+    },
+    "deep_10000": {
+      "entrypoint": "rapidxmltodict:parse",
+      "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+      "loaded_extension_sha256": "590332f374b10ba7f39c2ba443ed13979aece63452cf5bb8b231186fcda71328",
+      "output_fingerprint": {
+        "sha256": "ff7c10717e69d9ee435f98022d6bc1f2e6fbdd5a76fc5e30154060d64dd8dd49",
+        "type_counts": {
+          "dict": 10000,
+          "list": 0,
+          "str": 10001,
+          "none": 0
+        }
+      },
+      "native_entrypoint_calls": {
+        "iterative_dom": 1,
+        "native_events": 0
+      },
+      "expected_route": "iterative_dom",
+      "source_workload": "deep_10000",
+      "parse_options": {},
+      "generator_input": false,
+      "correct_route": true,
+      "content_matches_selected_architecture": true
+    },
+    "late_deep_60000_siblings": {
+      "entrypoint": "rapidxmltodict:parse",
+      "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+      "loaded_extension_sha256": "590332f374b10ba7f39c2ba443ed13979aece63452cf5bb8b231186fcda71328",
+      "output_fingerprint": {
+        "sha256": "4b823a96d9888fe6641784831ee0e03b8fa58aa4a15c3ed1b2a846ff23a50e8c",
+        "type_counts": {
+          "dict": 121502,
+          "list": 60001,
+          "str": 481504,
+          "none": 0
+        }
+      },
+      "native_entrypoint_calls": {
+        "iterative_dom": 1,
+        "native_events": 0
+      },
+      "expected_route": "iterative_dom",
+      "source_workload": "late_deep_60000_siblings",
+      "parse_options": {},
+      "generator_input": false,
+      "correct_route": true,
+      "content_matches_selected_architecture": true
+    },
+    "records_10mib_direct_str": {
+      "entrypoint": "rapidxmltodict:parse",
+      "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+      "loaded_extension_sha256": "590332f374b10ba7f39c2ba443ed13979aece63452cf5bb8b231186fcda71328",
+      "output_fingerprint": {
+        "sha256": "08810c64b138ca062464f6adb70cf3a93e47b58e3e134221dd2e4edcc5c677e4",
+        "type_counts": {
+          "dict": 178844,
+          "list": 59615,
+          "str": 1013442,
+          "none": 0
+        }
+      },
+      "native_entrypoint_calls": {
+        "iterative_dom": 1,
+        "native_events": 0
+      },
+      "expected_route": "iterative_dom",
+      "source_workload": "records_10mib_direct_str",
+      "parse_options": {},
+      "generator_input": false,
+      "correct_route": true,
+      "content_matches_selected_architecture": true
+    },
+    "records_10mib_direct_file": {
+      "entrypoint": "rapidxmltodict:parse",
+      "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+      "loaded_extension_sha256": "590332f374b10ba7f39c2ba443ed13979aece63452cf5bb8b231186fcda71328",
+      "output_fingerprint": {
+        "sha256": "08810c64b138ca062464f6adb70cf3a93e47b58e3e134221dd2e4edcc5c677e4",
+        "type_counts": {
+          "dict": 178844,
+          "list": 59615,
+          "str": 1013442,
+          "none": 0
+        }
+      },
+      "native_entrypoint_calls": {
+        "iterative_dom": 0,
+        "native_events": 1
+      },
+      "expected_route": "native_events",
+      "source_workload": "records_10mib_direct_file",
+      "parse_options": {},
+      "generator_input": false,
+      "correct_route": true,
+      "content_matches_selected_architecture": true
+    },
+    "records_10mib_callback_file_discard": {
+      "entrypoint": "rapidxmltodict:parse",
+      "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+      "loaded_extension_sha256": "590332f374b10ba7f39c2ba443ed13979aece63452cf5bb8b231186fcda71328",
+      "callback_content_sha256": "3738ee75f4176ad0078b571ce7ebf2c21ce6df15429af3c4631946a79b1a8446",
+      "callback_summary": {
+        "count": 59614,
+        "id_sum": 1776884691,
+        "id_square_sum": 70617543684619,
+        "first_id": 0,
+        "last_id": 59613,
+        "parse_returned_none": true,
+        "retained_items": 0
+      },
+      "native_entrypoint_calls": {
+        "iterative_dom": 0,
+        "native_events": 1
+      },
+      "expected_route": "native_events",
+      "source_workload": "records_10mib_callback_file_discard",
+      "parse_options": {},
+      "generator_input": false,
+      "correct_route": true,
+      "content_matches_selected_architecture": true
+    },
+    "records_10mib_callback_file_retain": {
+      "entrypoint": "rapidxmltodict:parse",
+      "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+      "loaded_extension_sha256": "590332f374b10ba7f39c2ba443ed13979aece63452cf5bb8b231186fcda71328",
+      "callback_content_sha256": "3738ee75f4176ad0078b571ce7ebf2c21ce6df15429af3c4631946a79b1a8446",
+      "callback_summary": {
+        "count": 59614,
+        "id_sum": 1776884691,
+        "id_square_sum": 70617543684619,
+        "first_id": 0,
+        "last_id": 59613,
+        "parse_returned_none": true,
+        "retained_items": 59614
+      },
+      "native_entrypoint_calls": {
+        "iterative_dom": 0,
+        "native_events": 1
+      },
+      "retained_items_fingerprint": {
+        "sha256": "84a4d3318bef174be762b5a8edf7fefe5c79b64249bf84cccf6680cf4fcf348f",
+        "type_counts": {
+          "dict": 178842,
+          "list": 59615,
+          "str": 1013438,
+          "none": 0
+        }
+      },
+      "oracle_retained_items_fingerprint": {
+        "sha256": "84a4d3318bef174be762b5a8edf7fefe5c79b64249bf84cccf6680cf4fcf348f",
+        "type_counts": {
+          "dict": 178842,
+          "list": 59615,
+          "str": 1013438,
+          "none": 0
+        }
+      },
+      "retained_objects_match_oracle": true,
+      "expected_route": "native_events",
+      "source_workload": "records_10mib_callback_file_retain",
+      "parse_options": {},
+      "generator_input": false,
+      "correct_route": true,
+      "content_matches_selected_architecture": true
+    },
+    "records_100mib_callback_file_retain": {
+      "entrypoint": "rapidxmltodict:parse",
+      "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+      "loaded_extension_sha256": "590332f374b10ba7f39c2ba443ed13979aece63452cf5bb8b231186fcda71328",
+      "callback_content_sha256": "971eca5b5d76d3c516e163bdabbaa19353b6dbb1d2d3e210057cff78c9a637b7",
+      "callback_summary": {
+        "count": 596143,
+        "id_sum": 177692940153,
+        "id_square_sum": 70620209050106535,
+        "first_id": 0,
+        "last_id": 596142,
+        "parse_returned_none": true,
+        "retained_items": 596143
+      },
+      "native_entrypoint_calls": {
+        "iterative_dom": 0,
+        "native_events": 1
+      },
+      "retained_items_fingerprint": {
+        "sha256": "2bd8a73ac63c8bc6b4a25f37081ef465ab191ff6ffab46b83afb48b51fb5fd36",
+        "type_counts": {
+          "dict": 1788429,
+          "list": 596144,
+          "str": 10134431,
+          "none": 0
+        }
+      },
+      "oracle_retained_items_fingerprint": {
+        "sha256": "2bd8a73ac63c8bc6b4a25f37081ef465ab191ff6ffab46b83afb48b51fb5fd36",
+        "type_counts": {
+          "dict": 1788429,
+          "list": 596144,
+          "str": 10134431,
+          "none": 0
+        }
+      },
+      "retained_objects_match_oracle": true,
+      "expected_route": "native_events",
+      "source_workload": "records_100mib_callback_file_retain",
+      "parse_options": {},
+      "generator_input": false,
+      "correct_route": true,
+      "content_matches_selected_architecture": true
+    },
+    "large_text_10mib_direct_str": {
+      "entrypoint": "rapidxmltodict:parse",
+      "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+      "loaded_extension_sha256": "590332f374b10ba7f39c2ba443ed13979aece63452cf5bb8b231186fcda71328",
+      "output_fingerprint": {
+        "sha256": "49382ec3a74e9f88e72f8bc0eed154a1df72d55d36366dd6742b3bd65628108f",
+        "type_counts": {
+          "dict": 2,
+          "list": 0,
+          "str": 3,
+          "none": 0
+        }
+      },
+      "native_entrypoint_calls": {
+        "iterative_dom": 1,
+        "native_events": 0
+      },
+      "expected_route": "iterative_dom",
+      "source_workload": "large_text_10mib_direct_str",
+      "parse_options": {},
+      "generator_input": false,
+      "correct_route": true,
+      "content_matches_selected_architecture": true
+    },
+    "large_text_10mib_direct_file": {
+      "entrypoint": "rapidxmltodict:parse",
+      "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+      "loaded_extension_sha256": "590332f374b10ba7f39c2ba443ed13979aece63452cf5bb8b231186fcda71328",
+      "output_fingerprint": {
+        "sha256": "49382ec3a74e9f88e72f8bc0eed154a1df72d55d36366dd6742b3bd65628108f",
+        "type_counts": {
+          "dict": 2,
+          "list": 0,
+          "str": 3,
+          "none": 0
+        }
+      },
+      "native_entrypoint_calls": {
+        "iterative_dom": 0,
+        "native_events": 1
+      },
+      "expected_route": "native_events",
+      "source_workload": "large_text_10mib_direct_file",
+      "parse_options": {},
+      "generator_input": false,
+      "correct_route": true,
+      "content_matches_selected_architecture": true
+    }
+  },
+  "source_and_binary_hashes_end": {
+    "pyproject.toml": "8dca44d37d9dbd6a417a349255d0c9d55134e9d25d1ed9ddc0442a4ba3bbb33e",
+    "setup.py": "5dd3d51c3d7c4fac3e77749b482ca3c8962ac249ff47c96c2807a2cb3dc78951",
+    "src/native.cpp": "2313a787f89beab4fe2944287c9fda026d7352c2b7b9627312a06715164713ee",
+    "src/native_events_binding.hpp": "ce4ec872242ff906cdfa2915e346b5021ad191129ce7cc73e8ea617bbe91131f",
+    "src/native_mapping.hpp": "d8f36b843a656aea8b3e999a8cdef6bba3b3947b98e35f21310458fbe763de5d",
+    "src/rapidxml_events.hpp": "7fc93cdc6f20fb2b3c5d52b7d61d22817ace4136904177d41c3fdbca323ec64e",
+    "src/rapidxmltodict/__init__.py": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+    "src/rapidxmltodict/__init__.pyi": "17aab90b5e72dd5d87640e367083ab93e4ae6789759c4ca16bd0f80675003f3a",
+    "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "590332f374b10ba7f39c2ba443ed13979aece63452cf5bb8b231186fcda71328",
+    "src/rapidxmltodict/_parse.py": "f9da6bc087bea8bd9602ea15c63081e6f21ad464a045c835a49411f109c3b6e9",
+    "src/rapidxmltodict/_serialize.py": "a70e17d97e15fd1e973bc7e07a18f3e7cb94f13ff0792bd390aa0270d59c3b26",
+    "src/rapidxmltodict/_version.py": "2dc27d19a83888874e005d68290caf9c395edc4947b98b2ee79564e93f921195",
+    "vendor/rapidxml/rapidxml.hpp": "e83aa6118e9b0689ab1b54f1fbd33fc435e300e6931b11aebc49732b8b111503",
+    "vendor/rapidxml/rapidxml_lexical.hpp": "8abe9f25bdabffea03c94aa832421484dac6e17f4922ec475898e3b01dc5dd49",
+    "vendor/rapidxml/rapidxml_parse_core.hpp": "b4f3ea1399630842bc4352e96afe6481ed3ef61d7656766d6a816c0f232dbedd",
+    "vendor/rapidxml/rapidxml_stream.hpp": "7945a36e287e2689f0aa45ca027419f139e679b7a1aac858b4421999fd5eaed1"
+  },
+  "source_and_binary_hashes_unchanged": true,
+  "all_checks_passed": true
+}

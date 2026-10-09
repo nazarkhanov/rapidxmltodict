@@ -45,7 +45,9 @@ in Python when requested. A strict exact-builtins mode avoids unobservable
 mapping containers, while the general native mode preserves custom protocols.
 Completed items are
 not attached back to the document result; a caller retaining callback values
-still retains memory.
+still retains memory. Parser name, namespace and entity tables can also grow
+with document vocabulary, so bounded memory for every possible XML shape is
+not promised.
 
 The strict DOM parser walks parent links as its explicit open-element stack;
 the Python-object builder uses explicit postorder frames. Neither depends on

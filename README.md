@@ -44,11 +44,13 @@ Values remain strings; leading and trailing text whitespace is stripped.
 ```python
 from pathlib import Path
 
-data = rapidxmltodict.parse(Path("catalog.xml").read_bytes())
+with Path("catalog.xml").open("rb") as stream:
+    data = rapidxmltodict.parse(stream)
 ```
 
-This loads the whole file into memory. Binary file objects and chunk generators
-are also supported, including incremental `item_callback` processing.
+Binary files and chunk generators are read incrementally; the complete returned
+dictionary still stays in memory. Use `item_callback` without retaining emitted
+items when the output should be processed incrementally too.
 
 ### Use parsing options
 
@@ -74,7 +76,8 @@ xml = rapidxmltodict.unparse(data, pretty=True)
 The compatibility target is **xmltodict 1.0.4**, including namespace mappings,
 comments, postprocessors, custom dictionaries, callbacks and serialization.
 Default UTF-8 documents use a native dictionary fast path; other inputs/options
-use the independent native event parser and mapping layer. Native work holds the GIL.
+use direct C++ event-to-Python construction without an intermediate DOM.
+Native work holds the GIL.
 
 Intentional differences:
 - The `expat` parameter is removed; parser injection is unsupported.
@@ -90,36 +93,38 @@ dependency. See the [compatibility contract](docs/compatibility.md).
 With `item_depth` and `item_callback`, completed items are delivered incrementally
 and are not accumulated in the parent result. Keeping them in your callback will
 still retain memory. Inputs, a single unfinished token and the current item can
-also require substantial memory. See [API details](docs/typing.md).
+also require substantial memory; parser name/entity tables may grow with the
+document vocabulary. See [API details](docs/typing.md).
 
 ## Performance
 
-Preserved pre-iterative integrated-parser measurements on **CPython 3.12.14 / Linux x86-64**, compared
-with **xmltodict 1.0.4**:
+Same-host measurements on **CPython 3.12.14 / Linux x86-64**, compared with
+**xmltodict 1.0.4**, using the default in-memory parser:
 
 | Input size | rapidxmltodict | xmltodict | Speedup |
 | --- | ---: | ---: | ---: |
-| 1,077 bytes | 0.013 ms | 0.084 ms | 6.5× |
-| 105,501 bytes | 1.279 ms | 7.851 ms | 6.1× |
-| 1,055,391 bytes | 12.597 ms | 86.012 ms | 6.8× |
+| 1,077 bytes | 0.0129 ms | 0.0893 ms | 6.93× |
+| 105,501 bytes | 1.0750 ms | 7.8811 ms | 7.33× |
+| 1,055,391 bytes | 11.7156 ms | 90.1815 ms | 7.70× |
 
 These catalog-shaped inputs are checked for equal output before timing complete
 parse calls, including validation and conversion. Results depend on input shape,
-options and machine. These measurements precede the iterative DOM and direct-event prototypes now
-under evaluation. They include the former deep-input restart cost; fresh
-architecture comparisons are pending. Some record-shaped inputs also regressed
-relative to the pre-refactor hybrid parser.
+options and machine; they are not universal speedup claims.
 
-**Faster parsing can use more memory.** The ~1 MiB case used 32.38 MiB
-whole-process peak RSS versus 27.54 MiB for `xmltodict`. At 100 MiB, repeated
-records used 1403.80 MiB versus 918.11 MiB; increasing input size did not reverse
-that difference. Non-retaining callback parsing stayed near 20.63 MiB across
-10/50/100 MiB, with a different output-retention contract.
+**Memory depends on how input is supplied.** The ~1 MiB string case peaked at
+33.85 MiB versus 29.44 MiB for `xmltodict`. At 100 MiB, record-shaped strings
+peaked at 1405.2 versus 920.4 MiB. For the same-size binary-file workload, native
+event construction used 627.7 versus 718.1 MiB and took 3.258 versus 10.048 seconds.
+Retaining all callback items grows memory; discarding them avoids accumulating
+the complete result.
 
-See the [complete comparison](benchmarks/standalone-results.md) for raw data,
-reproduction commands, total and incremental RSS, retained output, streaming
-results and all slower cases. The benchmark reference uses Expat 2.8.3; the
-separate compatibility gate uses the exact modern oracle described above.
+The iterative DOM remains the default for ordinary strings because it is faster
+than the direct-event alternative on the measured string workloads. Files and
+mapping options use native events. See the [complete architecture comparison](benchmarks/architecture-results.md)
+for all 348 samples, deeper trees, 10/50/100 MiB inputs, both pre-parse RSS
+baselines, retained memory, reproduction scripts and slower cases.
+The benchmark reference uses Expat 2.8.3; the separate compatibility gate uses
+the exact modern oracle described above.
 
 ## Type hints
 
