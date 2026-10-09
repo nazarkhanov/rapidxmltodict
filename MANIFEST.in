@@ -6,3 +6,7 @@ exclude benchmarks/baseline-results.*
 exclude benchmarks/optimization-check.*
 recursive-include src/rapidxmltodict *.pyi py.typed
 recursive-include docs *.md
+
+recursive-include scripts *.py
+include src/rapidxmltodict/_version.py
+prune .github

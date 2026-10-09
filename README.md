@@ -19,8 +19,10 @@ From this checkout (CPython 3.9+, a C++17 compiler and Python development header
 python -m pip install .
 ```
 
-This repository has not been published to PyPI. The initial release builds a
-native extension from source; it does not promise prebuilt platform wheels.
+The first PyPI publication requires the one-time [maintainer setup](docs/releasing.md).
+Tag releases build tested wheels for CPython 3.9–3.14 on Linux x86-64
+(manylinux), Windows x64, and macOS Intel/Apple Silicon, plus a source
+distribution. Other platforms can build from source with a C++17 compiler.
 `xmltodict` is a runtime dependency for compatibility fallback and `unparse`.
 
 ## Types and editor autocomplete
@@ -126,8 +128,18 @@ python benchmarks/benchmark.py --help
 Tests cover differential fixtures, deterministic generated documents, malformed
 input mutations, advanced-option fallback, namespace names, BOMs, encodings,
 entities, ownership, deep nesting and concurrent calls. CI builds/tests on Linux,
-macOS and Windows with CPython 3.9, 3.12 and 3.13. Those CI targets are not a claim
+macOS and Windows with CPython 3.9, 3.12 and 3.14; distribution tests cover
+all wheel targets from CPython 3.9 through 3.14. Those CI targets are not a claim
 that all platforms were tested locally; see the published commit's checks.
+
+## Releases and contributing
+
+Open a pull request targeting `main`; the stable required check is **CI passed**.
+It includes compatibility/security tests, installed-package typing, source-package
+rebuilds, and platform wheel tests. Version numbers come from Git tags, so do not
+edit a version constant. See [release and repository setup](docs/releasing.md)
+for the one-time protection/publisher configuration, release commands, changelog
+labels, and failure recovery.
 
 ## Vendor and license
 

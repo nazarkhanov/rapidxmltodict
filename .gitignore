@@ -10,3 +10,6 @@ dist/
 benchmarks/fixtures/
 benchmarks/baseline-results.*
 benchmarks/optimization-check.*
+
+# Generated from Git tags at build time; included in distributions.
+src/rapidxmltodict/_version.py
