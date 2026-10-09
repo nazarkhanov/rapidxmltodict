@@ -53,6 +53,14 @@ Do not choose “Protected branches only”: the release runs from a tag.
 No manual reviewer is required for fully automatic publishing. Add a reviewer
 only if deliberate approval on every release is desired.
 
+Before enabling the publisher, restrict creation of release tags `v*` to
+trusted release maintainers using a tag ruleset. Use a separate tag ruleset
+to block updates and deletions without bypasses. This protects the release
+workflow itself: the main-history check prevents accidental off-main releases,
+but someone who can create arbitrary tags could tag a modified workflow that
+removes that check. Review workflow changes as carefully as code.
+See [PyPI's tag/security guidance](https://docs.pypi.org/trusted-publishers/security-model/).
+
 Keep 2FA enabled on GitHub and PyPI and retain account recovery codes securely.
 Never paste a PyPI token into this repository or its workflow.
 
@@ -140,14 +148,14 @@ instructions; edit or augment release notes for breaking changes.
   overwrite or enable `skip-existing`.
 - **PyPI succeeded, GitHub Release failed:** rerun only the failed release job.
   Do not rerun a successful publisher just to regenerate notes. If the release
-  already exists, verify its notes/assets before accepting recovery.
+  already exists, the job verifies that it is published and every expected asset
+  has a matching SHA-256. Missing/unverified assets cause an explicit failure;
+  repair them using the original artifacts.
 - GitHub Releases and PyPI are separate services; publication is not atomic.
   A PyPI release can exist while GitHub release creation is being retried.
 
 ## Further maintenance recommendations
 
-- Add a tag ruleset for `v*` blocking tag updates/deletions, with a narrow
-  maintainer policy for creation, to keep published versions immutable.
 - Enable Dependabot (weekly grouped GitHub Actions updates and Python dependency
   checks), then review and merge its PRs through the same CI.
 - Keep a SECURITY.md with a private vulnerability-reporting route and a
