@@ -589,23 +589,29 @@ def parse(xml_input, encoding=None, process_namespaces=False,
     parser = NativeParser(sink, disable_entities=disable_entities,
                           process_comments=process_comments)
     sink.parser = parser
-    if isinstance(xml_input, str):
-        encoding = encoding or 'utf-8'
-        xml_input = xml_input.encode(encoding)
-    decoder = _InputDecoder(parser, encoding)
-    if hasattr(xml_input, 'read'):
-        while True:
-            chunk = xml_input.read(2048)
-            if not isinstance(chunk, bytes):
-                raise TypeError('read() did not return a bytes object (type=%s)' % type(chunk).__name__)
-            if not chunk:
-                decoder.feed(b'', True)
-                break
-            decoder.feed(chunk)
-    elif isgenerator(xml_input):
-        for chunk in xml_input:
-            decoder.feed(chunk)
-        decoder.feed(b'', True)
-    else:
-        decoder.feed(xml_input, True)
-    return handler.item
+    try:
+        if isinstance(xml_input, str):
+            encoding = encoding or 'utf-8'
+            xml_input = xml_input.encode(encoding)
+        decoder = _InputDecoder(parser, encoding)
+        if hasattr(xml_input, 'read'):
+            while True:
+                chunk = xml_input.read(2048)
+                if not isinstance(chunk, bytes):
+                    raise TypeError('read() did not return a bytes object (type=%s)' % type(chunk).__name__)
+                if not chunk:
+                    decoder.feed(b'', True)
+                    break
+                decoder.feed(chunk)
+        elif isgenerator(xml_input):
+            for chunk in xml_input:
+                decoder.feed(chunk)
+            decoder.feed(b'', True)
+        else:
+            decoder.feed(xml_input, True)
+        return handler.item
+    finally:
+        # The native parser owns its sink. Keep the reverse reference only
+        # while callbacks need diagnostic positions, so completed/error parses
+        # release their handler, input buffers and output without cyclic GC.
+        sink.parser = None

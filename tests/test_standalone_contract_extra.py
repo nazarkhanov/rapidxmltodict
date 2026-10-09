@@ -226,6 +226,12 @@ def test_extended_features_with_parser_dependencies_blocked():
 import importlib.abc
 import io
 import sys
+import os
+# -I deliberately ignores PYTHONPATH; explicitly retain sanitizer isolation.
+if os.environ.get("SAN_ROOT"):
+    sys.path.insert(0, os.environ["SAN_ROOT"])
+    import sitecustomize
+    assert sitecustomize.LSAN_CHECKPOINT_ACTIVE
 blocked = {'xmltodict', 'pyexpat', 'xml.parsers.expat', 'xml.sax.expatreader'}
 class RejectParserDependency(importlib.abc.MetaPathFinder):
     def find_spec(self, fullname, path=None, target=None):

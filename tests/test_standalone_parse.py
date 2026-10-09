@@ -337,3 +337,110 @@ def test_utf16_partial_bytes_use_original_deferral_units(encoding, label, chunk_
     def chunks():
         yield from (data[i:i + chunk_size] for i in range(0, len(data), chunk_size))
     assert parse(chunks(), cdata_separator='|') == xmltodict.parse(chunks(), cdata_separator='|')
+
+
+@pytest.mark.parametrize('case', [
+    'success', 'streaming_success', 'malformed', 'namespace_error',
+    'interrupted', 'callback_error', 'encoding_error', 'encoding_type_error',
+    'reader_error', 'generator_error',
+])
+def test_event_parser_lifetime_does_not_require_cyclic_gc(monkeypatch, case):
+    import gc
+    import importlib
+    import weakref
+
+    implementation = importlib.import_module('rapidxmltodict._parse')
+    sinks = []
+    class TrackedSink(implementation._NamespaceSink):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            sinks.append(weakref.ref(self))
+    monkeypatch.setattr(implementation, '_NamespaceSink', TrackedSink)
+
+    def callback_error(path, item):
+        raise RuntimeError('callback failure')
+
+    class BrokenReader:
+        def read(self, size):
+            raise OSError('reader failure')
+
+    def broken_generator():
+        yield '<r><item>one</item>'
+        raise RuntimeError('generator failure')
+
+    def run():
+        # Do not keep an exception traceback alive after returning: it would
+        # intentionally keep the parse frame and its local references alive.
+        options = {'process_comments': True}  # Exercise the event parser.
+        document = '<r><item>one</item></r>'
+        expected_error = None
+        if case == 'streaming_success':
+            options.update(item_depth=2, item_callback=lambda path, item: True)
+        elif case == 'malformed':
+            document = '<r><item>one</wrong></r>'
+            expected_error = rapidxmltodict.ParseError
+        elif case == 'namespace_error':
+            document = '<p:r/>'
+            options['process_namespaces'] = True
+            expected_error = rapidxmltodict.ParseError
+        elif case == 'interrupted':
+            options.update(item_depth=2, item_callback=lambda path, item: False)
+            expected_error = rapidxmltodict.ParsingInterrupted
+        elif case == 'callback_error':
+            options.update(item_depth=2, item_callback=callback_error)
+            expected_error = RuntimeError
+        elif case == 'encoding_error':
+            document = '<r>é</r>'
+            options['encoding'] = 'ascii'
+            expected_error = UnicodeEncodeError
+        elif case == 'encoding_type_error':
+            document = b'<r/>'
+            options['encoding'] = 42
+            expected_error = TypeError
+        elif case == 'reader_error':
+            document = BrokenReader()
+            expected_error = OSError
+        elif case == 'generator_error':
+            document = broken_generator()
+            expected_error = RuntimeError
+        try:
+            result = parse(document, **options)
+        except Exception as error:
+            assert expected_error is not None
+            assert isinstance(error, expected_error)
+        else:
+            assert expected_error is None
+            if case == 'success':
+                assert result == {'r': {'item': 'one'}}
+            else:
+                assert result is None
+
+    was_enabled = gc.isenabled()
+    gc.disable()
+    try:
+        run()
+        assert len(sinks) == 1
+        # NativeParser strongly owns this sink, so its immediate destruction
+        # also proves the owning native parser has released it.
+        assert sinks[0]() is None
+    finally:
+        if was_enabled:
+            gc.enable()
+
+
+def test_parser_back_reference_is_cleared_even_with_retained_traceback(monkeypatch):
+    import importlib
+    import weakref
+
+    implementation = importlib.import_module('rapidxmltodict._parse')
+    sinks = []
+    class TrackedSink(implementation._NamespaceSink):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            sinks.append(weakref.ref(self))
+    monkeypatch.setattr(implementation, '_NamespaceSink', TrackedSink)
+    with pytest.raises(rapidxmltodict.ParseError) as captured:
+        parse('<r/>tail', process_comments=True)
+    assert captured.value.__traceback__ is not None
+    assert sinks[0]() is not None
+    assert sinks[0]().parser is None

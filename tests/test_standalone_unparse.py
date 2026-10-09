@@ -366,6 +366,12 @@ def test_serializer_has_no_reference_or_expat_import_dependency():
 import importlib.abc
 import importlib.util
 import sys
+import os
+# -I deliberately ignores PYTHONPATH; explicitly retain sanitizer isolation.
+if os.environ.get("SAN_ROOT"):
+    sys.path.insert(0, os.environ["SAN_ROOT"])
+    import sitecustomize
+    assert sitecustomize.LSAN_CHECKPOINT_ACTIVE
 from io import BytesIO
 
 class BlockReferenceAndExpat(importlib.abc.MetaPathFinder):

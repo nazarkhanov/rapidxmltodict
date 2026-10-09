@@ -23,8 +23,9 @@ def main():
         package = directory / "rapidxmltodict"
         package.mkdir()
         installed = Path(rapidxmltodict.__file__).parent
-        for source in installed.glob("*.py"):
-            shutil.copy2(source, package / source.name)
+        for source in installed.iterdir():
+            if source.suffix in (".py", ".pyi") or source.name == "py.typed":
+                shutil.copy2(source, package / source.name)
         flags = [compiler, "-O1", "-g", "-fsanitize=address,undefined",
                  "-fno-omit-frame-pointer", "-shared", "-fPIC", "-std=c++17"]
         subprocess.run(flags + ["-I" + sysconfig.get_path("include"),

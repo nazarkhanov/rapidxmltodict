@@ -1,10 +1,11 @@
 #ifndef RAPIDXMLTODICT_ASCII_HPP
 #define RAPIDXMLTODICT_ASCII_HPP
 
-// Allocation-light validator for the common ASCII subset. A false result means
+// Allocation-light validator for common XML with ASCII names and UTF-8 values.
+// A false result means
 // the complete incremental validator must run; it does not mean invalid XML.
-// In particular, no unsupported declaration, entity, or Unicode input is ever
-// accepted here. This validates syntax only; conversion still uses RapidXML.
+// In particular, no unsupported declaration, entity, Unicode name, or unchecked
+// UTF-8 sequence is accepted here. This validates syntax only; conversion still uses RapidXML.
 #include <array>
 #include <cstdint>
 #include <cstring>
@@ -15,6 +16,25 @@ namespace rapidxml_fast {
 namespace ascii_detail {
 inline bool space(char c) { return c == ' ' || c == '\t' || c == '\r' || c == '\n'; }
 inline bool literal(unsigned char c) { return (c >= 0x20 && c < 0x80) || c == 9 || c == 10 || c == 13; }
+inline bool character(std::string_view s, size_t& at) {
+    const unsigned char lead = static_cast<unsigned char>(s[at]);
+    if (lead < 0x80) { ++at; return literal(lead); }
+    size_t length; uint32_t value;
+    if (lead >= 0xc2 && lead <= 0xdf) { length = 2; value = lead & 31; }
+    else if (lead >= 0xe0 && lead <= 0xef) { length = 3; value = lead & 15; }
+    else if (lead >= 0xf0 && lead <= 0xf4) { length = 4; value = lead & 7; }
+    else return false;
+    if (s.size() - at < length) return false;
+    for (size_t i = 1; i < length; ++i) {
+        const unsigned char next = static_cast<unsigned char>(s[at + i]);
+        if ((next & 0xc0) != 0x80) return false;
+        value = (value << 6) | (next & 63);
+    }
+    if ((length == 2 && value < 0x80) || (length == 3 && value < 0x800) ||
+            (length == 4 && value < 0x10000) || value > 0x10ffff ||
+            (value >= 0xd800 && value <= 0xdfff) || value == 0xfffe || value == 0xffff) return false;
+    at += length; return true;
+}
 inline bool initial(unsigned char c) { return c == ':' || c == '_' || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'); }
 inline bool subsequent(unsigned char c) { return initial(c) || (c >= '0' && c <= '9') || c == '-' || c == '.'; }
 inline size_t whitespace(std::string_view s, size_t i) { while (i < s.size() && space(s[i])) ++i; return i; }
@@ -87,24 +107,23 @@ inline bool validate_ascii_subset(const char* input, size_t length) {
         if (s[i] != '<') {
             while (i < length && s[i] != '<') {
                 const unsigned char c = static_cast<unsigned char>(s[i]);
-                if (!literal(c)) return false;
                 if (stack.empty()) { if (!space(static_cast<char>(c))) return false; ++i; continue; }
                 if (c == '&') { if (!reference(s, i)) return false; }
-                else { if (c == ']' && s.substr(i, 3) == "]]>") return false; ++i; }
+                else { if (c == ']' && s.substr(i, 3) == "]]>") return false; if (!character(s, i)) return false; }
             }
             continue;
         }
         const size_t markup = i;
         if (s.substr(i, 4) == "<!--") {
             i += 4;
-            while (i < length && s.substr(i, 2) != "--") { if (!literal(static_cast<unsigned char>(s[i]))) return false; ++i; }
+            while (i < length && s.substr(i, 2) != "--") { if (!character(s, i)) return false; }
             if (s.substr(i, 3) != "-->") return false;
             i += 3; continue;
         }
         if (s.substr(i, 9) == "<![CDATA[") {
             if (stack.empty()) return false;
             i += 9;
-            while (i < length && s.substr(i, 3) != "]]>") { if (!literal(static_cast<unsigned char>(s[i]))) return false; ++i; }
+            while (i < length && s.substr(i, 3) != "]]>") { if (!character(s, i)) return false; }
             if (i == length) return false;
             i += 3; continue;
         }
@@ -112,7 +131,7 @@ inline bool validate_ascii_subset(const char* input, size_t length) {
             i += 2; auto target = name(s, i); if (target.empty()) return false;
             if (s.substr(i, 2) != "?>" && (i == length || !space(s[i]))) return false;
             const size_t value = i;
-            while (i < length && s.substr(i, 2) != "?>") { if (!literal(static_cast<unsigned char>(s[i]))) return false; ++i; }
+            while (i < length && s.substr(i, 2) != "?>") { if (!character(s, i)) return false; }
             if (i == length) return false;
             const bool reserved = target.size() == 3 && (target[0] == 'x' || target[0] == 'X') && (target[1] == 'm' || target[1] == 'M') && (target[2] == 'l' || target[2] == 'L');
             if (reserved && (target != "xml" || markup != 0 || !declaration(s, value, i))) return false;
@@ -142,9 +161,9 @@ inline bool validate_ascii_subset(const char* input, size_t length) {
             const char quote = s[i++];
             while (i < length && s[i] != quote) {
                 const unsigned char c = static_cast<unsigned char>(s[i]);
-                if (!literal(c) || c == '<') return false;
+                if (c == '<') return false;
                 if (c == '&') { if (!reference(s, i)) return false; }
-                else ++i;
+                else if (!character(s, i)) return false;
             }
             if (i == length) return false;
             ++i;

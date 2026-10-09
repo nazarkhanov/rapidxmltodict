@@ -19,33 +19,63 @@ void set_event_error(const rapidxml_events::Error& error) {
 
 struct PythonEventSink : rapidxml_events::Sink {
     PyObject* handler; // Owned and GC-traversed by PyEventParser.
+    // XML vocabulary belongs to one parser, just like its element stack. Reuse
+    // Unicode names across events without growing Python's global intern table.
+    std::unordered_map<std::string, PyObject*> names;
+    enum Method { Start, End, Text, Comment };
+    PyObject* method_names[4] = {nullptr, nullptr, nullptr, nullptr};
     explicit PythonEventSink(PyObject* value) : handler(value) {}
-    void invoke(const char* method, PyObject* args) {
-        Ref arguments(args);
-        if (!arguments.p) throw PythonError{};
-        Ref function(checked(PyObject_GetAttrString(handler, method)));
-        Ref result(checked(PyObject_CallObject(function.p, arguments.p)));
+    ~PythonEventSink() override {
+        for (const auto& entry : names) Py_DECREF(entry.second);
+        for (PyObject* method : method_names) Py_XDECREF(method);
+    }
+    int traverse(visitproc visit, void* arg) {
+        for (const auto& entry : names) Py_VISIT(entry.second);
+        for (PyObject* method : method_names) Py_VISIT(method);
+        return 0;
+    }
+    PyObject* cached_name(const std::string& value) {
+        auto found = names.find(value);
+        if (found != names.end()) { Py_INCREF(found->second); return found->second; }
+        Ref name(unicode(value));
+        names.emplace(value, name.p);
+        PyObject* result = name.release(); // The cache owns the original reference.
+        Py_INCREF(result); // Return a separate owned reference to the event.
+        return result;
+    }
+    void invoke(Method method, PyObject* first, PyObject* second = nullptr) {
+        static const char* identifiers[] = {"start", "end", "text", "comment"};
+        PyObject*& identifier = method_names[method];
+        if (!identifier) identifier = checked(PyUnicode_FromString(identifiers[method]));
+        PyObject* arguments[] = {handler, first, second};
+        // Resolve the method on every event, preserving custom dynamic lookup
+        // and callback changes, while avoiding temporary argument tuples and
+        // bound methods for normal Python methods (public API since Python 3.9).
+        Ref result(checked(PyObject_VectorcallMethod(identifier, arguments, second ? 3 : 2, nullptr)));
     }
     static PyObject* unicode(const std::string& text) {
         return checked(PyUnicode_DecodeUTF8(text.data(), static_cast<Py_ssize_t>(text.size()), "strict"));
     }
     void start(const std::string& name, const std::vector<std::pair<std::string, std::string>>& attrs) override {
-        Ref py_name(unicode(name));
+        Ref py_name(cached_name(name));
         Ref py_attrs(checked(PyList_New(static_cast<Py_ssize_t>(attrs.size()))));
         for (size_t i = 0; i < attrs.size(); ++i) {
-            Ref key(unicode(attrs[i].first)), value(unicode(attrs[i].second));
+            Ref key(cached_name(attrs[i].first)), value(unicode(attrs[i].second));
             PyObject* pair = checked(PyTuple_Pack(2, key.p, value.p));
             PyList_SET_ITEM(py_attrs.p, static_cast<Py_ssize_t>(i), pair);
         }
-        invoke("start", PyTuple_Pack(2, py_name.p, py_attrs.p));
+        invoke(Start, py_name.p, py_attrs.p);
     }
-    void one(const char* method, const std::string& value) {
+    void one(Method method, const std::string& value) {
         Ref text(unicode(value));
-        invoke(method, PyTuple_Pack(1, text.p));
+        invoke(method, text.p);
     }
-    void end(const std::string& name) override { one("end", name); }
-    void text(const std::string& value) override { one("text", value); }
-    void comment(const std::string& value) override { one("comment", value); }
+    void end(const std::string& name) override {
+        Ref py_name(cached_name(name));
+        invoke(End, py_name.p);
+    }
+    void text(const std::string& value) override { one(Text, value); }
+    void comment(const std::string& value) override { one(Comment, value); }
 };
 
 struct NullEventSink : rapidxml_events::Sink {
@@ -65,7 +95,7 @@ struct PyEventParser {
 
 int event_parser_traverse(PyEventParser* self, visitproc visit, void* arg) {
     Py_VISIT(self->handler);
-    return 0;
+    return self->sink ? self->sink->traverse(visit, arg) : 0;
 }
 int event_parser_clear(PyEventParser* self) {
     delete self->parser; self->parser = nullptr;
