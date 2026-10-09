@@ -1,8 +1,7 @@
-"""Standalone dictionary mapping and incremental input decoding.
+"""Input decoding and dispatch for native RapidXML parsing and mapping.
 
-The dictionary handler below is adapted from xmltodict 1.0.4. XML tokenization,
-validation, DTD processing and entity expansion are implemented by the native
-RapidXML-backed event parser; no alternative XML parser is imported here.
+Both dictionary construction paths are implemented in C++. Python only drives
+input decoding and reading; user-requested callbacks retain their Python API.
 """
 # Copyright (C) 2012 Martin Blech and individual contributors.
 # 
@@ -24,193 +23,6 @@ class ParsingInterrupted(Exception):
     """Raised when an item callback asks to stop parsing."""
 
 
-class _DictSAXHandler:
-    def __init__(
-        self,
-        item_depth=0,
-        item_callback=lambda *args: True,
-        xml_attribs=True,
-        attr_prefix="@",
-        cdata_key="#text",
-        force_cdata=False,
-        cdata_separator="",
-        postprocessor=None,
-        dict_constructor=dict,
-        strip_whitespace=True,
-        namespace_separator=":",
-        namespaces=None,
-        force_list=None,
-        comment_key="#comment",
-    ):
-        self.path = []
-        self.stack = []
-        self.data = []
-        self.item = None
-        self.item_depth = item_depth
-        self.xml_attribs = xml_attribs
-        self.item_callback = item_callback
-        self.attr_prefix = attr_prefix
-        self.cdata_key = cdata_key
-        self.force_cdata = force_cdata
-        self.cdata_separator = cdata_separator
-        self.postprocessor = postprocessor
-        self.dict_constructor = dict_constructor
-        self.strip_whitespace = strip_whitespace
-        self.namespace_separator = namespace_separator
-        self.namespaces = namespaces
-        self.namespace_declarations = dict_constructor()
-        self.force_list = force_list
-        self.comment_key = comment_key
-
-    def _build_name(self, full_name):
-        if self.namespaces is None:
-            return full_name
-        i = full_name.rfind(self.namespace_separator)
-        if i == -1:
-            return full_name
-        namespace, name = full_name[:i], full_name[i+1:]
-        try:
-            short_namespace = self.namespaces[namespace]
-        except KeyError:
-            short_namespace = namespace
-        if not short_namespace:
-            return name
-        else:
-            return self.namespace_separator.join((short_namespace, name))
-
-    def _attrs_to_dict(self, attrs):
-        if isinstance(attrs, dict):
-            return attrs
-        return self.dict_constructor(zip(attrs[0::2], attrs[1::2]))
-
-    def startNamespaceDecl(self, prefix, uri):
-        self.namespace_declarations[prefix or ''] = uri
-
-    def startElement(self, full_name, attrs):
-        name = self._build_name(full_name)
-        attrs = self._attrs_to_dict(attrs)
-        if self.namespace_declarations:
-            if not attrs:
-                attrs = self.dict_constructor()
-            attrs['xmlns'] = self.namespace_declarations
-            self.namespace_declarations = self.dict_constructor()
-        self.path.append((name, attrs or None))
-        if len(self.path) >= self.item_depth:
-            self.stack.append((self.item, self.data))
-            if self.xml_attribs:
-                attr_entries = []
-                for key, value in attrs.items():
-                    key = self.attr_prefix+self._build_name(key)
-                    if self.postprocessor:
-                        entry = self.postprocessor(self.path, key, value)
-                    else:
-                        entry = (key, value)
-                    if entry:
-                        attr_entries.append(entry)
-                attrs = self.dict_constructor(attr_entries)
-            else:
-                attrs = None
-            self.item = attrs or None
-            self.data = []
-
-    def endElement(self, full_name):
-        name = self._build_name(full_name)
-        # If we just closed an item at the streaming depth, emit it and drop it
-        # without attaching it back to its parent. This avoids accumulating all
-        # streamed items in memory when using item_depth > 0.
-        if len(self.path) == self.item_depth:
-            item = self.item
-            if item is None:
-                item = (None if not self.data
-                        else self.cdata_separator.join(self.data))
-
-            should_continue = self.item_callback(self.path, item)
-            if not should_continue:
-                raise ParsingInterrupted
-            # Reset state for the parent context without keeping a reference to
-            # the emitted item.
-            if self.stack:
-                self.item, self.data = self.stack.pop()
-            else:
-                self.item = None
-                self.data = []
-            self.path.pop()
-            return
-        if self.stack:
-            data = (None if not self.data
-                    else self.cdata_separator.join(self.data))
-            item = self.item
-            self.item, self.data = self.stack.pop()
-            if self.strip_whitespace and data:
-                data = data.strip() or None
-            if data and self._should_force_cdata(name, data) and item is None:
-                item = self.dict_constructor()
-            if item is not None:
-                if data:
-                    self.push_data(item, self.cdata_key, data)
-                self.item = self.push_data(self.item, name, item)
-            else:
-                self.item = self.push_data(self.item, name, data)
-        else:
-            self.item = None
-            self.data = []
-        self.path.pop()
-
-    def characters(self, data):
-        if not self.data:
-            self.data = [data]
-        else:
-            self.data.append(data)
-
-    def comments(self, data):
-        if self.strip_whitespace:
-            data = data.strip()
-        self.item = self.push_data(self.item, self.comment_key, data)
-
-    def push_data(self, item, key, data):
-        if self.postprocessor is not None:
-            result = self.postprocessor(self.path, key, data)
-            if result is None:
-                return item
-            key, data = result
-        if item is None:
-            item = self.dict_constructor()
-        try:
-            value = item[key]
-            if isinstance(value, list):
-                value.append(data)
-            else:
-                item[key] = [value, data]
-        except KeyError:
-            if self._should_force_list(key, data):
-                item[key] = [data]
-            else:
-                item[key] = data
-        return item
-
-    def _should_force_list(self, key, value):
-        if not self.force_list:
-            return False
-        if isinstance(self.force_list, bool):
-            return self.force_list
-        try:
-            return key in self.force_list
-        except TypeError:
-            return self.force_list(self.path[:-1], key, value)
-
-    def _should_force_cdata(self, key, value):
-        if not self.force_cdata:
-            return False
-        if isinstance(self.force_cdata, bool):
-            return self.force_cdata
-        try:
-            return key in self.force_cdata
-        except TypeError:
-            return self.force_cdata(self.path[:-1], key, value)
-
-
-_XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace'
-_XMLNS_NAMESPACE = 'http://www.w3.org/2000/xmlns/'
 _ENCODING = re.compile(br'\bencoding\s*=\s*([\'\"])([^\'\"]+)\1')
 
 
@@ -221,99 +33,6 @@ def _error(message, code=4, lineno=1, offset=0, byte_index=0):
     error.offset = offset
     error.byte_index = byte_index
     return error
-
-
-class _NamespaceSink:
-    """Translate raw native events into xmltodict's namespace-aware events."""
-
-    def __init__(self, handler, process_namespaces, separator, process_comments):
-        self.handler = handler
-        self.process_namespaces = process_namespaces and separator is not None
-        self.separator = separator
-        self.process_comments = process_comments
-        self.bindings = {'xml': _XML_NAMESPACE}
-        self.scopes = []
-
-    def _error(self, message, code=4):
-        parser = getattr(self, 'parser', None)
-        return _error(message, code, getattr(parser, 'lineno', 1),
-                      getattr(parser, 'offset', 0), getattr(parser, 'byte_index', 0))
-
-    def _name(self, name, attribute=False):
-        parts = name.split(':')
-        if len(parts) > 2 or any(not part for part in parts):
-            raise self._error('not well-formed (invalid token)')
-        if len(parts) == 2:
-            prefix, local = parts
-            if prefix not in self.bindings:
-                raise self._error('unbound prefix', 27)
-            uri = self.bindings[prefix]
-        else:
-            local = name
-            uri = None if attribute else self.bindings.get('')
-        if uri:
-            return uri + self.separator + local
-        return local
-
-    def start(self, name, attributes):
-        if not self.process_namespaces:
-            self.handler.startElement(name, [value for pair in attributes for value in pair])
-            return
-        previous = self.bindings
-        declarations = []
-        ordinary = []
-        for key, value in attributes:
-            if key == 'xmlns':
-                declarations.append(('', value))
-            elif key.startswith('xmlns:'):
-                prefix = key[6:]
-                if not prefix or ':' in prefix:
-                    raise self._error('not well-formed (invalid token)')
-                declarations.append((prefix, value))
-            else:
-                ordinary.append((key, value))
-        if declarations:
-            self.bindings = previous.copy()
-        for prefix, uri in declarations:
-            if prefix == 'xmlns':
-                raise self._error('reserved prefix (xmlns) must not be declared or undeclared', 39)
-            if prefix == 'xml' and uri != _XML_NAMESPACE:
-                raise self._error('reserved prefix (xml) must not be undeclared or bound to another namespace name', 38)
-            if uri == _XMLNS_NAMESPACE or (uri == _XML_NAMESPACE and prefix != 'xml'):
-                raise self._error('prefix must not be bound to one of the reserved namespace names', 40)
-            if prefix and not uri:
-                raise self._error('must not undeclare prefix', 28)
-            # A colon in a namespace URI is ordinary. Other nonempty separators
-            # may not occur in URIs, matching the namespace parser interface.
-            if self.separator and self.separator != ':' and self.separator in uri:
-                raise self._error('syntax error', 2)
-            self.bindings[prefix] = uri or None
-            self.handler.startNamespaceDecl(prefix or None, uri or None)
-        expanded = []
-        used = set()
-        for key, value in ordinary:
-            key = self._name(key, attribute=True)
-            if key in used:
-                raise self._error('duplicate attribute', 8)
-            used.add(key)
-            expanded.extend((key, value))
-        full_name = self._name(name)
-        self.scopes.append(previous)
-        self.handler.startElement(full_name, expanded)
-
-    def end(self, name):
-        if self.process_namespaces:
-            self.handler.endElement(self._name(name))
-            self.bindings = self.scopes.pop()
-        else:
-            self.handler.endElement(name)
-
-    def text(self, data):
-        self.handler.characters(data)
-
-    def comment(self, data):
-        if self.process_comments:
-            self.handler.comments(data)
 
 
 class _SingleByteDecoder:
@@ -556,10 +275,11 @@ def parse(xml_input, encoding=None, process_namespaces=False,
     There is deliberately no ``expat`` parser-injection parameter.
     """
     # Keep the all-native default mapping path. Documents/options requiring
-    # incremental Python callbacks use the same validating native event engine.
+    # incremental input or mapping options use direct native event construction.
     if (type(xml_input) in (str, bytes) and encoding is None and not kwargs
-            and not process_namespaces and not process_comments
-            and disable_entities and namespace_separator == ':'):
+            and process_namespaces is False and process_comments is False
+            and disable_entities is True and type(namespace_separator) is str
+            and namespace_separator == ':'):
         data = xml_input.encode('utf-8') if isinstance(xml_input, str) else xml_input
         # Only inspect the encoding declaration/prefix to select the decoder.
         # Strict well-formedness validation happens inside RapidXML conversion.
@@ -575,19 +295,20 @@ def parse(xml_input, encoding=None, process_namespaces=False,
             result = _native.convert(data)
             if result is not NotImplemented:
                 return result
-    handler = _DictSAXHandler(namespace_separator=namespace_separator, **kwargs)
-    if process_namespaces and namespace_separator is not None:
-        if not isinstance(namespace_separator, str):
-            raise TypeError('namespace_separator must be str or None')
-        if len(namespace_separator.encode('utf-8')) > 1:
-            raise ValueError('namespace_separator must be at most one character, omitted, or None')
-        if '\x00' in namespace_separator:
-            raise ValueError('embedded null character')
-    sink = _NamespaceSink(handler, process_namespaces, namespace_separator,
-                          process_comments)
-    parser = NativeParser(sink, disable_entities=disable_entities,
-                          process_comments=process_comments)
-    sink.parser = parser
+    return _parse_native_events(
+        xml_input, encoding=encoding, process_namespaces=process_namespaces,
+        namespace_separator=namespace_separator, disable_entities=disable_entities,
+        process_comments=process_comments, **kwargs)
+
+
+def _parse_native_events(xml_input, encoding=None, process_namespaces=False,
+                         namespace_separator=':', disable_entities=True,
+                         process_comments=False, **kwargs):
+    """Private architecture comparator: direct C++ mapping, without a DOM."""
+    parser = _native.NativeMappingParser(
+        disable_entities=disable_entities, process_namespaces=process_namespaces,
+        namespace_separator=namespace_separator, process_comments=process_comments,
+        interrupted=ParsingInterrupted, **kwargs)
     try:
         if isinstance(xml_input, str):
             encoding = encoding or 'utf-8'
@@ -608,9 +329,6 @@ def parse(xml_input, encoding=None, process_namespaces=False,
             decoder.feed(b'', True)
         else:
             decoder.feed(xml_input, True)
-        return handler.item
+        return parser.result
     finally:
-        # The native parser owns its sink. Keep the reverse reference only
-        # while callbacks need diagnostic positions, so completed/error parses
-        # release their handler, input buffers and output without cyclic GC.
-        sink.parser = None
+        parser.close()

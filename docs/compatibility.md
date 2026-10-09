@@ -38,7 +38,12 @@ objects; this necessary output traversal is separate from XML parsing.
 The resumable event interface shares consuming opening/closing-tag grammar and
 attribute decoding with the DOM parser. It emits directly from parser state,
 without synthesizing XML or building temporary tag DOMs. Document/DTD policy and
-text-event batching retain their streaming-specific state. Completed items are
+text-event batching retain their streaming-specific state. Events construct
+dictionaries, lists and strings directly in C++; no intermediate DOM or Python
+per-tag handler is used. User callbacks and custom-object protocols still run
+in Python when requested. A strict exact-builtins mode avoids unobservable
+mapping containers, while the general native mode preserves custom protocols.
+Completed items are
 not attached back to the document result; a caller retaining callback values
 still retains memory.
 
@@ -49,6 +54,12 @@ available memory, including the Python result and its eventual destruction.
 DTD input can still request the event interface before document elements are
 parsed. Input decoding and error-location accounting also have costs; these
 are not claims that every operation visits each byte only once.
+
+The public dispatcher uses iterative DOM conversion for exact default UTF-8
+string/bytes calls. Files, generators, mapping options and DTD input use direct
+native events. Both architectures are retained for reproducible comparison;
+the private `_parse_native_events` entry point forces the event architecture.
+The previous Python SAX dictionary/namespace handlers have been removed.
 
 Serialization implements the 1.0.4 output contract using standard-library output
 helpers, without loading an XML parser. External entities are never fetched.

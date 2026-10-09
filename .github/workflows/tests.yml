@@ -32,6 +32,8 @@ jobs:
           python-version: ${{ matrix.python }}
       - run: python -m pip install '.[test]'
       - run: python -m pytest -q
+      - name: Exercise direct native mapping against the full behavior corpus
+        run: python scripts/check_native_mapping.py
 
   native-leaks:
     name: Linux ASan / LSan
@@ -66,6 +68,8 @@ jobs:
       - name: Verify exact canonical oracle and checked-in expectations
         run: python scripts/check_reference_oracle.py
       - run: python -m pytest -q
+      - name: Exercise direct native mapping against the full behavior corpus
+        run: python scripts/check_native_mapping.py
 
   typing:
     runs-on: ubuntu-24.04

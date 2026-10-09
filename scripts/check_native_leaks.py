@@ -104,6 +104,9 @@ atexit.register(_checkpoint)
         )
         subprocess.run([sys.executable, "-c", program], env=env, check=True)
         print("PASS: complete differential suite under ASan/UBSan/LSan", flush=True)
+        subprocess.run([sys.executable, str(ROOT / "scripts/check_native_mapping.py")],
+                       env=env, check=True)
+        print("PASS: forced native mapping corpus under ASan/UBSan/LSan", flush=True)
 
 
 if __name__ == "__main__":

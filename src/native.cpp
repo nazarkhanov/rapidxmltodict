@@ -147,6 +147,7 @@ struct Builder {
 };
 
 #include "native_events_binding.hpp"
+#include "native_mapping.hpp"
 
 // Locations are computed from immutable input only on the error path. Parsing
 // and in-place normalization therefore do not require a whole-input prepass.
@@ -211,6 +212,6 @@ PyModuleDef module={PyModuleDef_HEAD_INIT,"_native",nullptr,-1,methods,nullptr,n
 PyMODINIT_FUNC PyInit__native() {
     PyObject* result = PyModule_Create(&module);
     if (!result) return nullptr;
-    if (add_event_parser(result) < 0) { Py_DECREF(result); return nullptr; }
+    if (add_event_parser(result) < 0 || add_mapping_parser(result) < 0) { Py_DECREF(result); return nullptr; }
     return result;
 }

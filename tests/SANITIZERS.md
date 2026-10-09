@@ -42,6 +42,10 @@ There are no suppression files or disabled allocation tracking.
    isolated mode ignores `PYTHONMALLOC=malloc` and `PYTHONPATH`; they explicitly
    check the hook and allocator environment, and still reject parser imports.
    Normal jobs run those subprocesses with `-I`.
+5. The same behavior corpus runs again through the forced direct-native event
+   mapper, including custom-object protocols, retained-traceback cleanup, deep
+   results and partial-result mutation. This second process uses the same real
+   LSan startup hook; it is not a skipped or unsanitized comparison.
 
 The separate runtime-independence tests block xmltodict, pyexpat and Expat parser
 imports. Normal distribution/typing jobs also remain required.
