@@ -128,3 +128,39 @@ cross-platform assertion or a claim that memory cannot grow.
 For peak-memory comparisons, use the benchmark's fresh-process RSS results.
 Python-only `tracemalloc` does not account for the native RapidXML DOM and
 input buffers.
+
+## Required Linux leak gate
+
+The `Linux ASan / LSan` job in `tests.yml` is a required dependency of the
+fail-closed `CI passed` aggregate. It runs on GitHub-hosted Ubuntu 24.04 with
+CPython 3.12 and GCC. It also runs in the tag-release test pipeline.
+
+After installing the project, run `python scripts/check_native_leaks.py`.
+The script compiles `src/native.cpp` into a temporary package with
+`-fsanitize=address,undefined`, preloads GCC's ASan and C++ runtimes, and uses
+`PYTHONMALLOC=malloc`. `ASAN_OPTIONS=detect_leaks=1:halt_on_error=1` and
+`LSAN_OPTIONS=exitcode=23:print_suppressions=1` enable real exit-time leak
+checking. There are **no suppressions**. RapidXML and the shipped extension are
+not modified; the instrumented extension and intentional-leak probe are temporary.
+
+A positive control first runs the same Python workload and deliberately loses
+one 4,096-byte allocation in a separate, test-only shared library. The runner
+must return 23 and report the expected LeakSanitizer diagnostic, byte count and
+`intentional_leak` function. A crash or unsupported detector is not success.
+The clean process then must exit zero, including interpreter shutdown.
+
+Each process exercises 9,000 successful parses (including namespace, large
+1,000-record input, unusual-name native exception, depth/mixed-content and option
+fallbacks), 6,000 malformed inputs, 3,000 direct native exceptions (including
+Unicode decoding failure), and 1,000 failing reference callbacks. Results and
+exception objects are released; fixtures leave scope and garbage collection
+runs before process exit. The regular pytest suite remains a separate gate.
+
+This checks the exercised Linux/compiler/interpreter paths, not all inputs,
+architectures, out-of-memory paths, or every possible retained/global allocation.
+LSan treats reachable allocations as live. RSS stability is not a substitute.
+Some traced/sandboxed development environments cannot run LSan (`ptrace` fatal
+error); this script fails rather than silently skipping or disabling detection.
+Use the hosted CI result for the actual leak verdict in those environments.
+
+Detector behavior: [LLVM LeakSanitizer documentation](https://clang.llvm.org/docs/LeakSanitizer.html).
