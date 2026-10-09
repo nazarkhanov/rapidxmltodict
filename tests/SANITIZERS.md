@@ -166,7 +166,7 @@ No tolerances are used. Balanced unrelated allocation/deallocation could conceal
 a count change, so this complements LSan rather than proving all refcounts.
 
 After a 10-iteration warmup, each process exercises 9,000 successful parses (including namespace, large
-1,000-record input, unusual-name native exception, depth/mixed-content and option
+1,000-record input, unusual XML name, depth/mixed-content and option
 fallbacks), 6,000 malformed inputs, 3,000 direct native exceptions (including
 Unicode decoding failure after partial dictionary/list construction), and 1,000 failing reference callbacks. Results and
 exception objects are released; fixtures leave scope and garbage collection

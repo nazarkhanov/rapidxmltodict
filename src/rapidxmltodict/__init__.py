@@ -56,8 +56,8 @@ def parse(xml_input, encoding=None, expat=_expat, process_namespaces=False,
     try:
         result = _convert(data)
     except ValueError:
-        # The preserved RapidXML fork rejects some valid general XML Names
-        # (e.g. <root:/>); Expat has already established well-formedness.
+        # Preserve compatibility if native conversion rejects a document that
+        # Expat has already established is well-formed.
         return reference()
     if result is NotImplemented:  # Depth or mixed-content compatibility guard.
         return reference()

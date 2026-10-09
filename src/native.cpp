@@ -137,8 +137,7 @@ struct Builder {
         return name.release();
     }
     PyObject* element_key(rapidxml::xml_node<char>* node) {
-        return node->prefix() ? key(node->prefix(), node->prefix_size()+1+node->name_size())
-                              : key(node->name(), node->name_size());
+        return key(node->name(), node->name_size());
     }
     void put(PyObject* dict,PyObject* k,PyObject* value) {
         PyObject* old=PyDict_GetItemWithError(dict,k);
