@@ -117,6 +117,28 @@ It never pushes those tags or uploads a package.
 
 ## Release notes
 
+Write a user-facing overview for each release in
+`docs/release-notes/<version>.md`, for example
+[`docs/release-notes/0.1.0.md`](release-notes/0.1.0.md). Commit it through a PR
+before creating that version's tag. Include features, compatibility limits and
+migration guidance there; omit installation instructions, which are added once
+by `scripts/prepare_release_notes.py`.
+
+The unprivileged verification job reads this file from the tagged commit and
+uploads the composed Markdown as a separate `release-notes` artifact. Only
+after PyPI publication succeeds does the GitHub Release job consume that file
+with `--notes-file` and append GitHub's generated PR notes with
+`--generate-notes`. The notes artifact is never included in PyPI distributions.
+No manual release-body editing is required. A future version without a curated
+file uses a short version-specific introduction plus installation instructions;
+an existing but empty file fails validation before publication.
+
+Preview the exact curated section locally:
+
+```sh
+python scripts/prepare_release_notes.py 0.1.0 --output /tmp/release-notes.md
+```
+
 Use descriptive PR titles; these become the user-facing changelog.
 Before merging, apply appropriate repository labels:
 
