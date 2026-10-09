@@ -2,7 +2,6 @@
 #include <Python.h>
 #include <rapidxml/rapidxml.hpp>
 #include "rapidxml_events.hpp"
-#include "native_fast_validation.hpp"
 #include <cstring>
 #include <string>
 #include <string_view>
@@ -21,99 +20,6 @@ struct Ref {
 };
 struct PythonError {};
 PyObject* checked(PyObject* p) { if (!p) throw PythonError{}; return p; }
-
-// Check the nesting limit without recursion, before entering RapidXML's parser.
-// Input to this private routine has already been validated by the native validator.
-bool xml_space(char c) { return c==' ' || c=='\t' || c=='\r' || c=='\n'; }
-bool shallow(const char* s, size_t n, bool& compact) {
-    size_t i = 0, depth = 0, data_start = 0;
-    bool text[257] = {}, gap[257] = {};
-    while (i < n) {
-        if (s[i++] != '<') continue;
-        // The preserved RapidXML fork drops whitespace-only data segments.
-        // They are insignificant in element-only content after xmltodict's
-        // strip(), but must not be lost in mixed content: delegate that case.
-        if (depth && i-1 > data_start) {
-            bool nonspace=false;
-            for(size_t j=data_start;j<i-1;++j) if(!xml_space(s[j])) {nonspace=true;break;}
-            if(nonspace) { if(text[depth]) compact=false; text[depth]=true; }
-            else gap[depth]=true;
-            if(text[depth] && gap[depth]) return false;
-        }
-        if (i + 2 < n && !std::memcmp(s+i, "!--", 3)) {
-            const char* e = std::strstr(s+i+3, "-->");
-            if (!e) return false;
-            i = static_cast<size_t>(e-s)+3; data_start=i; continue;
-        }
-        if (i + 7 < n && !std::memcmp(s+i, "![CDATA[", 8)) {
-            compact=false;  // CDATA and split character data require full DOM nodes.
-            const char* e = std::strstr(s+i+8, "]]>");
-            if (!e) return false;
-            if(depth) {
-                for(const char* p=s+i+8;p<e;++p) if(!xml_space(*p)) {text[depth]=true;break;}
-                if(text[depth] && gap[depth]) return false;
-            }
-            i = static_cast<size_t>(e-s)+3; data_start=i; continue;
-        }
-        if (i < n && s[i] == '?') {
-            const char* e = std::strstr(s+i+1, "?>");
-            if (!e) return false;
-            i = static_cast<size_t>(e-s)+2; data_start=i; continue;
-        }
-        if (i == n || s[i] == '!') return false;
-        bool closing = s[i] == '/';
-        char quote = 0;
-        size_t end = i;
-        for (; end < n; ++end) {
-            char c = s[end];
-            if (quote) { if (c == quote) quote = 0; }
-            else if (c == '\'' || c == '"') quote = c;
-            else if (c == '>') break;
-        }
-        if (end == n) return false;
-        if (closing) { if (!depth) return false; --depth; }
-        else {
-            if (depth + 1 > 256) return false;
-            if (end == 0 || s[end-1] != '/') {++depth; text[depth]=gap[depth]=false;}
-        }
-        i = end+1; data_start=i;
-    }
-    return depth == 0;
-}
-
-// XML 1.0 literal line endings normalize before entity expansion. Attribute
-// literals also normalize whitespace, whereas numeric references retain it.
-void normalize(std::vector<char>& b) {
-    size_t r=0, w=0, n=b.size()-1;
-    while (r<n) {
-        char c=b[r++];
-        if(c=='\r') { if(r<n && b[r]=='\n') ++r; c='\n'; }
-        b[w++]=c;
-    }
-    b[w]=0; b.resize(w+1);
-    n=w;
-    for(size_t i=0; i<n;) {
-        if(b[i++]!='<') continue;
-        if(i<n && b[i]=='!') {
-            const char* term=(i+7<n && !std::memcmp(b.data()+i,"![CDATA[",8)) ? "]]>" : "-->";
-            const char* e=std::strstr(b.data()+i,term);
-            if(!e) return;
-            i=static_cast<size_t>(e-b.data())+3; continue;
-        }
-        if(i<n && b[i]=='?') {
-            const char* e=std::strstr(b.data()+i,"?>");
-            if(!e) return;
-            i=static_cast<size_t>(e-b.data())+2; continue;
-        }
-        char quote=0;
-        for(;i<n;++i) {
-            char c=b[i];
-            if(quote) { if(c==quote) quote=0; else if(c=='\n'||c=='\t') b[i]=' '; }
-            else if(c=='\''||c=='"') quote=c;
-            else if(c=='>') {++i;break;}
-        }
-    }
-}
 
 struct Builder {
     bool compact;
@@ -199,37 +105,66 @@ struct Builder {
     }
 };
 
-PyObject* convert(PyObject*, PyObject* input) {
-    if(!PyBytes_Check(input)) {PyErr_SetString(PyExc_TypeError,"internal converter requires bytes");return nullptr;}
-    const char* s=PyBytes_AS_STRING(input); const size_t n=PyBytes_GET_SIZE(input);
-    bool compact=true;
-    if(std::memchr(s,0,n) || !shallow(s,n,compact)) {Py_INCREF(Py_NotImplemented);return Py_NotImplemented;}
-    try {
-        std::vector<char> buffer(s,s+n+1);
-        normalize(buffer);
-        // Heap allocate: RapidXML's inline pool is large; never put it on the
-        // Python thread stack. Its destructor frees every dynamically grown pool.
-        auto doc=std::make_unique<rapidxml::xml_document<char>>();
-        // Simple scalar content can use each element's existing value span
-        // instead of allocating a separate DOM data node for every leaf.
-        if(compact) doc->parse<rapidxml::parse_no_string_terminators | rapidxml::parse_no_data_nodes>(buffer.data());
-        else doc->parse<rapidxml::parse_no_string_terminators>(buffer.data());
-        Builder builder(compact);
-        Ref result(checked(PyDict_New()));
-        for(auto* node=doc->first_node();node;node=node->next_sibling()) {
-            if(node->type()!=rapidxml::node_element) continue;
-            Ref value(builder.build(node));
-            builder.put(result.p,builder.element_key(node),value.p);
-        }
-        return result.release();
-    } catch(const PythonError&) {return nullptr;}
-      catch(const std::bad_alloc&) {return PyErr_NoMemory();}
-      catch(const rapidxml::parse_error& e) {PyErr_SetString(PyExc_ValueError,e.what());return nullptr;}
-      catch(const std::exception& e) {PyErr_SetString(PyExc_RuntimeError,e.what());return nullptr;}
-}
 #include "native_events_binding.hpp"
 
-PyMethodDef methods[]={{"validate", reinterpret_cast<PyCFunction>(validate_xml), METH_VARARGS | METH_KEYWORDS, "Validate XML with the native incremental parser."},{"convert",convert,METH_O,"Private converter; caller must first validate XML with the native validator."},{nullptr,nullptr,0,nullptr}};
+// Locations are computed from immutable input only on the error path. Parsing
+// and in-place normalization therefore do not require a whole-input prepass.
+void set_dom_error(const char* message, int code, const char* source, size_t size,
+                   const char* buffer, const char* where) {
+    // RapidXML's memory-pool failure uses parse_error with a null location.
+    if (!where || !buffer) { PyErr_NoMemory(); return; }
+    size_t offset = static_cast<size_t>(where - buffer);
+    if (offset > size) offset = size;
+    size_t line = 1, column = 0;
+    bool carriage_return = false;
+    for (size_t i = 0; i < offset; ++i) {
+        const unsigned char c = static_cast<unsigned char>(source[i]);
+        if (c == '\r') { ++line; column = 0; carriage_return = true; }
+        else if (c == '\n') { if (!carriage_return) ++line; column = 0; carriage_return = false; }
+        else {
+            carriage_return = false;
+            if ((c & 0xc0) != 0x80) ++column;
+        }
+    }
+    set_positioned_parse_error(message, code, line, column, offset);
+}
+
+PyObject* convert(PyObject*, PyObject* input) {
+    if (!PyBytes_Check(input)) { PyErr_SetString(PyExc_TypeError, "internal converter requires bytes"); return nullptr; }
+    const char* source = PyBytes_AS_STRING(input);
+    const size_t size = static_cast<size_t>(PyBytes_GET_SIZE(input));
+    std::vector<char> buffer;
+    try {
+        buffer.assign(source, source + size);
+        buffer.push_back('\0');
+        // Strict checks and XML normalization execute inside RapidXML's token
+        // consumption. The bounded parser distinguishes embedded NUL from EOF.
+        auto doc = std::make_unique<rapidxml::xml_document<char>>();
+        doc->parse<rapidxml::parse_strict | rapidxml::parse_no_string_terminators |
+                   rapidxml::parse_compact_data>(buffer.data(), size);
+        Builder builder(true);
+        Ref result(checked(PyDict_New()));
+        for (auto* node = doc->first_node(); node; node = node->next_sibling()) {
+            if (node->type() != rapidxml::node_element) continue;
+            Ref value(builder.build(node));
+            builder.put(result.p, builder.element_key(node), value.p);
+        }
+        return result.release();
+    } catch (const PythonError&) { return nullptr; }
+      catch (const rapidxml::strict_unsupported&) { Py_INCREF(Py_NotImplemented); return Py_NotImplemented; }
+      catch (const rapidxml::strict_parse_error& error) {
+          set_dom_error(error.what(), error.code, source, size, buffer.data(), error.where<char>());
+          return nullptr;
+      }
+      catch (const std::bad_alloc&) { return PyErr_NoMemory(); }
+      catch (const rapidxml::parse_error& error) {
+          set_dom_error(error.what(), 4, source, size, buffer.data(), error.where<char>());
+          return nullptr;
+      }
+      catch (const std::exception& error) { PyErr_SetString(PyExc_RuntimeError, error.what()); return nullptr; }
+}
+
+PyMethodDef methods[]={{"validate", reinterpret_cast<PyCFunction>(validate_xml), METH_VARARGS | METH_KEYWORDS, "Validate XML with the native incremental parser."},{"convert",convert,METH_O,"Strict RapidXML parsing and dictionary conversion in one consuming parse."},{nullptr,nullptr,0,nullptr}};
 PyModuleDef module={PyModuleDef_HEAD_INIT,"_native",nullptr,-1,methods,nullptr,nullptr,nullptr,nullptr};
 }
 PyMODINIT_FUNC PyInit__native() {

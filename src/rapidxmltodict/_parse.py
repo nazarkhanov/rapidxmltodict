@@ -561,19 +561,18 @@ def parse(xml_input, encoding=None, process_namespaces=False,
             and not process_namespaces and not process_comments
             and disable_entities and namespace_separator == ':'):
         data = xml_input.encode('utf-8') if isinstance(xml_input, str) else xml_input
-        probe = data[3:] if data.startswith(codecs.BOM_UTF8) else data
+        # Only inspect the encoding declaration/prefix to select the decoder.
+        # Strict well-formedness validation happens inside RapidXML conversion.
+        begin = 3 if data.startswith(codecs.BOM_UTF8) else 0
         declared = None
-        if probe.startswith(b'<?xml'):
-            declaration_end = probe.find(b'?>')
-            declared = _ENCODING.search(probe[:declaration_end + 2])
-        if (b'<!DOCTYPE' not in data and b'\x00' not in data
-                and (declared is None or isinstance(xml_input, str)
-                     or declared.group(2).lower() == b'utf-8')):
-            _native.validate(data, disable_entities=True)
-            try:
-                result = _native.convert(probe)
-            except ValueError:
-                result = NotImplemented
+        if data.startswith(b'<?xml', begin):
+            declaration_end = data.find(b'?>', begin)
+            declared = _ENCODING.search(data[begin:declaration_end + 2])
+        wide_input = (data.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE))
+                      or b'\x00' in data[:4])
+        if (not wide_input and (declared is None or isinstance(xml_input, str)
+                                or declared.group(2).lower() == b'utf-8')):
+            result = _native.convert(data)
             if result is not NotImplemented:
                 return result
     handler = _DictSAXHandler(namespace_separator=namespace_separator, **kwargs)

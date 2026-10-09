@@ -30,11 +30,22 @@ remain independently tested; empty-separator equality alone is insufficient.
 
 ## Implementation and boundaries
 
-The common in-memory UTF-8 path uses native validation and RapidXML dictionary
-conversion. Advanced options and incremental input use a native event engine,
-with RapidXML start-tag parsing and a Python dictionary-mapping layer. Streaming
-callbacks run while chunks are consumed; completed items are not attached back
-to the document result. A caller retaining callback values still retains memory.
+The common in-memory UTF-8 path uses bounded strict parsing inside RapidXML.
+Well-formedness checks, UTF-8 handling and XML normalization run as its parsing
+routines consume input. The native builder then converts the DOM into Python
+objects; this necessary output traversal is separate from XML parsing.
+
+The resumable event interface shares consuming opening/closing-tag grammar and
+attribute decoding with the DOM parser. It emits directly from parser state,
+without synthesizing XML or building temporary tag DOMs. Document/DTD policy and
+text-event batching retain their streaming-specific state. Completed items are
+not attached back to the document result; a caller retaining callback values
+still retains memory.
+
+DTD input or depth beyond the bounded recursive DOM path can request a restart
+through the event interface. Therefore the common path has one semantic XML
+parse, but the package does not claim every possible path or diagnostic operation
+is a single scan. Input decoding and error-location accounting also have costs.
 
 Serialization implements the 1.0.4 output contract using standard-library output
 helpers, without loading an XML parser. External entities are never fetched.

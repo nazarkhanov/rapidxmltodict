@@ -1,24 +1,28 @@
-// CPython bridge for the independently validated incremental RapidXML events.
+// CPython bridge for the incremental RapidXML events.
 // Included by native.cpp inside its implementation namespace.
 PyObject* native_parse_error = nullptr;
 
-void set_event_error(const rapidxml_events::Error& error) {
+void set_positioned_parse_error(const char* text, int code, size_t line, size_t column, size_t byte_index) {
     // This runs inside a C++ catch handler: do not allocate C++ strings here,
     // since a second bad_alloc would escape the Python C entry point.
     Ref message(PyUnicode_FromFormat("%s: line %zu, column %zu",
-                                     error.what(), error.line, error.column));
+                                     text, line, column));
     if (!message.p) return;
     Ref exception(PyObject_CallOneArg(native_parse_error, message.p));
     if (!exception.p) return;
     const std::pair<const char*, size_t> fields[] = {
-        {"code", static_cast<size_t>(error.code)}, {"lineno", error.line},
-        {"offset", error.column}, {"byte_index", error.byte_index},
+        {"code", static_cast<size_t>(code)}, {"lineno", line},
+        {"offset", column}, {"byte_index", byte_index},
     };
     for (const auto& field : fields) {
         Ref value(PyLong_FromSize_t(field.second));
         if (!value.p || PyObject_SetAttrString(exception.p, field.first, value.p) < 0) return;
     }
     PyErr_SetObject(native_parse_error, exception.p);
+}
+
+void set_event_error(const rapidxml_events::Error& error) {
+    set_positioned_parse_error(error.what(), error.code, error.line, error.column, error.byte_index);
 }
 
 struct PythonEventSink : rapidxml_events::Sink {
@@ -195,7 +199,6 @@ PyObject* validate_xml(PyObject*, PyObject* args, PyObject* kwargs) {
     static const char* names[] = {"data", "disable_entities", nullptr};
     if (!PyArg_ParseTupleAndKeywords(args, kwargs, "y#|p:validate", const_cast<char**>(names), &data, &size, &disable_entities)) return nullptr;
     try {
-        if (rapidxml_fast::validate_ascii_subset(data, static_cast<size_t>(size))) Py_RETURN_NONE;
         NullEventSink sink;
         rapidxml_events::Parser parser(sink, disable_entities != 0, false, true);
         parser.feed(data, static_cast<size_t>(size), true);

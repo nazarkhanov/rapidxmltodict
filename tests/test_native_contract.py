@@ -7,9 +7,17 @@ import xmltodict
 import pytest
 
 
-def test_vendor_header_unchanged():
-    header = Path(__file__).parents[1] / 'vendor/rapidxml/rapidxml.hpp'
-    assert hashlib.sha256(header.read_bytes()).hexdigest() == 'd61c53fd63f11aef0e18d253746ee800903dc82e4ad3cc533d0fdca69f07c4f9'
+def test_vendor_provenance_and_integrated_entrypoints():
+    vendor = Path(__file__).parents[1] / 'vendor/rapidxml'
+    original = 'd61c53fd63f11aef0e18d253746ee800903dc82e4ad3cc533d0fdca69f07c4f9'
+    header = (vendor / 'rapidxml.hpp').read_bytes()
+    provenance = (vendor / 'README.md').read_text()
+    assert original in provenance and 'modified' in provenance
+    assert hashlib.sha256(header).hexdigest() != original
+    assert b'Copyright (C) 2006, 2009 Marcin Kalicinski' in header
+    assert b'parse_strict' in header and b'parse_compact_data' in header
+    assert (vendor / 'rapidxml_parse_core.hpp').is_file()
+    assert (vendor / 'rapidxml_stream.hpp').is_file()
 
 
 def test_default_uses_native(monkeypatch):
