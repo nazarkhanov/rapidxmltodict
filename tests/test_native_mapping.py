@@ -9,6 +9,7 @@ import xmltodict
 
 import rapidxmltodict
 from rapidxmltodict import _native, _parse
+from oracle_contract_cases import MAPPING_CHUNK_CASE, assert_chunk_contract
 
 
 DOCUMENT = ('<!--before--><r a="1"> before <x>one</x><x/><y> two </y>'
@@ -38,6 +39,13 @@ def test_mapping_option_matrix(options, kind):
         if kind == 'file':
             return BytesIO(raw)
         return (raw[i:i + 7] for i in range(0, len(raw), 7))
+    if kind == 'chunks' and options.get('cdata_separator') == '|':
+        # Old Expat builds emit an extra text boundary here. Enforce the
+        # approved exact modern oracle, plus live empty-separator semantics.
+        assert MAPPING_CHUNK_CASE.document == DOCUMENT.encode()
+        assert_chunk_contract(MAPPING_CHUNK_CASE, _parse._parse_native_events,
+                              xmltodict.parse)
+        return
     expected = xmltodict.parse(source(), **options)
     actual = _parse._parse_native_events(source(), **options)
     assert actual == expected

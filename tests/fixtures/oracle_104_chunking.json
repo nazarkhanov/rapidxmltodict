@@ -5861,6 +5861,66 @@
         "process_comments": true,
         "strip_whitespace": false
       }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "3c212d2d6265666f72652d2d3e3c7220613d2231223e206265666f7265203c783e6f6e653c2f783e3c782f3e3c793e2074776f203c2f793e3c215b43444154415b207461696c205d5d3e3c212d2d61667465722d2d3e3c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "@a",
+                  [
+                    "str",
+                    "1"
+                  ]
+                ],
+                [
+                  "x",
+                  [
+                    "list",
+                    [
+                      [
+                        "str",
+                        "on|e"
+                      ],
+                      [
+                        "none"
+                      ]
+                    ]
+                  ]
+                ],
+                [
+                  "y",
+                  [
+                    "str",
+                    "t|wo"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "before | tail|"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "native-mapping-comments-seven-byte",
+      "options": {
+        "cdata_separator": "|"
+      }
     }
   ],
   "schema_version": 1,

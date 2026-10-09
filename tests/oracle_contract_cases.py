@@ -93,12 +93,19 @@ def _cases():
                     declaration + '<r>text</r>', chunk_size,
                     {'disable_entities': False, 'process_comments': comments,
                      'cdata_separator': '|', 'strip_whitespace': False}))
-    assert len(cases) == 195
+    cases.append(ChunkCase(
+        'native-mapping-comments-seven-byte',
+        ('<!--before--><r a="1"> before <x>one</x><x/><y> two </y>'
+         '<![CDATA[ tail ]]><!--after--></r>').encode('utf-8'),
+        7, {'cdata_separator': '|'}))
+    assert len(cases) == 196
     assert len({case.id for case in cases}) == len(cases)
     return tuple(cases)
 
 
 CHUNK_CASES = _cases()
+MAPPING_CHUNK_CASE = next(case for case in CHUNK_CASES
+                          if case.id == 'native-mapping-comments-seven-byte')
 PARTIAL_TOKEN_CASES = tuple(case for case in CHUNK_CASES if case.id.startswith('partial-'))
 UTF16_CHUNK_CASES = tuple(case for case in CHUNK_CASES if case.id.startswith('utf16-'))
 DTD_CHUNK_CASES = tuple(case for case in CHUNK_CASES if case.id.startswith('dtd-'))
