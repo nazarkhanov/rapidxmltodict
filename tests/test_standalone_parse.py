@@ -9,6 +9,7 @@ import xmltodict
 
 import rapidxmltodict
 from rapidxmltodict._parse import parse
+from oracle_contract_cases import PARTIAL_TOKEN_CASES, UTF16_CHUNK_CASES, assert_chunk_contract
 
 
 DOCUMENT = '<r z="a"> before <!-- note --><a>one</a><a/><b> two </b><![CDATA[ after ]]></r>'
@@ -229,26 +230,9 @@ def test_encoding_aliases_use_single_byte_character_maps(encoding, explicit):
         parse(doc, **options)
 
 
-@pytest.mark.parametrize('document', [
-    '<root>hello</root>',
-    '<root><child/>tail</root>',
-    '<root><![CDATA[hello & <world>]]></root>',
-    '<root><![CDATA[a]]> <![CDATA[b]]></root>',
-    '<root>&#9;&#10;&#13;text&#xA0;&#x2003;</root>',
-    '<root>café 日本語 Ελληνικά Кириллица 😀 𝄞</root>',
-    '<root z="last" a="first" m="middle">text</root>',
-    '<r>a<![CDATA[b]]>c</r>', '<r>a&amp;b&#10;c</r>',
-    '<r>a\r\nb\rc\nd</r>', '<r>a<!--comment-->b<?pi x?>c</r>',
-    '<?xml version="1.0" encoding="UTF-8"?><root>hello</root>',
-])
-@pytest.mark.parametrize('chunk_size', [1, 2, 7, 2048])
-@pytest.mark.parametrize('as_bytes', [False, True])
-def test_partial_tokens_preserve_text_feed_coalescing(document, chunk_size, as_bytes):
-    data = document.encode() if as_bytes else document
-    def chunks():
-        yield from (data[i:i + chunk_size] for i in range(0, len(data), chunk_size))
-    options = {'cdata_separator': '|', 'process_comments': True, 'strip_whitespace': False}
-    assert parse(chunks(), **options) == xmltodict.parse(chunks(), **options)
+@pytest.mark.parametrize('case', PARTIAL_TOKEN_CASES, ids=lambda case: case.id)
+def test_partial_tokens_preserve_text_feed_coalescing(case):
+    assert_chunk_contract(case, parse, xmltodict.parse)
 
 
 @pytest.mark.parametrize('encoding', [None, 'latin1', 'unknown', 'shift_jis'])
@@ -328,15 +312,9 @@ def test_utf16_declaration_can_switch_to_unknown_single_byte_codec():
     assert parse(document) == xmltodict.parse(document) == {'r': 'café'}
 
 
-@pytest.mark.parametrize('encoding,label', [
-    ('utf-16', 'utf-16'), ('utf-16-le', 'UTF-16LE'), ('utf-16-be', 'UTF-16BE'),
-])
-@pytest.mark.parametrize('chunk_size', [1, 2, 3, 7, 11])
-def test_utf16_partial_bytes_use_original_deferral_units(encoding, label, chunk_size):
-    data = ('<?xml version="1.0" encoding="%s"?><root><child/>text</root>' % label).encode(encoding)
-    def chunks():
-        yield from (data[i:i + chunk_size] for i in range(0, len(data), chunk_size))
-    assert parse(chunks(), cdata_separator='|') == xmltodict.parse(chunks(), cdata_separator='|')
+@pytest.mark.parametrize('case', UTF16_CHUNK_CASES, ids=lambda case: case.id)
+def test_utf16_partial_bytes_use_original_deferral_units(case):
+    assert_chunk_contract(case, parse, xmltodict.parse)
 
 
 @pytest.mark.parametrize('case', [

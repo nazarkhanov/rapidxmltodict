@@ -499,9 +499,17 @@ class Parser {
             while (i < token.size() - 2) {
                 std::string key = name(token, i); i = skip_space(token, i);
                 if (i == token.size() || token[i++] != '=') fail("XML declaration not well-formed", 30);
-                i = skip_space(token, i); std::string value = quoted(token, i);
+                i = skip_space(token, i);
+                const size_t value_start = i + 1;
+                std::string value = quoted(token, i);
                 if (stage == 0 && key == "version") {
-                    if (value.empty() || value.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.-") != std::string::npos) fail("XML declaration not well-formed", 30);
+                    const size_t invalid = value.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.-");
+                    if (invalid != std::string::npos) fail("XML declaration not well-formed", 30, value_start + invalid);
+                    // VersionNum follows the XML 1.0 fifth-edition grammar.
+                    // Retain the reference's value-start diagnostic position.
+                    if (value.size() < 3 || value[0] != '1' || value[1] != '.' ||
+                            value.find_first_not_of("0123456789", 2) != std::string::npos)
+                        fail("XML declaration not well-formed", 30, value_start);
                     stage = 1;
                 } else if (stage == 1 && key == "encoding") {
                     if (value.empty() || !((value[0] >= 'A' && value[0] <= 'Z') || (value[0] >= 'a' && value[0] <= 'z'))) fail("XML declaration not well-formed", 30);

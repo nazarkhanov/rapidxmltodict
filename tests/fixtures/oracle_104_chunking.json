@@ -1,0 +1,5873 @@
+{
+  "cases": [
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<root>hello</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "he|l|l|o"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-1-00",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<root><child/>tail</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "tail"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-1-01",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<root><![CDATA[hello & <world>]]></root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hel|l|o| |&| |<|w|o|r|l|d|>"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-1-02",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<root><![CDATA[a]]> <![CDATA[b]]></root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "a| |b"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-1-03",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<root>&#9;&#10;&#13;text&#xA0;&#x2003;</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "\t|\n|\rtex|t|\u00a0|\u2003"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-1-04",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<root>caf\u00e9 \u65e5\u672c\u8a9e \u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac \u041a\u0438\u0440\u0438\u043b\u043b\u0438\u0446\u0430 \ud83d\ude00 \ud834\udd1e</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "ca|f|\u00e9| |\u65e5|\u672c|\u8a9e| |\u0395|\u03bb|\u03bb|\u03b7|\u03bd|\u03b9|\u03ba|\u03ac| |\u041a|\u0438|\u0440|\u0438|\u043b|\u043b|\u0438|\u0446|\u0430| |\ud83d\ude00| |\ud834\udd1e"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-1-05",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<root z=\"last\" a=\"first\" m=\"middle\">text</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "@z",
+                  [
+                    "str",
+                    "last"
+                  ]
+                ],
+                [
+                  "@a",
+                  [
+                    "str",
+                    "first"
+                  ]
+                ],
+                [
+                  "@m",
+                  [
+                    "str",
+                    "middle"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-1-06",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<r>a<![CDATA[b]]>c</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|bc"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-1-07",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<r>a&amp;b&#10;c</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|&b|\nc"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-1-08",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<r>a\r\nb\rc\nd</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|\n|b|\nc|\n|d"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-1-09",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<r>a<!--comment-->b<?pi x?>c</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "#comment",
+                  [
+                    "str",
+                    "comment"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "a|b|c"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-1-10",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><root>hello</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-1-11",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<root>hello</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "he|ll|o"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2-00",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<root><child/>tail</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "ta|il"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2-01",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<root><![CDATA[hello & <world>]]></root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello &| <|wo|rl|d>"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2-02",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<root><![CDATA[a]]> <![CDATA[b]]></root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "a |b"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2-03",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<root>&#9;&#10;&#13;text&#xA0;&#x2003;</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "\t|\n|\r|te|xt|\u00a0|\u2003"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2-04",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<root>caf\u00e9 \u65e5\u672c\u8a9e \u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac \u041a\u0438\u0440\u0438\u043b\u043b\u0438\u0446\u0430 \ud83d\ude00 \ud834\udd1e</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "ca|f\u00e9| \u65e5|\u672c\u8a9e| \u0395|\u03bb\u03bb|\u03b7\u03bd|\u03b9\u03ba|\u03ac |\u041a\u0438|\u0440\u0438|\u043b\u043b|\u0438\u0446|\u0430 |\ud83d\ude00 |\ud834\udd1e"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2-05",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<root z=\"last\" a=\"first\" m=\"middle\">text</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "@z",
+                  [
+                    "str",
+                    "last"
+                  ]
+                ],
+                [
+                  "@a",
+                  [
+                    "str",
+                    "first"
+                  ]
+                ],
+                [
+                  "@m",
+                  [
+                    "str",
+                    "middle"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2-06",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<r>a<![CDATA[b]]>c</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|bc"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2-07",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<r>a&amp;b&#10;c</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|&b|\nc"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2-08",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<r>a\r\nb\rc\nd</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|\n|b|\nc\n|d"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2-09",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<r>a<!--comment-->b<?pi x?>c</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "#comment",
+                  [
+                    "str",
+                    "comment"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "a|b|c"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2-10",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><root>hello</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2-11",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<root>hello</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "h|ello"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-7-00",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<root><child/>tail</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "tail"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-7-01",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<root><![CDATA[hello & <world>]]></root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello & <worl|d>"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-7-02",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<root><![CDATA[a]]> <![CDATA[b]]></root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "a |b"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-7-03",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<root>&#9;&#10;&#13;text&#xA0;&#x2003;</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "\t|\n\rt|ext|\u00a0|\u2003"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-7-04",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<root>caf\u00e9 \u65e5\u672c\u8a9e \u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac \u041a\u0438\u0440\u0438\u043b\u043b\u0438\u0446\u0430 \ud83d\ude00 \ud834\udd1e</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "c|af\u00e9 \u65e5\u672c\u8a9e| \u0395\u03bb\u03bb\u03b7\u03bd\u03b9|\u03ba\u03ac \u041a\u0438\u0440\u0438|\u043b\u043b\u0438\u0446\u0430 \ud83d\ude00| \ud834\udd1e"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-7-05",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<root z=\"last\" a=\"first\" m=\"middle\">text</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "@z",
+                  [
+                    "str",
+                    "last"
+                  ]
+                ],
+                [
+                  "@a",
+                  [
+                    "str",
+                    "first"
+                  ]
+                ],
+                [
+                  "@m",
+                  [
+                    "str",
+                    "middle"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-7-06",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<r>a<![CDATA[b]]>c</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|b|c"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-7-07",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<r>a&amp;b&#10;c</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|&b|\nc"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-7-08",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<r>a\r\nb\rc\nd</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a\nb|\nc\nd"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-7-09",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<r>a<!--comment-->b<?pi x?>c</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "#comment",
+                  [
+                    "str",
+                    "comment"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "a|bc"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-7-10",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><root>hello</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-7-11",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "kind": "text",
+        "text": "<root>hello</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2048-00",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "kind": "text",
+        "text": "<root><child/>tail</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "tail"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2048-01",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "kind": "text",
+        "text": "<root><![CDATA[hello & <world>]]></root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello & <world>"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2048-02",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "kind": "text",
+        "text": "<root><![CDATA[a]]> <![CDATA[b]]></root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "a b"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2048-03",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "kind": "text",
+        "text": "<root>&#9;&#10;&#13;text&#xA0;&#x2003;</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "\t\n\rtext\u00a0\u2003"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2048-04",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "kind": "text",
+        "text": "<root>caf\u00e9 \u65e5\u672c\u8a9e \u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac \u041a\u0438\u0440\u0438\u043b\u043b\u0438\u0446\u0430 \ud83d\ude00 \ud834\udd1e</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "caf\u00e9 \u65e5\u672c\u8a9e \u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac \u041a\u0438\u0440\u0438\u043b\u043b\u0438\u0446\u0430 \ud83d\ude00 \ud834\udd1e"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2048-05",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "kind": "text",
+        "text": "<root z=\"last\" a=\"first\" m=\"middle\">text</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "@z",
+                  [
+                    "str",
+                    "last"
+                  ]
+                ],
+                [
+                  "@a",
+                  [
+                    "str",
+                    "first"
+                  ]
+                ],
+                [
+                  "@m",
+                  [
+                    "str",
+                    "middle"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2048-06",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "kind": "text",
+        "text": "<r>a<![CDATA[b]]>c</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "abc"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2048-07",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "kind": "text",
+        "text": "<r>a&amp;b&#10;c</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a&b\nc"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2048-08",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "kind": "text",
+        "text": "<r>a\r\nb\rc\nd</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a\nb\nc\nd"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2048-09",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "kind": "text",
+        "text": "<r>a<!--comment-->b<?pi x?>c</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "#comment",
+                  [
+                    "str",
+                    "comment"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "a|bc"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2048-10",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "kind": "text",
+        "text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><root>hello</root>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-text-2048-11",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "hex": "3c726f6f743e68656c6c6f3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "he|l|l|o"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-1-00",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "hex": "3c726f6f743e3c6368696c642f3e7461696c3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "tail"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-1-01",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "hex": "3c726f6f743e3c215b43444154415b68656c6c6f2026203c776f726c643e5d5d3e3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hel|l|o| |&| |<|w|o|r|l|d|>"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-1-02",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "hex": "3c726f6f743e3c215b43444154415b615d5d3e203c215b43444154415b625d5d3e3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "a| |b"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-1-03",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "hex": "3c726f6f743e2623393b262331303b262331333b7465787426237841303b262378323030333b3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "\t|\n|\rtex|t|\u00a0|\u2003"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-1-04",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "hex": "3c726f6f743e636166c3a920e697a5e69cace8aa9e20ce95cebbcebbceb7cebdceb9cebaceac20d09ad0b8d180d0b8d0bbd0bbd0b8d186d0b020f09f988020f09d849e3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "ca|f|\u00e9| |\u65e5|\u672c|\u8a9e |\u0395|\u03bb|\u03bb|\u03b7|\u03bd|\u03b9|\u03ba|\u03ac| |\u041a|\u0438|\u0440|\u0438|\u043b|\u043b|\u0438|\u0446|\u0430| |\ud83d\ude00| |\ud834\udd1e"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-1-05",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "hex": "3c726f6f74207a3d226c6173742220613d22666972737422206d3d226d6964646c65223e746578743c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "@z",
+                  [
+                    "str",
+                    "last"
+                  ]
+                ],
+                [
+                  "@a",
+                  [
+                    "str",
+                    "first"
+                  ]
+                ],
+                [
+                  "@m",
+                  [
+                    "str",
+                    "middle"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-1-06",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "hex": "3c723e613c215b43444154415b625d5d3e633c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|bc"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-1-07",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "hex": "3c723e6126616d703b62262331303b633c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|&b|\nc"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-1-08",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "hex": "3c723e610d0a620d630a643c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|\n|b|\nc|\n|d"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-1-09",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "hex": "3c723e613c212d2d636f6d6d656e742d2d3e623c3f706920783f3e633c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "#comment",
+                  [
+                    "str",
+                    "comment"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "a|b|c"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-1-10",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "hex": "3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d225554462d38223f3e3c726f6f743e68656c6c6f3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-1-11",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "hex": "3c726f6f743e68656c6c6f3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "he|ll|o"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2-00",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "hex": "3c726f6f743e3c6368696c642f3e7461696c3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "ta|il"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2-01",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "hex": "3c726f6f743e3c215b43444154415b68656c6c6f2026203c776f726c643e5d5d3e3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello &| <|wo|rl|d>"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2-02",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "hex": "3c726f6f743e3c215b43444154415b615d5d3e203c215b43444154415b625d5d3e3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "a |b"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2-03",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "hex": "3c726f6f743e2623393b262331303b262331333b7465787426237841303b262378323030333b3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "\t|\n|\r|te|xt|\u00a0|\u2003"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2-04",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "hex": "3c726f6f743e636166c3a920e697a5e69cace8aa9e20ce95cebbcebbceb7cebdceb9cebaceac20d09ad0b8d180d0b8d0bbd0bbd0b8d186d0b020f09f988020f09d849e3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "ca|f|\u00e9 |\u65e5|\u672c|\u8a9e |\u0395|\u03bb|\u03bb|\u03b7|\u03bd|\u03b9|\u03ba|\u03ac| |\u041a|\u0438|\u0440|\u0438|\u043b|\u043b|\u0438|\u0446|\u0430 |\ud83d\ude00| |\ud834\udd1e"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2-05",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "hex": "3c726f6f74207a3d226c6173742220613d22666972737422206d3d226d6964646c65223e746578743c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "@z",
+                  [
+                    "str",
+                    "last"
+                  ]
+                ],
+                [
+                  "@a",
+                  [
+                    "str",
+                    "first"
+                  ]
+                ],
+                [
+                  "@m",
+                  [
+                    "str",
+                    "middle"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2-06",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "hex": "3c723e613c215b43444154415b625d5d3e633c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|bc"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2-07",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "hex": "3c723e6126616d703b62262331303b633c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|&b|\nc"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2-08",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "hex": "3c723e610d0a620d630a643c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|\n|b|\nc\n|d"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2-09",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "hex": "3c723e613c212d2d636f6d6d656e742d2d3e623c3f706920783f3e633c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "#comment",
+                  [
+                    "str",
+                    "comment"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "a|b|c"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2-10",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "hex": "3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d225554462d38223f3e3c726f6f743e68656c6c6f3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2-11",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "3c726f6f743e68656c6c6f3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "h|ello"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-7-00",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "3c726f6f743e3c6368696c642f3e7461696c3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "tail"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-7-01",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "3c726f6f743e3c215b43444154415b68656c6c6f2026203c776f726c643e5d5d3e3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello & <worl|d>"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-7-02",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "3c726f6f743e3c215b43444154415b615d5d3e203c215b43444154415b625d5d3e3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "a |b"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-7-03",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "3c726f6f743e2623393b262331303b262331333b7465787426237841303b262378323030333b3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "\t|\n\rt|ext|\u00a0|\u2003"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-7-04",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "3c726f6f743e636166c3a920e697a5e69cace8aa9e20ce95cebbcebbceb7cebdceb9cebaceac20d09ad0b8d180d0b8d0bbd0bbd0b8d186d0b020f09f988020f09d849e3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "c|af\u00e9 |\u65e5\u672c\u8a9e| \u0395\u03bb\u03bb|\u03b7\u03bd\u03b9|\u03ba\u03ac \u041a|\u0438\u0440\u0438\u043b|\u043b\u0438\u0446|\u0430 \ud83d\ude00 |\ud834\udd1e"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-7-05",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "3c726f6f74207a3d226c6173742220613d22666972737422206d3d226d6964646c65223e746578743c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "@z",
+                  [
+                    "str",
+                    "last"
+                  ]
+                ],
+                [
+                  "@a",
+                  [
+                    "str",
+                    "first"
+                  ]
+                ],
+                [
+                  "@m",
+                  [
+                    "str",
+                    "middle"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-7-06",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "3c723e613c215b43444154415b625d5d3e633c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|b|c"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-7-07",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "3c723e6126616d703b62262331303b633c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a|&b|\nc"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-7-08",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "3c723e610d0a620d630a643c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a\nb|\nc\nd"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-7-09",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "3c723e613c212d2d636f6d6d656e742d2d3e623c3f706920783f3e633c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "#comment",
+                  [
+                    "str",
+                    "comment"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "a|bc"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-7-10",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d225554462d38223f3e3c726f6f743e68656c6c6f3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-7-11",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "hex": "3c726f6f743e68656c6c6f3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2048-00",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "hex": "3c726f6f743e3c6368696c642f3e7461696c3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "tail"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2048-01",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "hex": "3c726f6f743e3c215b43444154415b68656c6c6f2026203c776f726c643e5d5d3e3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello & <world>"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2048-02",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "hex": "3c726f6f743e3c215b43444154415b615d5d3e203c215b43444154415b625d5d3e3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "a b"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2048-03",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "hex": "3c726f6f743e2623393b262331303b262331333b7465787426237841303b262378323030333b3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "\t\n\rtext\u00a0\u2003"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2048-04",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "hex": "3c726f6f743e636166c3a920e697a5e69cace8aa9e20ce95cebbcebbceb7cebdceb9cebaceac20d09ad0b8d180d0b8d0bbd0bbd0b8d186d0b020f09f988020f09d849e3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "caf\u00e9 \u65e5\u672c\u8a9e \u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac \u041a\u0438\u0440\u0438\u043b\u043b\u0438\u0446\u0430 \ud83d\ude00 \ud834\udd1e"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2048-05",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "hex": "3c726f6f74207a3d226c6173742220613d22666972737422206d3d226d6964646c65223e746578743c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "@z",
+                  [
+                    "str",
+                    "last"
+                  ]
+                ],
+                [
+                  "@a",
+                  [
+                    "str",
+                    "first"
+                  ]
+                ],
+                [
+                  "@m",
+                  [
+                    "str",
+                    "middle"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2048-06",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "hex": "3c723e613c215b43444154415b625d5d3e633c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "abc"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2048-07",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "hex": "3c723e6126616d703b62262331303b633c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a&b\nc"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2048-08",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "hex": "3c723e610d0a620d630a643c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "a\nb\nc\nd"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2048-09",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "hex": "3c723e613c212d2d636f6d6d656e742d2d3e623c3f706920783f3e633c2f723e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "#comment",
+                  [
+                    "str",
+                    "comment"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "a|bc"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2048-10",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2048,
+      "document": {
+        "hex": "3c3f786d6c2076657273696f6e3d22312e302220656e636f64696e673d225554462d38223f3e3c726f6f743e68656c6c6f3c2f726f6f743e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "str",
+              "hello"
+            ]
+          ]
+        ]
+      ],
+      "id": "partial-bytes-2048-11",
+      "options": {
+        "cdata_separator": "|",
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "hex": "fffe3c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022007500740066002d003100360022003f003e003c0072006f006f0074003e003c006300680069006c0064002f003e0074006500780074003c002f0072006f006f0074003e00",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "utf16-utf-16-1",
+      "options": {
+        "cdata_separator": "|"
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "hex": "3c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022005500540046002d00310036004c00450022003f003e003c0072006f006f0074003e003c006300680069006c0064002f003e0074006500780074003c002f0072006f006f0074003e00",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "utf16-utf-16-le-1",
+      "options": {
+        "cdata_separator": "|"
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "hex": "003c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022005500540046002d00310036004200450022003f003e003c0072006f006f0074003e003c006300680069006c0064002f003e0074006500780074003c002f0072006f006f0074003e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "utf16-utf-16-be-1",
+      "options": {
+        "cdata_separator": "|"
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "hex": "fffe3c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022007500740066002d003100360022003f003e003c0072006f006f0074003e003c006300680069006c0064002f003e0074006500780074003c002f0072006f006f0074003e00",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "utf16-utf-16-2",
+      "options": {
+        "cdata_separator": "|"
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "hex": "3c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022005500540046002d00310036004c00450022003f003e003c0072006f006f0074003e003c006300680069006c0064002f003e0074006500780074003c002f0072006f006f0074003e00",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "utf16-utf-16-le-2",
+      "options": {
+        "cdata_separator": "|"
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "hex": "003c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022005500540046002d00310036004200450022003f003e003c0072006f006f0074003e003c006300680069006c0064002f003e0074006500780074003c002f0072006f006f0074003e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "utf16-utf-16-be-2",
+      "options": {
+        "cdata_separator": "|"
+      }
+    },
+    {
+      "chunk_size": 3,
+      "document": {
+        "hex": "fffe3c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022007500740066002d003100360022003f003e003c0072006f006f0074003e003c006300680069006c0064002f003e0074006500780074003c002f0072006f006f0074003e00",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "t|ex|t"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "utf16-utf-16-3",
+      "options": {
+        "cdata_separator": "|"
+      }
+    },
+    {
+      "chunk_size": 3,
+      "document": {
+        "hex": "3c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022005500540046002d00310036004c00450022003f003e003c0072006f006f0074003e003c006300680069006c0064002f003e0074006500780074003c002f0072006f006f0074003e00",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "tex|t"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "utf16-utf-16-le-3",
+      "options": {
+        "cdata_separator": "|"
+      }
+    },
+    {
+      "chunk_size": 3,
+      "document": {
+        "hex": "003c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022005500540046002d00310036004200450022003f003e003c0072006f006f0074003e003c006300680069006c0064002f003e0074006500780074003c002f0072006f006f0074003e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "tex|t"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "utf16-utf-16-be-3",
+      "options": {
+        "cdata_separator": "|"
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "fffe3c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022007500740066002d003100360022003f003e003c0072006f006f0074003e003c006300680069006c0064002f003e0074006500780074003c002f0072006f006f0074003e00",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "te|xt"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "utf16-utf-16-7",
+      "options": {
+        "cdata_separator": "|"
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "3c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022005500540046002d00310036004c00450022003f003e003c0072006f006f0074003e003c006300680069006c0064002f003e0074006500780074003c002f0072006f006f0074003e00",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "t|ext"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "utf16-utf-16-le-7",
+      "options": {
+        "cdata_separator": "|"
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "hex": "003c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022005500540046002d00310036004200450022003f003e003c0072006f006f0074003e003c006300680069006c0064002f003e0074006500780074003c002f0072006f006f0074003e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "t|ext"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "utf16-utf-16-be-7",
+      "options": {
+        "cdata_separator": "|"
+      }
+    },
+    {
+      "chunk_size": 11,
+      "document": {
+        "hex": "fffe3c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022007500740066002d003100360022003f003e003c0072006f006f0074003e003c006300680069006c0064002f003e0074006500780074003c002f0072006f006f0074003e00",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "t|ext"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "utf16-utf-16-11",
+      "options": {
+        "cdata_separator": "|"
+      }
+    },
+    {
+      "chunk_size": 11,
+      "document": {
+        "hex": "3c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022005500540046002d00310036004c00450022003f003e003c0072006f006f0074003e003c006300680069006c0064002f003e0074006500780074003c002f0072006f006f0074003e00",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "utf16-utf-16-le-11",
+      "options": {
+        "cdata_separator": "|"
+      }
+    },
+    {
+      "chunk_size": 11,
+      "document": {
+        "hex": "003c003f0078006d006c002000760065007200730069006f006e003d00220031002e0030002200200065006e0063006f00640069006e0067003d0022005500540046002d00310036004200450022003f003e003c0072006f006f0074003e003c006300680069006c0064002f003e0074006500780074003c002f0072006f006f0074003e",
+        "kind": "bytes"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "root",
+            [
+              "dict",
+              [
+                [
+                  "child",
+                  [
+                    "none"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "utf16-utf-16-be-11",
+      "options": {
+        "cdata_separator": "|"
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|e|x|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-1-00",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ENTITY e \"word\"><!ENTITY f \"a&e;b\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|e|x|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-1-01",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ATTLIST r a CDATA \"default\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "@a",
+                  [
+                    "str",
+                    "default"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "t|e|x|t"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-1-02",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!--comment--><!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|e|x|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-1-03",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r SYSTEM \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|e|x|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-1-04",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r PUBLIC \"id\" \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|e|x|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-1-05",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-2-00",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ENTITY e \"word\"><!ENTITY f \"a&e;b\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|ex|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-2-01",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ATTLIST r a CDATA \"default\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "@a",
+                  [
+                    "str",
+                    "default"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "te|xt"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-2-02",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!--comment--><!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-2-03",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r SYSTEM \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-2-04",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r PUBLIC \"id\" \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|ex|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-2-05",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 3,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-3-00",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 3,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ENTITY e \"word\"><!ENTITY f \"a&e;b\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-3-01",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 3,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ATTLIST r a CDATA \"default\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "@a",
+                  [
+                    "str",
+                    "default"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "tex|t"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-3-02",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 3,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!--comment--><!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "tex|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-3-03",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 3,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r SYSTEM \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "tex|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-3-04",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 3,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r PUBLIC \"id\" \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-3-05",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 4,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-4-00",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 4,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ENTITY e \"word\"><!ENTITY f \"a&e;b\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|ext"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-4-01",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 4,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ATTLIST r a CDATA \"default\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "@a",
+                  [
+                    "str",
+                    "default"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-4-02",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 4,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!--comment--><!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-4-03",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 4,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r SYSTEM \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-4-04",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 4,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r PUBLIC \"id\" \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "tex|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-4-05",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 5,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-5-00",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 5,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ENTITY e \"word\"><!ENTITY f \"a&e;b\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-5-01",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 5,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ATTLIST r a CDATA \"default\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "@a",
+                  [
+                    "str",
+                    "default"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "te|xt"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-5-02",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 5,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!--comment--><!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|ext"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-5-03",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 5,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r SYSTEM \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-5-04",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 5,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r PUBLIC \"id\" \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-5-05",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-7-00",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ENTITY e \"word\"><!ENTITY f \"a&e;b\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|ext"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-7-01",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ATTLIST r a CDATA \"default\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "@a",
+                  [
+                    "str",
+                    "default"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-7-02",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!--comment--><!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-7-03",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r SYSTEM \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-7-04",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r PUBLIC \"id\" \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-7-05",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 11,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-11-00",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 11,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ENTITY e \"word\"><!ENTITY f \"a&e;b\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-11-01",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 11,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ATTLIST r a CDATA \"default\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "@a",
+                  [
+                    "str",
+                    "default"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-11-02",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 11,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!--comment--><!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|ext"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-11-03",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 11,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r SYSTEM \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-11-04",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 11,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r PUBLIC \"id\" \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "tex|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-0-11-05",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": false,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|e|x|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-1-00",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ENTITY e \"word\"><!ENTITY f \"a&e;b\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|e|x|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-1-01",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ATTLIST r a CDATA \"default\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "@a",
+                  [
+                    "str",
+                    "default"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "t|e|x|t"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-1-02",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!--comment--><!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "#comment",
+            [
+              "str",
+              "comment"
+            ]
+          ],
+          [
+            "r",
+            [
+              "str",
+              "t|e|x|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-1-03",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r SYSTEM \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|e|x|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-1-04",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 1,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r PUBLIC \"id\" \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|e|x|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-1-05",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-2-00",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ENTITY e \"word\"><!ENTITY f \"a&e;b\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|ex|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-2-01",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ATTLIST r a CDATA \"default\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "@a",
+                  [
+                    "str",
+                    "default"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "te|xt"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-2-02",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!--comment--><!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "#comment",
+            [
+              "str",
+              "comment"
+            ]
+          ],
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-2-03",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r SYSTEM \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-2-04",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 2,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r PUBLIC \"id\" \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|ex|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-2-05",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 3,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-3-00",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 3,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ENTITY e \"word\"><!ENTITY f \"a&e;b\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-3-01",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 3,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ATTLIST r a CDATA \"default\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "@a",
+                  [
+                    "str",
+                    "default"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "tex|t"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-3-02",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 3,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!--comment--><!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "#comment",
+            [
+              "str",
+              "comment"
+            ]
+          ],
+          [
+            "r",
+            [
+              "str",
+              "tex|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-3-03",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 3,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r SYSTEM \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "tex|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-3-04",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 3,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r PUBLIC \"id\" \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-3-05",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 4,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-4-00",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 4,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ENTITY e \"word\"><!ENTITY f \"a&e;b\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|ext"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-4-01",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 4,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ATTLIST r a CDATA \"default\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "@a",
+                  [
+                    "str",
+                    "default"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-4-02",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 4,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!--comment--><!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "#comment",
+            [
+              "str",
+              "comment"
+            ]
+          ],
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-4-03",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 4,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r SYSTEM \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-4-04",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 4,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r PUBLIC \"id\" \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "tex|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-4-05",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 5,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-5-00",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 5,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ENTITY e \"word\"><!ENTITY f \"a&e;b\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-5-01",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 5,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ATTLIST r a CDATA \"default\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "@a",
+                  [
+                    "str",
+                    "default"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "te|xt"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-5-02",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 5,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!--comment--><!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "#comment",
+            [
+              "str",
+              "comment"
+            ]
+          ],
+          [
+            "r",
+            [
+              "str",
+              "t|ext"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-5-03",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 5,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r SYSTEM \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-5-04",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 5,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r PUBLIC \"id\" \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-5-05",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-7-00",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ENTITY e \"word\"><!ENTITY f \"a&e;b\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "t|ext"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-7-01",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ATTLIST r a CDATA \"default\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "@a",
+                  [
+                    "str",
+                    "default"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-7-02",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!--comment--><!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "#comment",
+            [
+              "str",
+              "comment"
+            ]
+          ],
+          [
+            "r",
+            [
+              "str",
+              "te|xt"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-7-03",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r SYSTEM \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-7-04",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 7,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r PUBLIC \"id\" \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-7-05",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 11,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-11-00",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 11,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ENTITY e \"word\"><!ENTITY f \"a&e;b\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-11-01",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 11,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!ATTLIST r a CDATA \"default\">]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "dict",
+              [
+                [
+                  "@a",
+                  [
+                    "str",
+                    "default"
+                  ]
+                ],
+                [
+                  "#text",
+                  [
+                    "str",
+                    "text"
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-11-02",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 11,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r [<!--comment--><!ELEMENT r (#PCDATA)>]><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "#comment",
+            [
+              "str",
+              "comment"
+            ]
+          ],
+          [
+            "r",
+            [
+              "str",
+              "t|ext"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-11-03",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 11,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r SYSTEM \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "text"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-11-04",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    },
+    {
+      "chunk_size": 11,
+      "document": {
+        "kind": "text",
+        "text": "<!DOCTYPE r PUBLIC \"id\" \"not-fetched\"><r>text</r>"
+      },
+      "expected": [
+        "dict",
+        [
+          [
+            "r",
+            [
+              "str",
+              "tex|t"
+            ]
+          ]
+        ]
+      ],
+      "id": "dtd-1-11-05",
+      "options": {
+        "cdata_separator": "|",
+        "disable_entities": false,
+        "process_comments": true,
+        "strip_whitespace": false
+      }
+    }
+  ],
+  "schema_version": 1,
+  "target_oracle": {
+    "expat": "expat_2.8.5",
+    "python": "3.12.15",
+    "reparse_deferral": true,
+    "xmltodict": "1.0.4"
+  }
+}

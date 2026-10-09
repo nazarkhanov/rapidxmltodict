@@ -118,3 +118,9 @@ installed stubs. This is not a manual test of every IDE or extension configurati
 to this package, rather than Expat or xmltodict; catch them from rapidxmltodict.
 `ParseError` exposes `code`, `lineno`, `offset` and `byte_index` for diagnostics.
 Exception class identity is intentionally different even where messages match.
+
+## Deterministic compatibility reference
+
+The exact test oracle and approved XML declaration/chunking differences are
+documented in [the compatibility contract](compatibility.md). These do not add
+a runtime dependency or restore the removed `expat` argument.

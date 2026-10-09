@@ -314,8 +314,16 @@ _ASCII_VALIDATION_CASES = [
 @pytest.mark.parametrize('document', _ASCII_VALIDATION_CASES)
 @pytest.mark.parametrize('as_bytes', [False, True])
 def test_ascii_validation_subset_matches_full_engine_and_oracle(document, as_bytes):
+    strict_version_case = document == '<?xml version="release_1-0"?><r/>'
     if as_bytes:
         document = document.encode('utf-8')
+    if strict_version_case:
+        # Canonical 2.8.5 rejection, even where older Expat accepts this token.
+        for options in ({}, {'force_list': False}):
+            with pytest.raises(rapidxmltodict.ParseError) as error:
+                rapidxmltodict.parse(document, **options)
+            assert error.value.code == 30 and error.value.offset == 15
+        return
     try:
         expected = xmltodict.parse(document)
     except ExpatError:

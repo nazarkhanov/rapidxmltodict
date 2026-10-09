@@ -80,6 +80,12 @@ Intentional differences:
 - The `expat` parameter is removed; parser injection is unsupported.
 - Catch `rapidxmltodict.ParseError` and `rapidxmltodict.ParsingInterrupted`.
   They are independent classes, not the exceptions exported by Expat/xmltodict.
+- XML declaration versions must match `1.[0-9]+`, following the modern reference.
+- Chunk-sensitive text joining follows the pinned modern reference behavior;
+  older Expat builds can place a nonempty `cdata_separator` differently.
+
+The test oracle is pinned to CPython 3.12.15 / Expat 2.8.5; neither is a parser
+dependency. See the [compatibility contract](docs/compatibility.md).
 
 With `item_depth` and `item_callback`, completed items are delivered incrementally
 and are not accumulated in the parent result. Keeping them in your callback will

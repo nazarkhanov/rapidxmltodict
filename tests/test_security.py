@@ -141,7 +141,19 @@ for iteration in range(600):
         elif position < len(document):
             document[position] = rng.choice(alphabet)
     cases.append(bytes(document))
+# One exact generated case is accepted by older Expat but rejected by the
+# canonical Expat 2.8.5 oracle. Enforce the approved strict version grammar;
+# scripts/check_reference_oracle.py independently verifies canonical rejection.
+strict_version_case = base.replace(b'version="1.0"', b'version="104"')
 for document in cases:
+    if document == strict_version_case:
+        try:
+            rapidxmltodict.parse(document)
+        except rapidxmltodict.ParseError as error:
+            assert error.code == 30 and error.offset == 15
+        else:
+            raise AssertionError(('accepted nonconforming XML version', document))
+        continue
     try:
         expected = xmltodict.parse(document)
     except Exception as expected_error:

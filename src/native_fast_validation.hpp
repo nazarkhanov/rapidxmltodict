@@ -82,8 +82,8 @@ inline bool declaration(std::string_view s, size_t begin, size_t end) {
         if (i == end) return false;
         auto value = s.substr(start, i++ - start);
         if (stage == 0 && key == "version") {
-            if (value.empty()) return false;
-            for (unsigned char c : value) if (!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-')) return false;
+            if (value.size() < 3 || value[0] != '1' || value[1] != '.') return false;
+            for (size_t j = 2; j < value.size(); ++j) if (value[j] < '0' || value[j] > '9') return false;
             stage = 1;
         } else if (stage == 1 && key == "encoding") {
             if (value.empty() || !((value[0] >= 'A' && value[0] <= 'Z') || (value[0] >= 'a' && value[0] <= 'z'))) return false;
@@ -105,11 +105,18 @@ inline bool validate_ascii_subset(const char* input, size_t length) {
     size_t i = 0;
     while (i < length) {
         if (s[i] != '<') {
-            while (i < length && s[i] != '<') {
-                const unsigned char c = static_cast<unsigned char>(s[i]);
-                if (stack.empty()) { if (!space(static_cast<char>(c))) return false; ++i; continue; }
-                if (c == '&') { if (!reference(s, i)) return false; }
-                else { if (c == ']' && s.substr(i, 3) == "]]>") return false; if (!character(s, i)) return false; }
+            if (stack.empty()) {
+                while (i < length && s[i] != '<') { if (!space(s[i])) return false; ++i; }
+            } else {
+                while (i < length && s[i] != '<') {
+                    const unsigned char c = static_cast<unsigned char>(s[i]);
+                    if (c == '&') { if (!reference(s, i)) return false; }
+                    else {
+                        if (c == ']' && s.substr(i, 3) == "]]>") return false;
+                        if (c < 0x80) { if (!literal(c)) return false; ++i; }
+                        else if (!character(s, i)) return false;
+                    }
+                }
             }
             continue;
         }
