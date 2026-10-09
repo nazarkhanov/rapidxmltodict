@@ -14,6 +14,7 @@ import importlib.metadata
 import inspect
 from io import BytesIO, StringIO
 from pathlib import Path
+import os
 import random
 import subprocess
 import sys
@@ -372,6 +373,7 @@ if os.environ.get("SAN_ROOT"):
     sys.path.insert(0, os.environ["SAN_ROOT"])
     import sitecustomize
     assert sitecustomize.LSAN_CHECKPOINT_ACTIVE
+    assert not sys.flags.ignore_environment
 from io import BytesIO
 
 class BlockReferenceAndExpat(importlib.abc.MetaPathFinder):
@@ -391,6 +393,9 @@ serializer.unparse(data, output=output, encoding="latin-1", bytes_errors="replac
 assert b"<root" in output.getvalue()
 assert not any(name == "xmltodict" or "expat" in name for name in sys.modules)
 '''
-    completed = subprocess.run([sys.executable, "-I", "-c", script, str(Path(_serialize.__file__).resolve())],
+    # -I ignores PYTHONMALLOC as well as PYTHONPATH; the instrumented job
+    # must keep malloc-backed objects visible to LSan. Import blocking remains.
+    flags = [] if os.environ.get("SAN_ROOT") else ["-I"]
+    completed = subprocess.run([sys.executable, *flags, "-c", script, str(Path(_serialize.__file__).resolve())],
                                text=True, capture_output=True)
     assert completed.returncode == 0, completed.stdout + completed.stderr

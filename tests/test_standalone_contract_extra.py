@@ -5,6 +5,7 @@ parse/interruption exceptions, so comparisons translate those two identities.
 """
 from collections import OrderedDict
 from copy import deepcopy
+import os
 from xml.parsers.expat import ExpatError
 
 import pytest
@@ -232,6 +233,7 @@ if os.environ.get("SAN_ROOT"):
     sys.path.insert(0, os.environ["SAN_ROOT"])
     import sitecustomize
     assert sitecustomize.LSAN_CHECKPOINT_ACTIVE
+    assert not sys.flags.ignore_environment
 blocked = {'xmltodict', 'pyexpat', 'xml.parsers.expat', 'xml.sax.expatreader'}
 class RejectParserDependency(importlib.abc.MetaPathFinder):
     def find_spec(self, fullname, path=None, target=None):
@@ -250,7 +252,10 @@ value = {'r': {'i': ['one', 'two']}}
 assert xml.parse(xml.unparse(value, pretty=True)) == value
 assert not blocked & sys.modules.keys()
 '''
-    result = subprocess.run([sys.executable, '-I', '-c', program],
+    # Honor the sanitizer allocator/startup environment in the instrumented
+    # job; normal isolation checks still use -I and all runs block parser imports.
+    flags = [] if os.environ.get("SAN_ROOT") else ["-I"]
+    result = subprocess.run([sys.executable, *flags, "-c", program],
                             text=True, capture_output=True, timeout=30)
     assert result.returncode == 0, result.stdout + result.stderr
 

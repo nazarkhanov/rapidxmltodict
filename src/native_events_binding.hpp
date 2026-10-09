@@ -3,8 +3,12 @@
 PyObject* native_parse_error = nullptr;
 
 void set_event_error(const rapidxml_events::Error& error) {
-    std::string message = std::string(error.what()) + ": line " + std::to_string(error.line) + ", column " + std::to_string(error.column);
-    Ref exception(PyObject_CallFunction(native_parse_error, "s", message.c_str()));
+    // This runs inside a C++ catch handler: do not allocate C++ strings here,
+    // since a second bad_alloc would escape the Python C entry point.
+    Ref message(PyUnicode_FromFormat("%s: line %zu, column %zu",
+                                     error.what(), error.line, error.column));
+    if (!message.p) return;
+    Ref exception(PyObject_CallOneArg(native_parse_error, message.p));
     if (!exception.p) return;
     const std::pair<const char*, size_t> fields[] = {
         {"code", static_cast<size_t>(error.code)}, {"lineno", error.line},

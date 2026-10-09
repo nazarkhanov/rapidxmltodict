@@ -38,6 +38,10 @@ There are no suppression files or disabled allocation tracking.
    Its child Python processes inherit a startup hook for a real LSan checkpoint.
    This includes standalone validation, streaming, DTD/encoding and serialization
    regression tests. xmltodict 1.0.4 is a test oracle only.
+   Import-block subprocesses omit `-I` only in this instrumented job because
+   isolated mode ignores `PYTHONMALLOC=malloc` and `PYTHONPATH`; they explicitly
+   check the hook and allocator environment, and still reject parser imports.
+   Normal jobs run those subprocesses with `-I`.
 
 The separate runtime-independence tests block xmltodict, pyexpat and Expat parser
 imports. Normal distribution/typing jobs also remain required.
