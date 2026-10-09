@@ -1,4 +1,4 @@
-"""Build an isolated ASan/UBSan extension and run real exit-time LSan checks.
+"""Build an isolated ASan/UBSan extension and run real LSan cleanup checks.
 
 Linux/GCC only. Requires the project installed in the active interpreter.
 No suppressions or sanitizer disabling: an unsupported LSan host fails closed.

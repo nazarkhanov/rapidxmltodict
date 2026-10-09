@@ -1,4 +1,5 @@
 """Standalone sanitizer workload; no pytest/plugin allocations at shutdown."""
+import ctypes
 import gc
 import os
 from pathlib import Path
@@ -68,7 +69,6 @@ def main():
     exercise()
     gc.collect()
     if sys.argv[1:] == ['--intentional-leak']:
-        import ctypes
         probe = ctypes.CDLL(str(directory / 'leak_probe.so'))
         probe.intentional_leak.restype = ctypes.c_void_p
         probe.intentional_leak()  # Deliberately discard pointer in this process only.
@@ -80,3 +80,13 @@ def main():
 
 if __name__ == '__main__':
     main()
+    # CPython 3.12 immortal/interned strings can be orphaned during interpreter
+    # shutdown. Check after our frames/results are gone, before that teardown.
+    # This is LSan's supported early exit checkpoint, not a suppression: it
+    # scans all tracked allocations and replaces the later automatic check.
+    gc.collect()
+    check = ctypes.CDLL(None).__lsan_do_leak_check
+    check.argtypes = []
+    check.restype = None
+    check()
+    print('PASS: explicit LSan cleanup checkpoint completed', flush=True)
