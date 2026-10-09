@@ -2,6 +2,8 @@ import hashlib
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 import rapidxmltodict
+import rapidxmltodict._native as native
+import xmltodict
 import pytest
 
 
@@ -11,10 +13,14 @@ def test_vendor_header_unchanged():
 
 
 def test_default_uses_native(monkeypatch):
-    def forbidden(*args, **kwargs):
-        raise AssertionError('unexpected fallback')
-    monkeypatch.setattr(rapidxmltodict._reference, 'parse', forbidden)
+    calls = []
+    original = native.convert
+    def convert(data):
+        calls.append(data)
+        return original(data)
+    monkeypatch.setattr(native, 'convert', convert)
     assert rapidxmltodict.parse('<r a="1"><x>yes</x><x/></r>') == {'r': {'@a':'1', 'x':['yes',None]}}
+    assert len(calls) == 1
 
 
 @pytest.mark.parametrize('xml,kwargs', [
@@ -23,10 +29,8 @@ def test_default_uses_native(monkeypatch):
     ('<?xml version="1.0" encoding="ISO-8859-1"?><r/>', {}),
     ('<r>' * 257 + '</r>' * 257, {}),
 ])
-def test_documented_fallback(monkeypatch, xml, kwargs):
-    expected = object()
-    monkeypatch.setattr(rapidxmltodict._reference, 'parse', lambda *a, **kw: expected)
-    assert rapidxmltodict.parse(xml, **kwargs) is expected
+def test_documented_options_are_native(xml, kwargs):
+    assert rapidxmltodict.parse(xml, **kwargs) == xmltodict.parse(xml, **kwargs)
 
 
 def test_returned_values_own_memory():
@@ -44,10 +48,14 @@ def test_parallel_calls():
 
 
 def test_utf8_declaration_uses_native(monkeypatch):
-    def forbidden(*args, **kwargs):
-        raise AssertionError('UTF-8 declaration should be accelerated')
-    monkeypatch.setattr(rapidxmltodict._reference, 'parse', forbidden)
+    calls = []
+    original = native.convert
+    def convert(data):
+        calls.append(data)
+        return original(data)
+    monkeypatch.setattr(native, 'convert', convert)
     assert rapidxmltodict.parse('<?xml version="1.0" encoding="UTF-8"?><r>é</r>') == {'r': 'é'}
+    assert len(calls) == 1
 
 
 @pytest.mark.parametrize('document', [
@@ -59,8 +67,12 @@ def test_utf8_declaration_uses_native(monkeypatch):
 def test_upstream_preserves_qualified_names_on_native_path(monkeypatch, document):
     # Upstream name()/name_size() contain the whole qualified name. Comparing
     # before patching the reference proves prefixes are neither lost nor doubled.
-    expected = rapidxmltodict._reference.parse(document)
-    def forbidden(*args, **kwargs):
-        raise AssertionError('unexpected namespace/name fallback')
-    monkeypatch.setattr(rapidxmltodict._reference, 'parse', forbidden)
+    expected = xmltodict.parse(document)
+    calls = []
+    original = native.convert
+    def convert(data):
+        calls.append(data)
+        return original(data)
+    monkeypatch.setattr(native, 'convert', convert)
     assert rapidxmltodict.parse(document) == expected
+    assert len(calls) == 1

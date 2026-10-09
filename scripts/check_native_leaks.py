@@ -23,8 +23,8 @@ def main():
         package = directory / "rapidxmltodict"
         package.mkdir()
         installed = Path(rapidxmltodict.__file__).parent
-        for name in ("__init__.py", "_version.py"):
-            shutil.copy2(installed / name, package / name)
+        for source in installed.glob("*.py"):
+            shutil.copy2(source, package / source.name)
         flags = [compiler, "-O1", "-g", "-fsanitize=address,undefined",
                  "-fno-omit-frame-pointer", "-shared", "-fPIC", "-std=c++17"]
         subprocess.run(flags + ["-I" + sysconfig.get_path("include"),
@@ -77,6 +77,32 @@ extern "C" void intentional_python_leak() {
         print("PASS: Python cleanup guard detected intentional leaked reference", flush=True)
         subprocess.run(command, env=env, check=True)
         print("PASS: native workload exited cleanly with ASan/UBSan/LSan enabled", flush=True)
+        # Also instrument every differential test and inherited Python subprocess.
+        # A startup hook performs the same real pre-finalization LSan checkpoint;
+        # pytest itself retains interpreter objects until shutdown, so no broad
+        # allocator-stack suppressions are appropriate.
+        (directory / "sitecustomize.py").write_text('''import atexit
+import ctypes
+import gc
+import os
+LSAN_CHECKPOINT_ACTIVE = True
+def _checkpoint():
+    try:
+        gc.collect()
+        check = ctypes.CDLL(None).__lsan_do_leak_check
+        check.argtypes = []
+        check.restype = None
+        check()
+    except BaseException:
+        os._exit(25)
+atexit.register(_checkpoint)
+''')
+        program = (
+            "import sitecustomize; assert sitecustomize.LSAN_CHECKPOINT_ACTIVE; "
+            "import pytest; raise SystemExit(pytest.main([" + repr(str(ROOT / "tests")) + ", '-q']))"
+        )
+        subprocess.run([sys.executable, "-c", program], env=env, check=True)
+        print("PASS: complete differential suite under ASan/UBSan/LSan", flush=True)
 
 
 if __name__ == "__main__":

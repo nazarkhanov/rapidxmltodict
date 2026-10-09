@@ -1,6 +1,8 @@
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 #include <rapidxml/rapidxml.hpp>
+#include "rapidxml_events.hpp"
+#include "native_fast_validation.hpp"
 #include <cstring>
 #include <string>
 #include <string_view>
@@ -21,7 +23,7 @@ struct PythonError {};
 PyObject* checked(PyObject* p) { if (!p) throw PythonError{}; return p; }
 
 // Check the nesting limit without recursion, before entering RapidXML's parser.
-// Input to this private routine has already been validated by Expat.
+// Input to this private routine has already been validated by the native validator.
 bool xml_space(char c) { return c==' ' || c=='\t' || c=='\r' || c=='\n'; }
 bool shallow(const char* s, size_t n, bool& compact) {
     size_t i = 0, depth = 0, data_start = 0;
@@ -225,7 +227,14 @@ PyObject* convert(PyObject*, PyObject* input) {
       catch(const rapidxml::parse_error& e) {PyErr_SetString(PyExc_ValueError,e.what());return nullptr;}
       catch(const std::exception& e) {PyErr_SetString(PyExc_RuntimeError,e.what());return nullptr;}
 }
-PyMethodDef methods[]={{"convert",convert,METH_O,"Private converter; caller must first validate XML with Expat."},{nullptr,nullptr,0,nullptr}};
+#include "native_events_binding.hpp"
+
+PyMethodDef methods[]={{"validate", reinterpret_cast<PyCFunction>(validate_xml), METH_VARARGS | METH_KEYWORDS, "Validate XML with the native incremental parser."},{"convert",convert,METH_O,"Private converter; caller must first validate XML with the native validator."},{nullptr,nullptr,0,nullptr}};
 PyModuleDef module={PyModuleDef_HEAD_INIT,"_native",nullptr,-1,methods,nullptr,nullptr,nullptr,nullptr};
 }
-PyMODINIT_FUNC PyInit__native() {return PyModule_Create(&module);}
+PyMODINIT_FUNC PyInit__native() {
+    PyObject* result = PyModule_Create(&module);
+    if (!result) return nullptr;
+    if (add_event_parser(result) < 0) { Py_DECREF(result); return nullptr; }
+    return result;
+}

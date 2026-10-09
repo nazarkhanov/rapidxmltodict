@@ -4,7 +4,6 @@ import gc
 import os
 from pathlib import Path
 import sys
-from xml.parsers.expat import ExpatError
 
 import rapidxmltodict as rapid
 import rapidxmltodict._native as native
@@ -35,7 +34,7 @@ def exercise(iterations=1000):
         for document in malformed:
             try:
                 rapid.parse(document)
-            except ExpatError:
+            except rapid.ParseError:
                 pass
             else:
                 raise AssertionError("Malformed XML accepted")

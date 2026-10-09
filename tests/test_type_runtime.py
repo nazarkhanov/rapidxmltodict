@@ -1,7 +1,6 @@
 """Runtime evidence for the bundled public typing contract.
 
-Run against both the minimum and current supported xmltodict versions.  The
-stub covers their combined API, while behavior follows the installed version.
+The oracle is xmltodict 1.0.4; it is a test dependency only.
 """
 
 import ast

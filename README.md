@@ -7,8 +7,8 @@
 Fast XML-to-dictionary parsing for Python, powered by RapidXML.
 
 `rapidxmltodict` combines a C++ parser with the familiar `xmltodict` API and
-output format. Common UTF-8 documents use native acceleration; advanced
-options are handled by `xmltodict`.
+output format. Parsing, streaming callbacks and serialization are implemented
+locally, with no xmltodict or Expat runtime dependency.
 
 ## Installation
 
@@ -20,7 +20,8 @@ Requires **CPython 3.9+**. Wheels are available for CPython **3.9–3.14** on
 Linux x86-64 (manylinux), Windows x64, and macOS Intel/Apple Silicon.
 Source builds require a C++17 compiler and Python development headers.
 
-`xmltodict>=0.14.2,<2` is installed automatically as a runtime dependency.
+There are no third-party Python runtime dependencies. Tests use xmltodict 1.0.4
+as the compatibility reference.
 
 ## Quick start
 
@@ -47,7 +48,7 @@ data = rapidxmltodict.parse(Path("catalog.xml").read_bytes())
 ```
 
 This loads the whole file into memory. Binary file objects and chunk generators
-are also supported through `xmltodict`, including its streaming callbacks.
+are also supported, including incremental `item_callback` processing.
 
 ### Use parsing options
 
@@ -66,25 +67,28 @@ assert data == {"catalog": {"book": ["Python"]}}
 xml = rapidxmltodict.unparse(data, pretty=True)
 ```
 
-`unparse` is provided by `xmltodict`. XML round trips are not lossless.
+`unparse` follows xmltodict 1.0.4 serialization rules. XML round trips are not lossless.
 
 ## Compatibility
 
-Native acceleration handles UTF-8 `str` and `bytes` with default options,
-including attributes, repeated elements, namespace prefixes, Unicode and CDATA.
+The compatibility target is **xmltodict 1.0.4**, including namespace mappings,
+comments, postprocessors, custom dictionaries, callbacks and serialization.
+Default UTF-8 documents use a native dictionary fast path; other inputs/options
+use the independent native event parser and mapping layer. Native work holds the GIL.
 
-Custom options such as `force_list`, namespace processing, comments and
-postprocessors use the installed `xmltodict`. Extra options passed through
-`**kwargs` trigger fallback even when explicitly set to their defaults.
+Intentional differences:
+- The `expat` parameter is removed; parser injection is unsupported.
+- Catch `rapidxmltodict.ParseError` and `rapidxmltodict.ParsingInterrupted`.
+  They are independent classes, not the exceptions exported by Expat/xmltodict.
 
-File objects, generators, non-UTF-8 input, DTDs, nesting beyond 256 elements,
-and certain mixed-content or XML-name edge cases also use fallback.
-Behavior follows the installed dependency version; these calls may be slower
-than calling `xmltodict` directly. Native conversion holds the GIL.
+With `item_depth` and `item_callback`, completed items are delivered incrementally
+and are not accumulated in the parent result. Keeping them in your callback will
+still retain memory. Inputs, a single unfinished token and the current item can
+also require substantial memory. See [API details](docs/typing.md).
 
 ## Performance
 
-Recorded synthetic catalog benchmarks on **CPython 3.12.14 / Linux x86-64**,
+Historical measurements of the earlier Expat-validated implementation on **CPython 3.12.14 / Linux x86-64**,
 compared with **xmltodict 0.14.2**:
 
 | Input size | rapidxmltodict | xmltodict | Speedup |
@@ -110,9 +114,9 @@ Nested XML values remain dynamic. See [typing details](docs/typing.md).
 
 ## Security
 
-The native path validates XML with Expat before parsing. External entities are
-not fetched by the default path; DTD and entity behavior follows the installed
-`xmltodict`. Keep `disable_entities=True` for untrusted input.
+XML is validated by the native parser; Expat is not loaded. External entities
+are not fetched. Keep `disable_entities=True` to reject entity declarations for
+untrusted input.
 
 There is no application-level input-size or output-size limit. Enforce suitable
 size, time and memory limits when processing untrusted documents.

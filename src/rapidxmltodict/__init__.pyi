@@ -1,10 +1,16 @@
-"""Static API for xmltodict 0.14.2 through 1.0.4; see README typing limits."""
+"""Static API compatible with xmltodict 1.0.4 except Expat injection."""
 from collections.abc import Callable, Container, Generator, Mapping, MutableMapping
 from typing import Any, BinaryIO, Literal, TextIO, Protocol, TypeVar, Union, overload
 
 __version__: str
 
 class ParsingInterrupted(Exception): ...
+
+class ParseError(Exception):
+    code: int
+    lineno: int
+    offset: int
+    byte_index: int
 
 # Private aliases exist only in this stub, not as runtime exports.
 _Path = list[tuple[str, Union[MutableMapping[str, Any], None]]]
@@ -23,7 +29,6 @@ _Mapping = TypeVar("_Mapping", bound=MutableMapping[Any, Any])
 def parse(
     xml_input: _XMLInput,
     encoding: Union[str, None] = None,
-    expat: Any = ...,
     process_namespaces: bool = False,
     namespace_separator: str = ":",
     disable_entities: bool = True,
@@ -43,13 +48,12 @@ def parse(
     force_list: Union[bool, Container[Any], _Predicate, None] = None,
     comment_key: str = "#comment",
 ) -> _Mapping:
-    """Parse XML; advanced options delegate to the installed xmltodict."""
+    """Parse XML with the standalone native parser."""
 
 @overload
 def parse(
     xml_input: _XMLInput,
     encoding: Union[str, None] = None,
-    expat: Any = ...,
     process_namespaces: bool = False,
     namespace_separator: str = ":",
     disable_entities: bool = True,
@@ -69,13 +73,12 @@ def parse(
     force_list: Union[bool, Container[Any], _Predicate, None] = None,
     comment_key: str = "#comment",
 ) -> dict[str, Any]:
-    """Parse XML; advanced options delegate to the installed xmltodict."""
+    """Parse XML with the standalone native parser."""
 
 @overload
 def parse(
     xml_input: _XMLInput,
     encoding: Union[str, None] = None,
-    expat: Any = ...,
     process_namespaces: bool = False,
     namespace_separator: str = ":",
     disable_entities: bool = True,
@@ -95,13 +98,12 @@ def parse(
     force_list: Union[bool, Container[Any], _Predicate, None] = None,
     comment_key: str = "#comment",
 ) -> Union[_Mapping, None]:
-    """Parse XML; advanced options delegate to the installed xmltodict."""
+    """Parse XML with the standalone native parser."""
 
 @overload
 def parse(
     xml_input: _XMLInput,
     encoding: Union[str, None] = None,
-    expat: Any = ...,
     process_namespaces: bool = False,
     namespace_separator: str = ":",
     disable_entities: bool = True,
@@ -121,7 +123,7 @@ def parse(
     force_list: Union[bool, Container[Any], _Predicate, None] = None,
     comment_key: str = "#comment",
 ) -> Union[dict[Any, Any], None]:
-    """Parse XML; advanced options delegate to the installed xmltodict."""
+    """Parse XML with the standalone native parser."""
 
 @overload
 def unparse(
@@ -130,7 +132,7 @@ def unparse(
     encoding: str = "utf-8",
     full_document: bool = True,
     short_empty_elements: bool = False,
-    comment_key: str = "#comment",  # xmltodict 1.0.4; not 0.14.2
+    comment_key: str = "#comment",
     *,
     attr_prefix: str = "@",
     cdata_key: str = "#text",
@@ -142,7 +144,7 @@ def unparse(
     namespace_separator: str = ":",
     namespaces: Union[Mapping[str, Union[str, None]], None] = None,
     expand_iter: Union[str, None] = None,
-    bytes_errors: str = "replace",  # xmltodict 1.0.4; not 0.14.2
+    bytes_errors: str = "replace",
 ) -> str:
     """Return XML text, or write to output and return None."""
 
@@ -153,7 +155,7 @@ def unparse(
     encoding: str = "utf-8",
     full_document: bool = True,
     short_empty_elements: bool = False,
-    comment_key: str = "#comment",  # xmltodict 1.0.4; not 0.14.2
+    comment_key: str = "#comment",
     *,
     attr_prefix: str = "@",
     cdata_key: str = "#text",
@@ -165,7 +167,7 @@ def unparse(
     namespace_separator: str = ":",
     namespaces: Union[Mapping[str, Union[str, None]], None] = None,
     expand_iter: Union[str, None] = None,
-    bytes_errors: str = "replace",  # xmltodict 1.0.4; not 0.14.2
+    bytes_errors: str = "replace",
 ) -> None:
     """Return XML text, or write to output and return None."""
 
@@ -176,7 +178,7 @@ def unparse(
     encoding: str = "utf-8",
     full_document: bool = True,
     short_empty_elements: bool = False,
-    comment_key: str = "#comment",  # xmltodict 1.0.4; not 0.14.2
+    comment_key: str = "#comment",
     *,
     attr_prefix: str = "@",
     cdata_key: str = "#text",
@@ -188,7 +190,7 @@ def unparse(
     namespace_separator: str = ":",
     namespaces: Union[Mapping[str, Union[str, None]], None] = None,
     expand_iter: Union[str, None] = None,
-    bytes_errors: str = "replace",  # xmltodict 1.0.4; not 0.14.2
+    bytes_errors: str = "replace",
 ) -> Union[str, None]:
     """Return XML text, or write to output and return None."""
 

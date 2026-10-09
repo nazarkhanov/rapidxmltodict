@@ -64,7 +64,7 @@ MALFORMED = [
 def test_malformed_xml_is_rejected(document):
     with pytest.raises(ExpatError):
         xmltodict.parse(document)
-    with pytest.raises(ExpatError):
+    with pytest.raises(rapidxmltodict.ParseError):
         rapidxmltodict.parse(document)
 
 
@@ -148,9 +148,14 @@ for document in cases:
         try:
             rapidxmltodict.parse(document)
         except Exception as actual_error:
-            assert type(actual_error) is type(expected_error), (document, type(actual_error), type(expected_error))
+            expected_type = rapidxmltodict.ParseError if type(expected_error).__name__ == 'ExpatError' else type(expected_error)
+            assert type(actual_error) is expected_type, (document, type(actual_error), type(expected_error))
         else:
             raise AssertionError(('accepted invalid XML', document))
     else:
-        assert rapidxmltodict.parse(document) == expected, document
+        try:
+            actual = rapidxmltodict.parse(document)
+        except Exception as error:
+            raise AssertionError(('rejected reference-valid XML', document, str(error))) from error
+        assert actual == expected, document
 ''')
