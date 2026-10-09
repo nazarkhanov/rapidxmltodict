@@ -2485,9 +2485,6 @@ namespace rapidxml
                     if (m_root_seen) strict_fail(9, token);
                     m_root_seen = true;
                 }
-                // Bound recursion before allocating or descending. Deep XML
-                // continues through the iterative event path.
-                if (m_depth >= 256) throw strict_unsupported();
                 xml_node<Ch> *element = this->allocate_node(node_element);
                 parse_node_attributes<Flags>(text, element);
                 const bool empty = m_header_self_closing;
@@ -2652,6 +2649,11 @@ namespace rapidxml
         {
             if constexpr (Flags & parse_strict)
             {
+                // The DOM's parent links are the open-element stack. Attach
+                // each child before descending, and return to its parent when
+                // its closing tag is consumed. Strict parsing never recurses
+                // or restarts an already-consumed deep document.
+                xml_node<Ch> *root = node;
                 while (text != m_end)
                 {
                     if (*text != '<') { parse_and_append_data<Flags>(node, text, text); continue; }
@@ -2664,10 +2666,26 @@ namespace rapidxml
                         catch (const internal::header_error &error) { strict_fail(error.code, token + error.offset); }
                         if (!receiver.closing_match) strict_fail(7, token + 2);
                         text = token + header.consumed();
-                        return;
+                        if (node == root) return;
+                        node = node->parent();
+                        --m_depth;
+                        continue;
                     }
                     ++text;
-                    if (xml_node<Ch> *child = parse_node<Flags>(text, node)) node->append_node(child);
+                    if (text == m_end) strict_fail(5, text - 1);
+                    if (*text != '!' && *text != '?')
+                    {
+                        xml_node<Ch> *child = this->allocate_node(node_element);
+                        parse_node_attributes<Flags>(text, child);
+                        node->append_node(child);
+                        if (!m_header_self_closing)
+                        {
+                            node = child;
+                            ++m_depth;
+                        }
+                    }
+                    else if (xml_node<Ch> *child = parse_node<Flags>(text, node))
+                        node->append_node(child);
                 }
                 strict_fail(3, text);
             }

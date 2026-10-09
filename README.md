@@ -94,7 +94,7 @@ also require substantial memory. See [API details](docs/typing.md).
 
 ## Performance
 
-Integrated-parser measurements on **CPython 3.12.14 / Linux x86-64**, compared
+Preserved pre-iterative integrated-parser measurements on **CPython 3.12.14 / Linux x86-64**, compared
 with **xmltodict 1.0.4**:
 
 | Input size | rapidxmltodict | xmltodict | Speedup |
@@ -105,8 +105,9 @@ with **xmltodict 1.0.4**:
 
 These catalog-shaped inputs are checked for equal output before timing complete
 parse calls, including validation and conversion. Results depend on input shape,
-options and machine. Deep XML can trigger an event-path restart and remains
-slower than the earlier implementation; some record-shaped inputs also regressed
+options and machine. These measurements precede the iterative DOM and direct-event prototypes now
+under evaluation. They include the former deep-input restart cost; fresh
+architecture comparisons are pending. Some record-shaped inputs also regressed
 relative to the pre-refactor hybrid parser.
 
 **Faster parsing can use more memory.** The ~1 MiB case used 32.38 MiB

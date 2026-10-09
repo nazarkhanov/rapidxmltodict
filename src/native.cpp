@@ -16,6 +16,11 @@ struct Ref {
     ~Ref() { Py_XDECREF(p); }
     Ref(const Ref&) = delete;
     Ref& operator=(const Ref&) = delete;
+    Ref(Ref&& other) noexcept : p(other.release()) {}
+    Ref& operator=(Ref&& other) noexcept {
+        if (this != &other) { Py_XDECREF(p); p = other.release(); }
+        return *this;
+    }
     PyObject* release() { PyObject* x = p; p = nullptr; return x; }
 };
 struct PythonError {};
@@ -62,46 +67,82 @@ struct Builder {
             if(PyErr_Occurred() || PyDict_SetItem(dict,k,value)<0) throw PythonError{};
         }
     }
-    PyObject* build(rapidxml::xml_node<char>* node) {
+    struct Frame {
+        rapidxml::xml_node<char>* node;
+        rapidxml::xml_node<char>* child;
         Ref dict;
-        for(auto* a=node->first_attribute();a;a=a->next_attribute()) {
-            if(!dict.p) dict.p=checked(PyDict_New());
-            Ref value(checked(PyUnicode_DecodeUTF8(a->value(),a->value_size(),"strict")));
-            if(PyDict_SetItem(dict.p,key(a->name(),a->name_size(),true),value.p)<0) throw PythonError{};
-        }
-        const char* first=compact && node->value_size() ? node->value() : nullptr;
-        size_t len=first ? node->value_size() : 0;
-        std::string joined; bool multiple=false;
-        for(auto* child=node->first_node();child;child=child->next_sibling()) {
-            if(child->type()==rapidxml::node_element) {
-                if(!dict.p) dict.p=checked(PyDict_New());
-                Ref value(build(child)); put(dict.p,element_key(child),value.p);
-            } else if(child->type()==rapidxml::node_data || child->type()==rapidxml::node_cdata) {
-                if(!first) {first=child->value();len=child->value_size();}
-                else {
-                    if(!multiple) {joined.assign(first,len);multiple=true;}
-                    joined.append(child->value(),child->value_size());
-                }
+        const char* first;
+        size_t len;
+        std::string joined;
+        bool multiple = false;
+        Frame(Builder& owner, rapidxml::xml_node<char>* value)
+            : node(value), child(value->first_node()),
+              first(owner.compact && value->value_size() ? value->value() : nullptr),
+              len(first ? value->value_size() : 0) {
+            for (auto* a = node->first_attribute(); a; a = a->next_attribute()) {
+                if (!dict.p) dict.p = checked(PyDict_New());
+                Ref text(checked(PyUnicode_DecodeUTF8(a->value(), a->value_size(), "strict")));
+                if (PyDict_SetItem(dict.p, owner.key(a->name(), a->name_size(), true), text.p) < 0)
+                    throw PythonError{};
             }
         }
-        Ref value;
-        if(first) {
-            const char* s=multiple?joined.data():first;
-            size_t size=multiple?joined.size():len;
-            Ref raw(checked(PyUnicode_DecodeUTF8(s,size,"strict")));
-            // CPython's Unicode whitespace semantics match str.strip exactly.
-            Py_ssize_t start=0,end=PyUnicode_GET_LENGTH(raw.p);
-            int kind=PyUnicode_KIND(raw.p); void* data=PyUnicode_DATA(raw.p);
-            while(start<end && Py_UNICODE_ISSPACE(PyUnicode_READ(kind,data,start))) ++start;
-            while(end>start && Py_UNICODE_ISSPACE(PyUnicode_READ(kind,data,end-1))) --end;
-            if(end>start) value.p=checked(PyUnicode_Substring(raw.p,start,end));
+        void append_text(rapidxml::xml_node<char>* value) {
+            if (!first) { first = value->value(); len = value->value_size(); }
+            else {
+                if (!multiple) { joined.assign(first, len); multiple = true; }
+                joined.append(value->value(), value->value_size());
+            }
         }
-        if(dict.p) {
-            if(value.p && PyDict_SetItem(dict.p,text_key.p,value.p)<0) throw PythonError{};
-            return dict.release();
+        PyObject* finish(Builder& owner) {
+            Ref value;
+            if (first) {
+                const char* s = multiple ? joined.data() : first;
+                const size_t size = multiple ? joined.size() : len;
+                Ref raw(checked(PyUnicode_DecodeUTF8(s, size, "strict")));
+                // Match str.strip's Unicode whitespace semantics without calls.
+                Py_ssize_t start = 0, end = PyUnicode_GET_LENGTH(raw.p);
+                const int kind = PyUnicode_KIND(raw.p);
+                void* data = PyUnicode_DATA(raw.p);
+                while (start < end && Py_UNICODE_ISSPACE(PyUnicode_READ(kind, data, start))) ++start;
+                while (end > start && Py_UNICODE_ISSPACE(PyUnicode_READ(kind, data, end - 1))) --end;
+                if (end > start) value.p = checked(PyUnicode_Substring(raw.p, start, end));
+            }
+            if (dict.p) {
+                if (value.p && PyDict_SetItem(dict.p, owner.text_key.p, value.p) < 0) throw PythonError{};
+                return dict.release();
+            }
+            if (value.p) return value.release();
+            Py_INCREF(Py_None);
+            return Py_None;
         }
-        if(value.p) return value.release();
-        Py_INCREF(Py_None); return Py_None;
+    };
+    PyObject* build(rapidxml::xml_node<char>* node) {
+        // Each frame owns only its completed children. C++ control flow remains
+        // iterative at arbitrary XML depth; CPython owns result destruction.
+        std::vector<Frame> stack;
+        stack.reserve(32);
+        stack.emplace_back(*this, node);
+        while (!stack.empty()) {
+            Frame& frame = stack.back();
+            if (frame.child) {
+                auto* child = frame.child;
+                frame.child = child->next_sibling();
+                if (child->type() == rapidxml::node_element) {
+                    if (!frame.dict.p) frame.dict.p = checked(PyDict_New());
+                    stack.emplace_back(*this, child);
+                } else if (child->type() == rapidxml::node_data || child->type() == rapidxml::node_cdata) {
+                    frame.append_text(child);
+                }
+                continue;
+            }
+            auto* completed_node = frame.node;
+            Ref value(frame.finish(*this));
+            stack.pop_back();
+            if (stack.empty()) return value.release();
+            put(stack.back().dict.p, element_key(completed_node), value.p);
+        }
+        PyErr_SetString(PyExc_RuntimeError, "empty native conversion stack");
+        throw PythonError{};
     }
 };
 

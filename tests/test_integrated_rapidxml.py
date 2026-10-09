@@ -83,14 +83,15 @@ def test_private_converter_handles_supported_depth_without_prescan(depth):
     assert result == 'leaf'
 
 
-def test_depth_fallback_preserves_public_result():
+def test_depth_beyond_old_recursion_bound_stays_on_dom():
     depth = 257
     document = b'<node>' * depth + b'leaf' + b'</node>' * depth
-    assert _native.convert(document) is NotImplemented
-    result = rapidxmltodict.parse(document)
-    for _ in range(depth):
-        result = result['node']
-    assert result == 'leaf'
+    for convert in (_native.convert, rapidxmltodict.parse):
+        result = convert(document)
+        assert result is not NotImplemented
+        for _ in range(depth):
+            result = result['node']
+        assert result == 'leaf'
 
 
 @pytest.mark.parametrize('document', [

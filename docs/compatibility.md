@@ -42,14 +42,13 @@ text-event batching retain their streaming-specific state. Completed items are
 not attached back to the document result; a caller retaining callback values
 still retains memory.
 
-DTD input or depth beyond 256 levels in the bounded recursive DOM path can
-request a restart through the event interface. The depth limit protects the
-recursive parser and dictionary builder; it is not a limit on accepted XML.
-Restarting reparses the consumed prefix, which can include many earlier siblings,
-and is a remaining performance limitation for deep documents. Therefore the
-common path has one semantic XML
-parse, but the package does not claim every possible path or diagnostic operation
-is a single scan. Input decoding and error-location accounting also have costs.
+The strict DOM parser walks parent links as its explicit open-element stack;
+the Python-object builder uses explicit postorder frames. Neither depends on
+C++ recursion or restarts parsing at 256 levels. Deep input remains subject to
+available memory, including the Python result and its eventual destruction.
+DTD input can still request the event interface before document elements are
+parsed. Input decoding and error-location accounting also have costs; these
+are not claims that every operation visits each byte only once.
 
 Serialization implements the 1.0.4 output contract using standard-library output
 helpers, without loading an XML parser. External entities are never fetched.
