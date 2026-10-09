@@ -19,6 +19,8 @@ export SAN_ROOT="$(mktemp -d -t rapidxmltodict-sanitizers.XXXXXX)"
 
 mkdir -p "$SAN_ROOT/rapidxmltodict"
 cp src/rapidxmltodict/__init__.py "$SAN_ROOT/rapidxmltodict/"
+# Generate/install the package first so its SCM version module exists.
+cp src/rapidxmltodict/_version.py "$SAN_ROOT/rapidxmltodict/"
 
 "$PYTHON" - <<'PY'
 import os
@@ -128,3 +130,53 @@ cross-platform assertion or a claim that memory cannot grow.
 For peak-memory comparisons, use the benchmark's fresh-process RSS results.
 Python-only `tracemalloc` does not account for the native RapidXML DOM and
 input buffers.
+
+## Required Linux leak gate
+
+The `Linux ASan / LSan` job in `tests.yml` is a required dependency of the
+fail-closed `CI passed` aggregate. It runs on GitHub-hosted Ubuntu 24.04 with
+CPython 3.12 and GCC. It also runs in the tag-release test pipeline.
+
+After installing the project, run `python scripts/check_native_leaks.py`.
+The script compiles `src/native.cpp` into a temporary package with
+`-fsanitize=address,undefined`, preloads GCC's ASan and C++ runtimes, and uses
+`PYTHONMALLOC=malloc`. `ASAN_OPTIONS=detect_leaks=1:halt_on_error=1` and
+`LSAN_OPTIONS=exitcode=23:print_suppressions=1` enable real leak
+checking. There are **no suppressions**. RapidXML and the shipped extension are
+not modified; the instrumented extension and intentional-leak probe are temporary.
+
+A positive control first runs the same Python workload and deliberately loses
+one 4,096-byte allocation in a separate, test-only shared library. The runner
+must return 23 and report the expected LeakSanitizer diagnostic, byte count and
+`intentional_leak` function. A crash or unsupported detector is not success.
+The clean process then must exit zero. After the workload returns and GC runs,
+`__lsan_do_leak_check()` checks all tracked allocations before interpreter
+finalization, replacing LSan's automatic exit check. This documented checkpoint
+avoids CPython 3.12 interned/immortal strings becoming orphaned during shutdown;
+the first hosted trial reported those Unicode allocations at finalization.
+There is no allocation-stack suppression or disabled tracking. Objects still
+reachable at the checkpoint, and leaks created later by interpreter finalization,
+are outside this check; ASan remains active through shutdown.
+
+A second positive control loses a `PyList_New` owned reference. Python GC
+keeps such containers reachable to LSan, so a separate exact list/dict count
+guard compares warmed, garbage-collected snapshots after the scoped workload.
+The leaked-list control must fail with code 24; clean counts must not increase.
+No tolerances are used. Balanced unrelated allocation/deallocation could conceal
+a count change, so this complements LSan rather than proving all refcounts.
+
+After a 10-iteration warmup, each process exercises 9,000 successful parses (including namespace, large
+1,000-record input, unusual-name native exception, depth/mixed-content and option
+fallbacks), 6,000 malformed inputs, 3,000 direct native exceptions (including
+Unicode decoding failure after partial dictionary/list construction), and 1,000 failing reference callbacks. Results and
+exception objects are released; fixtures leave scope and garbage collection
+runs before process exit. The regular pytest suite remains a separate gate.
+
+This checks the exercised Linux/compiler/interpreter paths, not all inputs,
+architectures, out-of-memory paths, or every possible retained/global allocation.
+LSan treats reachable allocations as live. RSS stability is not a substitute.
+Some traced/sandboxed development environments cannot run LSan (`ptrace` fatal
+error); this script fails rather than silently skipping or disabling detection.
+Use the hosted CI result for the actual leak verdict in those environments.
+
+Detector behavior: [LLVM LeakSanitizer documentation](https://clang.llvm.org/docs/LeakSanitizer.html).
