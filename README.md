@@ -23,6 +23,14 @@ This repository has not been published to PyPI. The initial release builds a
 native extension from source; it does not promise prebuilt platform wheels.
 `xmltodict` is a runtime dependency for compatibility fallback and `unparse`.
 
+## Types and editor autocomplete
+
+PEP 561 type information ships in both wheels and source distributions. Editors
+can discover every supported `parse`/`unparse` parameter, callback signatures,
+and return overloads without a separate stub package. See the
+[API parameter reference and typing limits](docs/typing.md), including streaming,
+custom dictionary factories, and xmltodict-version-specific options.
+
 ## Compatibility contract
 
 `parse` accepts the same signature as `xmltodict.parse`. The native path handles
@@ -107,9 +115,11 @@ Fallback workloads can be slower than calling xmltodict directly.
 ## Development
 
 ```sh
-python -m pip install '.[test]' 'xmltodict==0.14.2'
+python -m pip install '.[test,typing]' 'xmltodict==0.14.2'
 python -m pytest -q
 python -m build
+python tests/typing/check_artifacts.py
+python tests/typing/check.py
 python benchmarks/benchmark.py --help
 ```
 

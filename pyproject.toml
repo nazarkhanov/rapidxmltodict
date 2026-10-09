@@ -15,9 +15,13 @@ dependencies = ["xmltodict>=0.14.2,<2"]
 
 [project.optional-dependencies]
 test = ["pytest>=8", "build"]
+typing = ["mypy>=1.14,<2", "pyright>=1.1.390", "typing_extensions>=4.12", "jedi>=0.19"]
 
 [project.urls]
 Homepage = "https://github.com/nazarkhanov/rapidxmltodict"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.setuptools.package-data]
+rapidxmltodict = ["*.pyi", "py.typed"]

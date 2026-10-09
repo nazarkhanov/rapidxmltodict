@@ -4,3 +4,5 @@ recursive-include tests *.py *.md
 recursive-include benchmarks *.py *.json *.md
 exclude benchmarks/baseline-results.*
 exclude benchmarks/optimization-check.*
+recursive-include src/rapidxmltodict *.pyi py.typed
+recursive-include docs *.md

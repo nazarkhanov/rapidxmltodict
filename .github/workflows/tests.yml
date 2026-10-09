@@ -25,3 +25,20 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install '.[test]' 'xmltodict==0.14.2'
       - run: python -m pytest -q
+  typing:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        xmltodict: ['0.14.2', '1.0.4']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install '.[test,typing]' 'xmltodict==${{ matrix.xmltodict }}'
+      - run: python -m build
+      - run: python tests/typing/check_artifacts.py
+      - run: python -m pip install --force-reinstall --no-deps dist/*.whl
+      - run: python tests/typing/check.py
+      - run: python -m pytest -q
