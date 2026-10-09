@@ -1,15 +1,12 @@
 # Vendored RapidXML
 
-`rapidxml.hpp` is copied **byte-for-byte, without modifications** from
-[nazarkhanov/rapidxmltojson](https://github.com/nazarkhanov/rapidxmltojson/blob/ed40f6bb23a262a26a50653698184541c89f3b50/include/rapidxml/rapidxml.hpp),
-commit `ed40f6bb23a262a26a50653698184541c89f3b50`.
+`rapidxml.hpp` is the **unmodified upstream RapidXML 1.13** header from the
+[official release archive](https://sourceforge.net/projects/rapidxml/files/rapidxml/rapidxml%201.13/rapidxml-1.13.zip/download).
 
-SHA-256: `ac2ea2d3b0e8c2543b8f70784a157e4976ddee6c0afea5484f63516960d58cdb`
+- Archive SHA-256: `c3f0b886374981bb20fabcf323d755db4be6dba42064599481da64a85f5b3571`
+- Header SHA-256: `d61c53fd63f11aef0e18d253746ee800903dc82e4ad3cc533d0fdca69f07c4f9`
 
-This is the existing project's RapidXML 1.13-derived header, including its
-pre-existing `eof_error` additions. It is not represented as a pristine release
-from the original RapidXML distribution. No change to this header or to
-rapidxmltojson is required by this project.
-
-The original dual Boost/MIT license is preserved in `license.txt`. RapidXML
-copyright belongs to Marcin Kalicinski. The surrounding binding is MIT licensed.
+The header is preserved byte-for-byte, including upstream line endings.
+Only the Python/C++ wrapper is adapted; upstream code is not patched.
+The original Boost/MIT dual license remains in `license.txt` (its existing
+line-ending formatting is unchanged). Copyright: Marcin Kalicinski.

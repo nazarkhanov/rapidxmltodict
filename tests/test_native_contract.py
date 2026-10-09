@@ -7,7 +7,7 @@ import pytest
 
 def test_vendor_header_unchanged():
     header = Path(__file__).parents[1] / 'vendor/rapidxml/rapidxml.hpp'
-    assert hashlib.sha256(header.read_bytes()).hexdigest() == 'ac2ea2d3b0e8c2543b8f70784a157e4976ddee6c0afea5484f63516960d58cdb'
+    assert hashlib.sha256(header.read_bytes()).hexdigest() == 'd61c53fd63f11aef0e18d253746ee800903dc82e4ad3cc533d0fdca69f07c4f9'
 
 
 def test_default_uses_native(monkeypatch):
@@ -48,3 +48,19 @@ def test_utf8_declaration_uses_native(monkeypatch):
         raise AssertionError('UTF-8 declaration should be accelerated')
     monkeypatch.setattr(rapidxmltodict._reference, 'parse', forbidden)
     assert rapidxmltodict.parse('<?xml version="1.0" encoding="UTF-8"?><r>é</r>') == {'r': 'é'}
+
+
+@pytest.mark.parametrize('document', [
+    '<p:root xmlns:p="urn:p"><p:item p:attr="v">one</p:item><p:item>two</p:item></p:root>',
+    '<root xmlns="urn:default" xmlns:a="urn:a" xmlns:b="urn:b"><a:item/><b:item/><item/></root>',
+    '<a:root xmlns:a="urn:one"><a:item xmlns:a="urn:two">value</a:item></a:root>',
+    '<root:/>',
+])
+def test_upstream_preserves_qualified_names_on_native_path(monkeypatch, document):
+    # Upstream name()/name_size() contain the whole qualified name. Comparing
+    # before patching the reference proves prefixes are neither lost nor doubled.
+    expected = rapidxmltodict._reference.parse(document)
+    def forbidden(*args, **kwargs):
+        raise AssertionError('unexpected namespace/name fallback')
+    monkeypatch.setattr(rapidxmltodict._reference, 'parse', forbidden)
+    assert rapidxmltodict.parse(document) == expected

@@ -16,7 +16,7 @@ def exercise(iterations=1000):
         '<root/>',
         '<root a="1"><item>one</item><item><![CDATA[two]]></item></root>',
         '<root xmlns="urn:default" xmlns:p="urn:p"><p:item p:a="v">text</p:item></root>',
-        '<root:/>',  # Native ValueError -> successful reference fallback.
+        '<root:/>',  # Valid general XML name, supported directly by upstream.
         '<r>before<a/> after <b/>tail</r>',  # NotImplemented mixed-content fallback.
         '<n>' * 300 + 'deep' + '</n>' * 300,  # Depth guard fallback.
         '<r>' + ''.join(f'<item id="{i}">value {i}</item>' for i in range(1000)) + '</r>',
@@ -40,7 +40,7 @@ def exercise(iterations=1000):
             else:
                 raise AssertionError("Malformed XML accepted")
         # Exercise native error cleanup directly, rather than stopping at Expat.
-        for data in (b'<root:/>', b'<r a="\xff"/>', b'<r><item>one</item><item>two</item><bad>\xff</bad></r>'):
+        for data in (b'<r>\xff</r>', b'<r a="\xff"/>', b'<r><item>one</item><item>two</item><bad>\xff</bad></r>'):
             try:
                 native.convert(data)
             except (ValueError, UnicodeDecodeError):
