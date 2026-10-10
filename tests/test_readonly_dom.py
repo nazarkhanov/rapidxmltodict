@@ -4,7 +4,10 @@ xmltodict/Expat are test-only references. These in-memory default-option cases
 avoid the version-sensitive chunk boundaries covered by the golden oracle suite.
 """
 import gc
+from pathlib import Path
+import subprocess
 import sys
+import textwrap
 from xml.parsers import expat
 
 import pytest
@@ -217,3 +220,65 @@ def test_deep_iterative_frames_keep_raw_spans_alive(parse, as_bytes):
         assert actual['#text'] == expected['#text'] == 'left&東京\néright'
         if level + 1 == depth:
             assert actual['leaf'] == expected['leaf'] == 'é'
+
+
+@pytest.mark.parametrize('input_kind', ['str', 'bytes'])
+def test_python_allocation_failures_release_partial_conversion_in_subprocess(input_kind):
+    testcapi = pytest.importorskip('_testcapi', reason='CPython allocation-failure hooks unavailable')
+    if not all(hasattr(testcapi, name) for name in ('set_nomemory', 'remove_mem_hooks')):
+        pytest.skip('CPython allocation-failure hooks unavailable')
+    if hasattr(sys, 'getobjects'):
+        pytest.skip('allocation hooks are unsafe on older Py_TRACE_REFS builds')
+
+    # CPython's _testcapi/mem.c specifies failures for start < count <= stop.
+    # Fail only ONE allocation per attempt, after all imports/source creation,
+    # and restore hooks before assertions or exception handling. No hooks are
+    # ever installed in pytest itself. These cover Python result allocation;
+    # C++ malloc/new failures require the separate native sanitizer harness.
+    code = textwrap.dedent(r'''
+        import gc
+        import sys
+        from _testcapi import remove_mem_hooks, set_nomemory
+        from rapidxmltodict import _native
+
+        convert = _native.convert
+        source = ('<root><first>already completed</first>'
+                  + '<item a="é&#13;🙂">left&amp;<![CDATA[東京\r\n]]>'
+                    '<leaf>é</leaf>&#x1F642;right</item>' * 24
+                  + '</root>')
+        if sys.argv[1] == 'bytes':
+            source = source.encode('utf-8')
+        snapshot = source.encode('utf-8') if isinstance(source, str) else memoryview(source).tobytes()
+        expected = convert(source)
+        # Prebuild the schedule and expected result outside the injected region.
+        schedule = tuple((start, start + 1) for start in range(128))
+        failures = []
+        for start, stop in schedule:
+            result = None
+            try:
+                try:
+                    set_nomemory(start, stop)
+                    result = convert(source)
+                finally:
+                    remove_mem_hooks()
+            except MemoryError:
+                failures.append(start)
+            else:
+                assert result == expected, start
+            # Every failure must leave the parser reusable and input untouched.
+            assert convert(source) == expected, start
+            current = source.encode('utf-8') if isinstance(source, str) else memoryview(source).tobytes()
+            assert current == snapshot, start
+        gc.collect()
+        assert failures, 'allocation hook did not exercise a failure'
+        assert max(failures) >= 16, 'partial-result allocation was not exercised'
+        assert convert(source) == expected
+        print('recovered allocation failures:', len(failures))
+    ''')
+    completed = subprocess.run(
+        [sys.executable, '-c', code, input_kind],
+        cwd=Path(__file__).resolve().parents[1],
+        capture_output=True, text=True, timeout=30,
+    )
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert 'recovered allocation failures:' in completed.stdout

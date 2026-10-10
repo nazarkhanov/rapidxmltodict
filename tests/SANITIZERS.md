@@ -75,3 +75,10 @@ It places XML in read-only pages immediately before an inaccessible page, checks
 raw normalization metadata and unchanged node sizes, and parses 12,000 levels
 without recursion. The Python suite checks unchanged str/bytes values, Unicode
 cache integrity, result/input lifetimes and mixed normalization.
+
+Five isolated `RLIMIT_AS` allocation-failure cases run in ordinary Linux tests.
+They check DOM allocation, final ASCII/UTF-8/entity-decoded strings and a Unicode
+input UTF-8 cache, with recovery after each `MemoryError`. Only those probes skip
+inside ASan/LSan, whose large virtual address mappings conflict with address caps;
+no sanitizer is disabled. Two additional bounded Python-allocation fault sweeps
+run when CPython provides `_testcapi` hooks. Missing hooks are explicit skips.
