@@ -285,6 +285,9 @@ namespace rapidxml
     // Keep the first text span in its element, with nodes only for later spans.
     // This preserves mixed content without a preliminary shape scan.
     const int parse_compact_data = 0x2000;
+    // Strict bounded parsing into read-only raw spans. XML normalization is
+    // deferred to the consumer; value_flags() records the required operations.
+    const int parse_readonly_spans = 0x4000;
     
     //! A combination of parse flags that forbids any modifications of the source text. 
     //! This also results in faster parsing. However, note that the following will occur:
@@ -536,13 +539,17 @@ namespace rapidxml
 
             // Clone name and value
             result->name(source->name(), source->name_size());
-            result->value(source->value(), source->value_size());
+            result->value(source->value(), source->value_size(), source->value_flags());
 
             // Clone child nodes and attributes
             for (xml_node<Ch> *child = source->first_node(); child; child = child->next_sibling())
                 result->append_node(clone_node(child));
             for (xml_attribute<Ch> *attr = source->first_attribute(); attr; attr = attr->next_attribute())
-                result->append_attribute(allocate_attribute(attr->name(), attr->value(), attr->name_size(), attr->value_size()));
+            {
+                xml_attribute<Ch> *copy = allocate_attribute(attr->name(), 0, attr->name_size());
+                copy->value(attr->value(), attr->value_size(), attr->value_flags());
+                result->append_attribute(copy);
+            }
 
             return result;
         }
@@ -727,7 +734,15 @@ namespace rapidxml
         //! \return Size of node value, in characters.
         std::size_t value_size() const
         {
-            return m_value ? m_value_size : 0;
+            return m_value ? (m_value_size & value_size_mask) : 0;
+        }
+
+        // Read-only strict spans carry metadata in the existing size word;
+        // this adds no bytes to xml_node or xml_attribute. Ordinary values have
+        // no flags. The input must outlive the document and must not be changed.
+        unsigned value_flags() const
+        {
+            return m_value ? static_cast<unsigned>(m_value_size >> value_flag_shift) : 0;
         }
 
         ///////////////////////////////////////////////////////////////////////////
@@ -778,8 +793,16 @@ namespace rapidxml
         //! \param size Size of value, in characters. This does not include zero terminator, if one is present.
         void value(const Ch *value, std::size_t size)
         {
+            this->value(value, size, 0);
+        }
+
+        // Assign a validated raw span and its normalization metadata.
+        void value(const Ch *value, std::size_t size, unsigned flags)
+        {
+            if (size > value_size_mask) throw std::length_error("RapidXML value span is too large");
+            assert((flags & ~15u) == 0);
             m_value = const_cast<Ch *>(value);
-            m_value_size = size;
+            m_value_size = size | (static_cast<std::size_t>(flags) << value_flag_shift);
         }
 
         //! Sets value of node to a zero-terminated string.
@@ -809,6 +832,8 @@ namespace rapidxml
             return &zero;
         }
 
+        static constexpr unsigned value_flag_shift = sizeof(std::size_t) * 8 - 4;
+        static constexpr std::size_t value_size_mask = (std::size_t(1) << value_flag_shift) - 1;
         Ch *m_name;                         // Name of node, or 0 if no name
         Ch *m_value;                        // Value of node, or 0 if no value
         std::size_t m_name_size;            // Length of node name, or undefined of no name
@@ -1394,6 +1419,18 @@ namespace rapidxml
         {
         }
 
+        // Parse an explicitly bounded immutable UTF-8 buffer. This uses the
+        // same consuming strict grammar and iterative DOM traversal as parse;
+        // it neither copies the input nor writes terminators/normalized values.
+        // value()/value_size() are raw spans, with value_flags() describing XML
+        // normalization required by the consumer. Names are already final UTF-8.
+        template<int Flags = 0>
+        void parse_readonly(const Ch *text, std::size_t length)
+        {
+            parse<Flags | parse_strict | parse_readonly_spans | parse_no_string_terminators>(
+                const_cast<Ch *>(text), length);
+        }
+
         //! Parses zero-terminated XML string according to given flags.
         //! Passed string will be modified by the parser, unless rapidxml::parse_non_destructive flag is used.
         //! The string must persist for the lifetime of the document.
@@ -1409,6 +1446,8 @@ namespace rapidxml
         void parse(Ch *text, std::size_t length = static_cast<std::size_t>(-1))
         {
             assert(text);
+            static_assert(!(Flags & parse_readonly_spans) || (Flags & parse_strict),
+                          "read-only raw spans require strict bounded parsing");
             if constexpr (Flags & parse_strict)
             {
                 static_assert(sizeof(Ch) == 1, "strict parsing requires UTF-8 bytes");
@@ -1477,6 +1516,7 @@ namespace rapidxml
         std::size_t m_depth = 0;
         bool m_root_seen = false, m_header_self_closing = false;
 
+        template<int Flags>
         struct strict_header_receiver
         {
             xml_document *document;
@@ -1503,14 +1543,21 @@ namespace rapidxml
             void attribute_begin(std::size_t offset) { value = write = token + offset; }
             void attribute_character(const char *data, std::size_t size)
             {
+                static_assert(!(Flags & parse_readonly_spans), "read-only attributes must stay raw");
                 // Source and destination can overlap after entity/CRLF expansion.
                 while (size--) *write++ = *data++;
             }
-            void attribute_reference(std::string_view, std::size_t offset)
+            void attribute_reference(std::string_view, std::size_t)
             {
-                document->strict_fail(11, token + offset);
+                // Expat attributes report unresolved entities at the opening
+                // element token, matching the streaming grammar receiver.
+                document->strict_fail(11, token);
             }
             void attribute_end() { attribute->value(value, write - value); }
+            void attribute_end(std::size_t offset, unsigned flags)
+            {
+                attribute->value(value, (token + offset) - value, flags);
+            }
         };
 
         [[noreturn]] void strict_fail(int code, Ch *where) const
@@ -1573,9 +1620,10 @@ namespace rapidxml
                 }
             }
         }
-        // Consume, check and expand one reference directly into its DOM span.
-        // No token is rescanned by a separate validator.
-        void strict_reference(Ch *&src, Ch *&dest) const
+        // Consume and validate one reference. Mutable mode expands it in place;
+        // read-only mode retains its raw span for the output consumer.
+        template<int Flags>
+        void strict_reference(Ch *&src, Ch *&dest, unsigned &metadata) const
         {
             Ch *start = src++;
             if (src == m_end) strict_fail(5, start);
@@ -1602,7 +1650,11 @@ namespace rapidxml
                 if (src == digits) strict_fail(4, start);
                 if (!lexical::xml_char(value)) strict_fail(14, start);
                 ++src;
-                insert_coded_character<0>(dest, value);
+                if constexpr (Flags & parse_readonly_spans)
+                {
+                    if (value >= 0x80) metadata |= value_non_ascii;
+                }
+                else insert_coded_character<0>(dest, value);
                 return;
             }
             Ch *name = src;
@@ -1618,52 +1670,64 @@ namespace rapidxml
             else if (key == "quot") value = '"';
             else if (key == "apos") value = '\'';
             else strict_fail(11, start);
-            *dest++ = value;
+            if constexpr (!(Flags & parse_readonly_spans)) *dest++ = value;
         }
-        // Character validation, literal normalization and reference translation
-        // happen during the same traversal that identifies the value's end.
-        Ch *strict_value(Ch *&text, Ch quote = 0)
+        // Validation happens during the traversal that identifies the value's end.
+        // Read-only spans defer materialization, keeping only operation flags.
+        template<int Flags>
+        Ch *strict_value(Ch *&text, unsigned &metadata)
         {
             Ch *dest = text;
-            while (text != m_end && (quote ? *text != quote : *text != '<'))
+            while (text != m_end && *text != '<')
             {
                 unsigned char byte = static_cast<unsigned char>(*text);
-                if (byte == '&') { strict_reference(text, dest); continue; }
-                if (quote && byte == '<') strict_fail(4, text);
-                if (!quote && byte == ']' && strict_starts(text, "]]>") ) strict_fail(4, text + 2);
+                if (byte == '&')
+                {
+                    if constexpr (Flags & parse_readonly_spans) metadata |= value_has_references;
+                    strict_reference<Flags>(text, dest, metadata);
+                    continue;
+                }
+                if (byte == ']' && strict_starts(text, "]]>")) strict_fail(4, text + 2);
                 if (byte == '\r')
                 {
                     ++text;
                     if (text != m_end && *text == '\n') ++text;
-                    *dest++ = quote ? ' ' : '\n';
+                    if constexpr (Flags & parse_readonly_spans) metadata |= value_normalize_lines;
+                    else *dest++ = '\n';
                 }
                 else if (byte < 0x80)
                 {
                     if (!lexical::xml_char(byte)) strict_fail(4, text);
-                    *dest++ = quote && (byte == '\n' || byte == '\t') ? ' ' : *text;
+                    if constexpr (!(Flags & parse_readonly_spans)) *dest++ = *text;
                     ++text;
                 }
                 else
                 {
                     uint32_t cp;
                     std::size_t width = strict_scalar(text, cp);
-                    while (width--) *dest++ = *text++;
+                    if constexpr (Flags & parse_readonly_spans)
+                    {
+                        metadata |= value_non_ascii;
+                        text += width;
+                    }
+                    else while (width--) *dest++ = *text++;
                 }
             }
-            return dest;
+            if constexpr (Flags & parse_readonly_spans) return text;
+            else return dest;
         }
         template<int Flags>
-        void strict_append_text(xml_node<Ch> *node, Ch *value, std::size_t size, node_type type = node_data)
+        void strict_append_text(xml_node<Ch> *node, Ch *value, std::size_t size, node_type type = node_data, unsigned metadata = 0)
         {
             if (!size) return;
-            if ((Flags & parse_compact_data) && !node->value_size()) node->value(value, size);
+            if ((Flags & parse_compact_data) && !node->value_size()) node->value(value, size, metadata);
             else if (!(Flags & parse_no_data_nodes))
             {
                 xml_node<Ch> *data = this->allocate_node(type);
-                data->value(value, size);
+                data->value(value, size, metadata);
                 node->append_node(data);
                 if (!(Flags & (parse_no_element_values | parse_compact_data)) && !node->value_size())
-                    node->value(value, size);
+                    node->value(value, size, metadata);
             }
         }
 
@@ -2101,27 +2165,35 @@ namespace rapidxml
             if constexpr (Flags & parse_strict)
             {
                 Ch *token = text - 4, *value = text, *dest = text;
+                unsigned metadata = 0;
                 while (text != m_end)
                 {
                     if (strict_starts(text, "--"))
                     {
                         if (m_end - text < 3) strict_fail(5, token);
                         if (!strict_starts(text, "-->")) strict_fail(4, text + 2);
+                        if constexpr (Flags & parse_readonly_spans) dest = text;
                         text += 3;
                         if (!(Flags & parse_comment_nodes)) return 0;
                         xml_node<Ch> *node = this->allocate_node(node_comment);
-                        node->value(value, dest - value);
+                        node->value(value, dest - value, metadata);
                         return node;
                     }
                     if (*text == '\r')
                     {
                         ++text; if (text != m_end && *text == '\n') ++text;
-                        *dest++ = '\n';
+                        if constexpr (Flags & parse_readonly_spans) metadata |= value_normalize_lines;
+                        else *dest++ = '\n';
                     }
                     else
                     {
                         uint32_t cp; std::size_t width = strict_scalar(text, cp);
-                        while (width--) *dest++ = *text++;
+                        if constexpr (Flags & parse_readonly_spans)
+                        {
+                            if (cp >= 0x80) metadata |= value_non_ascii;
+                            text += width;
+                        }
+                        else while (width--) *dest++ = *text++;
                     }
                 }
                 strict_fail(5, token);
@@ -2259,26 +2331,34 @@ namespace rapidxml
                 if (!strict_starts(text, "?>") && !whitespace_pred::test(*text)) strict_fail(4, text);
                 strict_space(text);
                 Ch *value = text, *dest = text;
+                unsigned metadata = 0;
                 while (text != m_end)
                 {
                     if (strict_starts(text, "?>"))
                     {
+                        if constexpr (Flags & parse_readonly_spans) dest = text;
                         text += 2;
                         if (!(Flags & parse_pi_nodes)) return 0;
                         xml_node<Ch> *node = this->allocate_node(node_pi);
                         node->name(name, target.size());
-                        node->value(value, dest - value);
+                        node->value(value, dest - value, metadata);
                         return node;
                     }
                     if (*text == '\r')
                     {
                         ++text; if (text != m_end && *text == '\n') ++text;
-                        *dest++ = '\n';
+                        if constexpr (Flags & parse_readonly_spans) metadata |= value_normalize_lines;
+                        else *dest++ = '\n';
                     }
                     else
                     {
                         uint32_t cp; std::size_t width = strict_scalar(text, cp);
-                        while (width--) *dest++ = *text++;
+                        if constexpr (Flags & parse_readonly_spans)
+                        {
+                            if (cp >= 0x80) metadata |= value_non_ascii;
+                            text += width;
+                        }
+                        else while (width--) *dest++ = *text++;
                     }
                 }
                 strict_fail(5, token);
@@ -2346,8 +2426,9 @@ namespace rapidxml
             if constexpr (Flags & parse_strict)
             {
                 Ch *value = text;
-                Ch *end = strict_value(text);
-                strict_append_text<Flags>(node, value, end - value);
+                unsigned metadata = 0;
+                Ch *end = strict_value<Flags>(text, metadata);
+                strict_append_text<Flags>(node, value, end - value, node_data, metadata);
                 return text == m_end ? Ch(0) : *text;
             }
             // Backup to contents start if whitespace trimming is disabled
@@ -2411,29 +2492,37 @@ namespace rapidxml
             if constexpr (Flags & parse_strict)
             {
                 Ch *value = text, *dest = text;
+                unsigned metadata = 0;
                 while (text != m_end)
                 {
                     if (strict_starts(text, "]]>"))
                     {
+                        if constexpr (Flags & parse_readonly_spans) dest = text;
                         text += 3;
                         if (parent)
                         {
-                            strict_append_text<Flags>(parent, value, dest - value, node_cdata);
+                            strict_append_text<Flags>(parent, value, dest - value, node_cdata, metadata);
                             return 0;
                         }
                         xml_node<Ch> *node = this->allocate_node(node_cdata);
-                        node->value(value, dest - value);
+                        node->value(value, dest - value, metadata);
                         return node;
                     }
                     if (*text == '\r')
                     {
                         ++text; if (text != m_end && *text == '\n') ++text;
-                        *dest++ = '\n';
+                        if constexpr (Flags & parse_readonly_spans) metadata |= value_normalize_lines;
+                        else *dest++ = '\n';
                     }
                     else
                     {
                         uint32_t cp; std::size_t width = strict_scalar(text, cp);
-                        while (width--) *dest++ = *text++;
+                        if constexpr (Flags & parse_readonly_spans)
+                        {
+                            if (cp >= 0x80) metadata |= value_non_ascii;
+                            text += width;
+                        }
+                        else while (width--) *dest++ = *text++;
                     }
                 }
                 strict_fail(20, text);
@@ -2660,9 +2749,9 @@ namespace rapidxml
                     if (strict_starts(text, "</"))
                     {
                         Ch *token = text;
-                        strict_header_receiver receiver{this, node, token, true};
+                        strict_header_receiver<Flags> receiver{this, node, token, true};
                         internal::element_header_parser header;
-                        try { header.parse(std::string_view(token, m_end - token), true, receiver); }
+                        try { header.parse<(Flags & parse_readonly_spans) != 0>(std::string_view(token, m_end - token), true, receiver); }
                         catch (const internal::header_error &error) { strict_fail(error.code, token + error.offset); }
                         if (!receiver.closing_match) strict_fail(7, token + 2);
                         text = token + header.consumed();
@@ -2762,11 +2851,11 @@ namespace rapidxml
             if constexpr (Flags & parse_strict)
             {
                 Ch *token = text - 1;
-                strict_header_receiver receiver{this, node, token, false};
+                strict_header_receiver<Flags> receiver{this, node, token, false};
                 internal::element_header_parser header;
                 try
                 {
-                    header.parse(std::string_view(token, m_end - token), true, receiver);
+                    header.parse<(Flags & parse_readonly_spans) != 0>(std::string_view(token, m_end - token), true, receiver);
                 }
                 catch (const internal::header_error &error)
                 {

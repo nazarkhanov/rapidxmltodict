@@ -31,9 +31,20 @@ remain independently tested; empty-separator equality alone is insufficient.
 ## Implementation and boundaries
 
 The common in-memory UTF-8 path uses bounded strict parsing inside RapidXML.
-Well-formedness checks, UTF-8 handling and XML normalization run as its parsing
-routines consume input. The native builder then converts the DOM into Python
-objects; this necessary output traversal is separate from XML parsing.
+Well-formedness and UTF-8 checks run as its parsing routines consume input.
+The DOM borrows immutable raw spans from the input instead of making a mutable
+whole-document copy. Per-value metadata records entity and XML whitespace/line
+normalization. The native builder writes normalized values directly into final
+Python Unicode storage, including mixed text/CDATA segments, without a transformed
+C++ string. Values needing normalization use sizing and filling passes over
+validated spans; this output conversion is separate from XML parsing.
+
+UTF-8 bytes input is borrowed. ASCII Python strings share their existing storage;
+other Python strings may require CPython to allocate and retain a UTF-8 cache on
+the original string. Thus arbitrary Unicode input is not promised to have zero
+encoding allocations. The input owner remains alive until DOM conversion ends,
+and returned Python values own their contents independently. No input bytes are
+modified. Non-UTF-8 bytes retain the existing incremental decoder path.
 
 The resumable event interface shares consuming opening/closing-tag grammar and
 attribute decoding with the DOM parser. It emits directly from parser state,

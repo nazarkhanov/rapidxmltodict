@@ -8,7 +8,9 @@ This is a **modified RapidXML 1.13** integration. The base header comes from the
 
 Project changes integrate strict, bounded UTF-8/XML parsing and normalization
 into RapidXML's parsing routines, with compact text spans and a resumable event
-interface. DOM and stream parsing share consuming tag/attribute grammar and
+interface. The bounded read-only DOM mode exposes validated immutable raw spans
+and packed normalization metadata without increasing node or attribute sizes;
+the Python binding performs normalization directly into final output strings. DOM and stream parsing share consuming tag/attribute grammar and
 lexical primitives through the additional headers in this directory. The header
 is no longer byte-for-byte upstream; the hashes above identify its base, not the
 modified files. The separate PR #5 retains the unmodified upstream migration.

@@ -280,21 +280,26 @@ def parse(xml_input, encoding=None, process_namespaces=False,
             and process_namespaces is False and process_comments is False
             and disable_entities is True and type(namespace_separator) is str
             and namespace_separator == ':'):
-        data = xml_input.encode('utf-8') if isinstance(xml_input, str) else xml_input
-        # Only inspect the encoding declaration/prefix to select the decoder.
-        # Strict well-formedness validation happens inside RapidXML conversion.
-        begin = 3 if data.startswith(codecs.BOM_UTF8) else 0
-        declared = None
-        if data.startswith(b'<?xml', begin):
-            declaration_end = data.find(b'?>', begin)
-            declared = _ENCODING.search(data[begin:declaration_end + 2])
-        wide_input = (data.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE))
-                      or b'\x00' in data[:4])
-        if (not wide_input and (declared is None or isinstance(xml_input, str)
-                                or declared.group(2).lower() == b'utf-8')):
-            result = _native.convert(data)
+        # Unicode input is already decoded; borrow its UTF-8 representation in
+        # C++ (ASCII shares storage, other Unicode may populate CPython's cache).
+        if isinstance(xml_input, str):
+            result = _native.convert(xml_input)
             if result is not NotImplemented:
                 return result
+        else:
+            data = xml_input
+            # Inspect only the declaration/prefix to choose a non-UTF-8 decoder.
+            begin = 3 if data.startswith(codecs.BOM_UTF8) else 0
+            declared = None
+            if data.startswith(b'<?xml', begin):
+                declaration_end = data.find(b'?>', begin)
+                declared = _ENCODING.search(data[begin:declaration_end + 2])
+            wide_input = (data.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE))
+                          or b'\x00' in data[:4])
+            if not wide_input and (declared is None or declared.group(2).lower() == b'utf-8'):
+                result = _native.convert(data)
+                if result is not NotImplemented:
+                    return result
     return _parse_native_events(
         xml_input, encoding=encoding, process_namespaces=process_namespaces,
         namespace_separator=namespace_separator, disable_entities=disable_entities,

@@ -60,6 +60,18 @@ extern "C" void intentional_python_leak() {
                    UBSAN_OPTIONS="halt_on_error=1:print_stacktrace=1",
                    PYTHONMALLOC="malloc", PYTHONPATH=str(directory),
                    SAN_ROOT=str(directory))
+        # A native executable proves the DOM accepts truly read-only, bounded
+        # input, including a page boundary with no readable sentinel byte.
+        readonly = directory / "readonly_input"
+        subprocess.run([compiler, "-O1", "-g", "-std=c++17",
+                        "-fsanitize=address,undefined", "-fno-omit-frame-pointer",
+                        "-I" + str(ROOT / "vendor"),
+                        str(ROOT / "tests/native_readonly_input.cpp"),
+                        "-o", str(readonly)], check=True)
+        native_env = dict(env)
+        native_env.pop("LD_PRELOAD", None)  # executable already links ASan first
+        subprocess.run([str(readonly)], env=native_env, check=True)
+        print("PASS: read-only bounded DOM spans with ASan/UBSan/LSan", flush=True)
         command = [sys.executable, str(ROOT / "tests/native_leak_workload.py")]
         # First prove the identical Python/runtime configuration detects a known
         # leak. A crash, unavailable LSan, or unrelated error is NOT a pass.

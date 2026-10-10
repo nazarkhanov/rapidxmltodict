@@ -1,6 +1,6 @@
 include LICENSE README.md
 recursive-include vendor *.hpp *.txt *.md
-recursive-include tests *.py *.md *.json
+recursive-include tests *.py *.md *.json *.cpp
 recursive-include benchmarks *.py *.json *.md
 exclude benchmarks/baseline-results.*
 exclude benchmarks/optimization-check.*

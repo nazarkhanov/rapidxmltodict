@@ -69,3 +69,9 @@ The script fails rather than skipping detection; use the GitHub-hosted run for
 its actual result in those environments.
 
 See the [official LeakSanitizer documentation](https://clang.llvm.org/docs/LeakSanitizer.html).
+
+The Linux job also compiles `native_readonly_input.cpp` with ASan/UBSan/LSan.
+It places XML in read-only pages immediately before an inaccessible page, checks
+raw normalization metadata and unchanged node sizes, and parses 12,000 levels
+without recursion. The Python suite checks unchanged str/bytes values, Unicode
+cache integrity, result/input lifetimes and mixed normalization.

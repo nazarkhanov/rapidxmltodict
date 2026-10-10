@@ -14,7 +14,16 @@
 #include <string_view>
 #include <unordered_set>
 
-namespace rapidxml { namespace internal {
+namespace rapidxml {
+// Metadata for untouched, validated DOM spans. References and literal line
+// normalization are independent because CDATA may contain a literal '&'.
+enum value_flag : unsigned {
+    value_has_references = 1,
+    value_normalize_lines = 2,
+    value_attribute = 4,
+    value_non_ascii = 8
+};
+namespace internal {
 struct header_error : std::runtime_error {
     int code;
     size_t offset;
@@ -55,6 +64,7 @@ class element_header_parser {
     uint32_t reference_value_ = 0;
     unsigned reference_base_ = 10;
     size_t reference_digits_ = 0;
+    unsigned value_flags_ = 0;
     std::string pending_message_;
     int pending_code_ = 0;
     size_t pending_offset_ = 0;
@@ -100,7 +110,7 @@ public:
     bool complete() const noexcept { return stage_ == done; }
     void reset() { *this = element_header_parser(); }
 
-    template<class Receiver>
+    template<bool RawValues = false, class Receiver>
     bool parse(std::string_view s, bool final, Receiver& receiver, bool defer_errors = false) {
         if (!pending_message_.empty()) return recover(s, final);
         try {
@@ -145,13 +155,20 @@ public:
                 case quote:
                     if (xml_space(s[at_])) { ++at_; break; }
                     if (s[at_] != '\'' && s[at_] != '"') invalid(at_);
-                    quote_ = s[at_++]; previous_cr_ = false; receiver.attribute_begin(at_); stage_ = value; break;
+                    quote_ = s[at_++]; previous_cr_ = false;
+                    if constexpr (RawValues) value_flags_ = value_attribute;
+                    receiver.attribute_begin(at_); stage_ = value; break;
                 case value: {
                     if (s[at_] == quote_) {
-                        ++at_; quote_ = 0; receiver.attribute_end(); separated_ = false; stage_ = between_attributes; break;
+                        if constexpr (RawValues) receiver.attribute_end(at_, value_flags_);
+                        else receiver.attribute_end();
+                        ++at_; quote_ = 0; separated_ = false; stage_ = between_attributes; break;
                     }
                     if (s[at_] == '<') invalid();
-                    if (s[at_] == '&') { reference_ = ++at_; previous_cr_ = false; stage_ = reference_start; break; }
+                    if (s[at_] == '&') {
+                        if constexpr (RawValues) value_flags_ |= value_has_references;
+                        reference_ = ++at_; previous_cr_ = false; stage_ = reference_start; break;
+                    }
                     // Copy an ordinary ASCII run once. Its lexical checks
                     // happen here, in the same consuming grammar as UTF-8.
                     const size_t run = at_;
@@ -161,13 +178,19 @@ public:
                         ++at_;
                     }
                     if (at_ != run) {
-                        receiver.attribute_character(s.data() + run, at_ - run); previous_cr_ = false; break;
+                        if constexpr (!RawValues) receiver.attribute_character(s.data() + run, at_ - run);
+                        previous_cr_ = false; break;
                     }
                     uint32_t cp; const size_t n = scalar(s, cp, final); if (!n) return false;
                     if (cp == '\r' || cp == '\n' || cp == '\t') {
-                        if (!(cp == '\n' && previous_cr_)) receiver.attribute_character(" ", 1);
+                        if constexpr (RawValues) value_flags_ |= value_normalize_lines;
+                        else if (!(cp == '\n' && previous_cr_)) receiver.attribute_character(" ", 1);
                         previous_cr_ = cp == '\r';
-                    } else { receiver.attribute_character(s.data() + at_, n); previous_cr_ = false; }
+                    } else {
+                        if constexpr (RawValues) { if (cp >= 0x80) value_flags_ |= value_non_ascii; }
+                        else receiver.attribute_character(s.data() + at_, n);
+                        previous_cr_ = false;
+                    }
                     at_ += n; break;
                 }
                 case reference_start:
@@ -181,7 +204,9 @@ public:
                 case reference_name:
                     if (s[at_] == ';') {
                         const auto ref = s.substr(reference_, at_ - reference_); char builtin;
-                        if (builtin_reference(ref, builtin)) receiver.attribute_character(&builtin, 1);
+                        if (builtin_reference(ref, builtin)) {
+                            if constexpr (!RawValues) receiver.attribute_character(&builtin, 1);
+                        }
                         else receiver.attribute_reference(ref, reference_ - 1);
                         ++at_; stage_ = value;
                     } else {
@@ -197,8 +222,13 @@ public:
                     if (s[at_] == ';') {
                         if (!reference_digits_) invalid();
                         if (!lexical::xml_char(reference_value_)) throw header_error("reference to invalid character number", 14, 0);
-                        char encoded[4]; const size_t n = encode_scalar(encoded, reference_value_);
-                        receiver.attribute_character(encoded, n); ++at_; stage_ = value; break;
+                        if constexpr (RawValues) {
+                            if (reference_value_ >= 0x80) value_flags_ |= value_non_ascii;
+                        } else {
+                            char encoded[4]; const size_t n = encode_scalar(encoded, reference_value_);
+                            receiver.attribute_character(encoded, n);
+                        }
+                        ++at_; stage_ = value; break;
                     }
                     const char c = s[at_]; unsigned digit;
                     if (c >= '0' && c <= '9') digit = static_cast<unsigned>(c - '0');
