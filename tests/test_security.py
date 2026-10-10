@@ -64,7 +64,7 @@ MALFORMED = [
 def test_malformed_xml_is_rejected(document):
     with pytest.raises(ExpatError):
         xmltodict.parse(document)
-    with pytest.raises(ExpatError):
+    with pytest.raises(rapidxmltodict.ParseError):
         rapidxmltodict.parse(document)
 
 
@@ -141,16 +141,33 @@ for iteration in range(600):
         elif position < len(document):
             document[position] = rng.choice(alphabet)
     cases.append(bytes(document))
+# One exact generated case is accepted by older Expat but rejected by the
+# canonical Expat 2.8.5 oracle. Enforce the approved strict version grammar;
+# scripts/check_reference_oracle.py independently verifies canonical rejection.
+strict_version_case = base.replace(b'version="1.0"', b'version="104"')
 for document in cases:
+    if document == strict_version_case:
+        try:
+            rapidxmltodict.parse(document)
+        except rapidxmltodict.ParseError as error:
+            assert error.code == 30 and error.offset == 15
+        else:
+            raise AssertionError(('accepted nonconforming XML version', document))
+        continue
     try:
         expected = xmltodict.parse(document)
     except Exception as expected_error:
         try:
             rapidxmltodict.parse(document)
         except Exception as actual_error:
-            assert type(actual_error) is type(expected_error), (document, type(actual_error), type(expected_error))
+            expected_type = rapidxmltodict.ParseError if type(expected_error).__name__ == 'ExpatError' else type(expected_error)
+            assert type(actual_error) is expected_type, (document, type(actual_error), type(expected_error))
         else:
             raise AssertionError(('accepted invalid XML', document))
     else:
-        assert rapidxmltodict.parse(document) == expected, document
+        try:
+            actual = rapidxmltodict.parse(document)
+        except Exception as error:
+            raise AssertionError(('rejected reference-valid XML', document, str(error))) from error
+        assert actual == expected, document
 ''')

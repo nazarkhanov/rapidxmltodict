@@ -1,6 +1,6 @@
 include LICENSE README.md
 recursive-include vendor *.hpp *.txt *.md
-recursive-include tests *.py *.md
+recursive-include tests *.py *.md *.json *.cpp
 recursive-include benchmarks *.py *.json *.md
 exclude benchmarks/baseline-results.*
 exclude benchmarks/optimization-check.*
@@ -10,3 +10,5 @@ recursive-include docs *.md
 recursive-include scripts *.py
 include src/rapidxmltodict/_version.py
 prune .github
+
+recursive-include src *.hpp

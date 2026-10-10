@@ -4,7 +4,6 @@ import gc
 import os
 from pathlib import Path
 import sys
-from xml.parsers.expat import ExpatError
 
 import rapidxmltodict as rapid
 import rapidxmltodict._native as native
@@ -35,15 +34,15 @@ def exercise(iterations=1000):
         for document in malformed:
             try:
                 rapid.parse(document)
-            except ExpatError:
+            except rapid.ParseError:
                 pass
             else:
                 raise AssertionError("Malformed XML accepted")
-        # Exercise native error cleanup directly, rather than stopping at Expat.
+        # Exercise integrated native error cleanup, including a partially built DOM.
         for data in (b'<r>\xff</r>', b'<r a="\xff"/>', b'<r><item>one</item><item>two</item><bad>\xff</bad></r>'):
             try:
                 native.convert(data)
-            except (ValueError, UnicodeDecodeError):
+            except rapid.ParseError:
                 pass
             else:
                 raise AssertionError("Expected native conversion exception")
@@ -52,7 +51,7 @@ def exercise(iterations=1000):
         except RuntimeError as error:
             assert str(error) == 'callback failure'
         else:
-            raise AssertionError("Expected reference callback exception")
+            raise AssertionError("Expected native callback exception")
     # All result trees, exception tracebacks and reference fixtures die on return.
 
 

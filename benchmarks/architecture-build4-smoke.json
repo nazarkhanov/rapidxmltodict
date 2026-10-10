@@ -1,0 +1,1941 @@
+{
+  "schema_version": 1,
+  "metadata": {
+    "timestamp_utc": "2026-10-09T18:48:37Z",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "cpu_affinity": [
+      8
+    ],
+    "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+    "build_flags": "CC=gcc CXX=g++; setup.py build_ext --inplace --force; -O3 -std=c++17 -Wall -Wextra",
+    "baseline_commit": "e911c9a5dbdc75974e66120861adc38dc36a39b8",
+    "iterative_commit": "cfe17cce26076a1e1fd94228ed271ef4fc22929d",
+    "native_events_commit": null,
+    "baseline_provenance_note": "Frozen pre-prototype source and existing binary. The pre-existing vendor-header CRLF/LF difference from the Git checkout is preserved and separately disclosed; hashes identify the exact measured bytes.",
+    "source_and_binary_hashes_start": {
+      "baseline": {
+        "pyproject.toml": "8dca44d37d9dbd6a417a349255d0c9d55134e9d25d1ed9ddc0442a4ba3bbb33e",
+        "setup.py": "c1c9916faaf946b69df2803a71b5690d8e5c42eee4cd035791fe1056a5d481d7",
+        "src/native.cpp": "867ecccf650c9427b1cc7f4577c18a9b8a38a46fb7b6fffdc660a99bfdbd6fd2",
+        "src/native_events_binding.hpp": "ce4ec872242ff906cdfa2915e346b5021ad191129ce7cc73e8ea617bbe91131f",
+        "src/rapidxml_events.hpp": "7fc93cdc6f20fb2b3c5d52b7d61d22817ace4136904177d41c3fdbca323ec64e",
+        "src/rapidxmltodict/__init__.py": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+        "src/rapidxmltodict/__init__.pyi": "17aab90b5e72dd5d87640e367083ab93e4ae6789759c4ca16bd0f80675003f3a",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "707d87d35ce57042c2fe537169576594fa39d7f418b0fb7937f2abd9380433d5",
+        "src/rapidxmltodict/_parse.py": "9576ddfe36b1b6645392e631d2ae3fe3ad70d8b8c5498bcecc1e5e9d4e2a6b8f",
+        "src/rapidxmltodict/_serialize.py": "a70e17d97e15fd1e973bc7e07a18f3e7cb94f13ff0792bd390aa0270d59c3b26",
+        "src/rapidxmltodict/_version.py": "2dc27d19a83888874e005d68290caf9c395edc4947b98b2ee79564e93f921195",
+        "vendor/rapidxml/rapidxml.hpp": "ab4d9c1f60a3a59bd2d7fe22651159faf610ca2741950ac01dab1c851c4fcddc",
+        "vendor/rapidxml/rapidxml_lexical.hpp": "8abe9f25bdabffea03c94aa832421484dac6e17f4922ec475898e3b01dc5dd49",
+        "vendor/rapidxml/rapidxml_parse_core.hpp": "b4f3ea1399630842bc4352e96afe6481ed3ef61d7656766d6a816c0f232dbedd",
+        "vendor/rapidxml/rapidxml_stream.hpp": "7945a36e287e2689f0aa45ca027419f139e679b7a1aac858b4421999fd5eaed1"
+      },
+      "iterative_dom": {
+        "pyproject.toml": "8dca44d37d9dbd6a417a349255d0c9d55134e9d25d1ed9ddc0442a4ba3bbb33e",
+        "setup.py": "c1c9916faaf946b69df2803a71b5690d8e5c42eee4cd035791fe1056a5d481d7",
+        "src/native.cpp": "e11ee51b2b8e57087a6b876d8ed34924cab77f0fc6e87a5a71d6dc24c6837329",
+        "src/native_events_binding.hpp": "ce4ec872242ff906cdfa2915e346b5021ad191129ce7cc73e8ea617bbe91131f",
+        "src/rapidxml_events.hpp": "7fc93cdc6f20fb2b3c5d52b7d61d22817ace4136904177d41c3fdbca323ec64e",
+        "src/rapidxmltodict/__init__.py": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+        "src/rapidxmltodict/__init__.pyi": "17aab90b5e72dd5d87640e367083ab93e4ae6789759c4ca16bd0f80675003f3a",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "547d62437143a7126be70d1395fe8da618b681159433c4c1c341c98812e5eecf",
+        "src/rapidxmltodict/_parse.py": "9576ddfe36b1b6645392e631d2ae3fe3ad70d8b8c5498bcecc1e5e9d4e2a6b8f",
+        "src/rapidxmltodict/_serialize.py": "a70e17d97e15fd1e973bc7e07a18f3e7cb94f13ff0792bd390aa0270d59c3b26",
+        "src/rapidxmltodict/_version.py": "2dc27d19a83888874e005d68290caf9c395edc4947b98b2ee79564e93f921195",
+        "vendor/rapidxml/rapidxml.hpp": "e83aa6118e9b0689ab1b54f1fbd33fc435e300e6931b11aebc49732b8b111503",
+        "vendor/rapidxml/rapidxml_lexical.hpp": "8abe9f25bdabffea03c94aa832421484dac6e17f4922ec475898e3b01dc5dd49",
+        "vendor/rapidxml/rapidxml_parse_core.hpp": "b4f3ea1399630842bc4352e96afe6481ed3ef61d7656766d6a816c0f232dbedd",
+        "vendor/rapidxml/rapidxml_stream.hpp": "7945a36e287e2689f0aa45ca027419f139e679b7a1aac858b4421999fd5eaed1"
+      },
+      "native_events": {
+        "pyproject.toml": "8dca44d37d9dbd6a417a349255d0c9d55134e9d25d1ed9ddc0442a4ba3bbb33e",
+        "setup.py": "5dd3d51c3d7c4fac3e77749b482ca3c8962ac249ff47c96c2807a2cb3dc78951",
+        "src/native.cpp": "2313a787f89beab4fe2944287c9fda026d7352c2b7b9627312a06715164713ee",
+        "src/native_events_binding.hpp": "ce4ec872242ff906cdfa2915e346b5021ad191129ce7cc73e8ea617bbe91131f",
+        "src/native_mapping.hpp": "5ccc951bdd6b399573c1003265df2fb48002b7082a064a7750e18e7b42f42f41",
+        "src/rapidxml_events.hpp": "7fc93cdc6f20fb2b3c5d52b7d61d22817ace4136904177d41c3fdbca323ec64e",
+        "src/rapidxmltodict/__init__.py": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+        "src/rapidxmltodict/__init__.pyi": "17aab90b5e72dd5d87640e367083ab93e4ae6789759c4ca16bd0f80675003f3a",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "aa46a0f583f34a296f3fc465205d4ff47ff7938afb80cdd459ff7398903726d2",
+        "src/rapidxmltodict/_parse.py": "f9da6bc087bea8bd9602ea15c63081e6f21ad464a045c835a49411f109c3b6e9",
+        "src/rapidxmltodict/_serialize.py": "a70e17d97e15fd1e973bc7e07a18f3e7cb94f13ff0792bd390aa0270d59c3b26",
+        "src/rapidxmltodict/_version.py": "2dc27d19a83888874e005d68290caf9c395edc4947b98b2ee79564e93f921195",
+        "vendor/rapidxml/rapidxml.hpp": "e83aa6118e9b0689ab1b54f1fbd33fc435e300e6931b11aebc49732b8b111503",
+        "vendor/rapidxml/rapidxml_lexical.hpp": "8abe9f25bdabffea03c94aa832421484dac6e17f4922ec475898e3b01dc5dd49",
+        "vendor/rapidxml/rapidxml_parse_core.hpp": "b4f3ea1399630842bc4352e96afe6481ed3ef61d7656766d6a816c0f232dbedd",
+        "vendor/rapidxml/rapidxml_stream.hpp": "7945a36e287e2689f0aa45ca027419f139e679b7a1aac858b4421999fd5eaed1"
+      }
+    },
+    "comparison_variants": [
+      "baseline",
+      "iterative_dom",
+      "native_events",
+      "xmltodict"
+    ],
+    "entrypoints": {
+      "baseline": "rapidxmltodict:parse",
+      "iterative_dom": "rapidxmltodict:parse",
+      "native_events": "rapidxmltodict._parse:_parse_native_events",
+      "xmltodict": "xmltodict:parse"
+    },
+    "entrypoint_options": {
+      "baseline": {},
+      "iterative_dom": {},
+      "native_events": {},
+      "xmltodict": {}
+    },
+    "variant_descriptions": {
+      "baseline": "Current integrated e911 baseline public parse; existing depth limit may trigger a second event parse.",
+      "iterative_dom": "Iterative DOM/default public parse: iterative DOM for default in-memory str/bytes, existing Python event mapping for file/callback/options.",
+      "native_events": "Private direct native-event dictionary mapper, forced via the recorded wrapper entry point.",
+      "xmltodict": "Unmodified xmltodict 1.0.4 public parse, Expat reference."
+    },
+    "xmltodict_version": "1.0.4",
+    "xmltodict_source_sha256": "701d42ae7298bbdf154163aed261e4f0fd3cc6c803748ec52f312a5bc402c46e",
+    "harness_sha256": "f959c0c6e4b633da125eec8e3167533541095b51bffa941e260c78a73da86765",
+    "fixture_generator_hashes": {
+      "benchmark.py": "38ff9389da978b21b0f97a8cecff489c4c6a2605cfc7e6c3c49402fa3eed34e1",
+      "upstream-large-memory.py": "3349db4130068e3c0358ac2d37780e35011796f3dd5a101f09f683aaede66ab0"
+    },
+    "initial_available_memory_bytes": 8575856640,
+    "method": {
+      "suite": "standard",
+      "repetitions": 1,
+      "fresh_process_per_sample": true,
+      "cpu_pinned": true,
+      "pythonhashseed": "0",
+      "gc_enabled": true,
+      "input_generation": "Separate generator process, all fixtures generated before all measured workers.",
+      "ordering": "Balanced rotating variant order, offset by workload index and repetition.",
+      "standard_timing": {
+        "warmup_calls": 3,
+        "calibration_calls": 3,
+        "batches_per_process": 3,
+        "target_batch_seconds": 0.03,
+        "output_destruction_timed": true
+      },
+      "standard_rss": "First parse in each fresh sample worker; sampled before fingerprint and before warmed timing batches.",
+      "large_timing": "One parse per fresh process; output destruction and fixture loading excluded; file reading included.",
+      "rss": "Linux current RSS and ru_maxrss, post-import/post-input baseline, total peak, peak minus baseline high-water mark, and retained current RSS. Input and output remain alive at sample.",
+      "incremental_peak_caveat": "Incremental peak subtracts baseline high-water RSS, not current baseline RSS; a previous input-loading peak can make incremental growth look small.",
+      "callbacks": "Same item_depth=2 callback tracks count/order/identifier sums. Discard retains no items; retain stores every item until RSS sample. File streams read through the normal wrapper.",
+      "correctness": "Complete typed iterative fingerprints for direct outputs. Separate unmeasured callback integrity workers hash every path and item. Measured callbacks validate full count and identifier checksums.",
+      "max_address_space_mib": 3072,
+      "memory_guard": "Skip estimated peak over 40% MemAvailable or 80% RLIMIT_AS; stop on worker failure, no automatic OOM retry.",
+      "private_prototype": true
+    },
+    "reference_expat_provenance": {
+      "version": "expat_2.8.3",
+      "version_info": [
+        2,
+        8,
+        3
+      ],
+      "features": [
+        [
+          "sizeof(XML_Char)",
+          1
+        ],
+        [
+          "sizeof(XML_LChar)",
+          1
+        ],
+        [
+          "XML_DTD",
+          0
+        ],
+        [
+          "XML_CONTEXT_BYTES",
+          1024
+        ],
+        [
+          "XML_NS",
+          0
+        ],
+        [
+          "XML_BLAP_MAX_AMP",
+          100
+        ],
+        [
+          "XML_BLAP_ACT_THRES",
+          8388608
+        ],
+        [
+          "XML_GE",
+          0
+        ],
+        [
+          "XML_AT_MAX_AMP",
+          100
+        ],
+        [
+          "XML_AT_ACT_THRES",
+          67108864
+        ]
+      ]
+    },
+    "workload_subset": [
+      "small",
+      "medium",
+      "large",
+      "unicode_mixed",
+      "deep_300",
+      "deep_10000",
+      "late_deep_60000_siblings"
+    ],
+    "all_requested_samples_completed": true,
+    "source_and_binary_hashes_end": {
+      "baseline": {
+        "pyproject.toml": "8dca44d37d9dbd6a417a349255d0c9d55134e9d25d1ed9ddc0442a4ba3bbb33e",
+        "setup.py": "c1c9916faaf946b69df2803a71b5690d8e5c42eee4cd035791fe1056a5d481d7",
+        "src/native.cpp": "867ecccf650c9427b1cc7f4577c18a9b8a38a46fb7b6fffdc660a99bfdbd6fd2",
+        "src/native_events_binding.hpp": "ce4ec872242ff906cdfa2915e346b5021ad191129ce7cc73e8ea617bbe91131f",
+        "src/rapidxml_events.hpp": "7fc93cdc6f20fb2b3c5d52b7d61d22817ace4136904177d41c3fdbca323ec64e",
+        "src/rapidxmltodict/__init__.py": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+        "src/rapidxmltodict/__init__.pyi": "17aab90b5e72dd5d87640e367083ab93e4ae6789759c4ca16bd0f80675003f3a",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "707d87d35ce57042c2fe537169576594fa39d7f418b0fb7937f2abd9380433d5",
+        "src/rapidxmltodict/_parse.py": "9576ddfe36b1b6645392e631d2ae3fe3ad70d8b8c5498bcecc1e5e9d4e2a6b8f",
+        "src/rapidxmltodict/_serialize.py": "a70e17d97e15fd1e973bc7e07a18f3e7cb94f13ff0792bd390aa0270d59c3b26",
+        "src/rapidxmltodict/_version.py": "2dc27d19a83888874e005d68290caf9c395edc4947b98b2ee79564e93f921195",
+        "vendor/rapidxml/rapidxml.hpp": "ab4d9c1f60a3a59bd2d7fe22651159faf610ca2741950ac01dab1c851c4fcddc",
+        "vendor/rapidxml/rapidxml_lexical.hpp": "8abe9f25bdabffea03c94aa832421484dac6e17f4922ec475898e3b01dc5dd49",
+        "vendor/rapidxml/rapidxml_parse_core.hpp": "b4f3ea1399630842bc4352e96afe6481ed3ef61d7656766d6a816c0f232dbedd",
+        "vendor/rapidxml/rapidxml_stream.hpp": "7945a36e287e2689f0aa45ca027419f139e679b7a1aac858b4421999fd5eaed1"
+      },
+      "iterative_dom": {
+        "pyproject.toml": "8dca44d37d9dbd6a417a349255d0c9d55134e9d25d1ed9ddc0442a4ba3bbb33e",
+        "setup.py": "c1c9916faaf946b69df2803a71b5690d8e5c42eee4cd035791fe1056a5d481d7",
+        "src/native.cpp": "e11ee51b2b8e57087a6b876d8ed34924cab77f0fc6e87a5a71d6dc24c6837329",
+        "src/native_events_binding.hpp": "ce4ec872242ff906cdfa2915e346b5021ad191129ce7cc73e8ea617bbe91131f",
+        "src/rapidxml_events.hpp": "7fc93cdc6f20fb2b3c5d52b7d61d22817ace4136904177d41c3fdbca323ec64e",
+        "src/rapidxmltodict/__init__.py": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+        "src/rapidxmltodict/__init__.pyi": "17aab90b5e72dd5d87640e367083ab93e4ae6789759c4ca16bd0f80675003f3a",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "547d62437143a7126be70d1395fe8da618b681159433c4c1c341c98812e5eecf",
+        "src/rapidxmltodict/_parse.py": "9576ddfe36b1b6645392e631d2ae3fe3ad70d8b8c5498bcecc1e5e9d4e2a6b8f",
+        "src/rapidxmltodict/_serialize.py": "a70e17d97e15fd1e973bc7e07a18f3e7cb94f13ff0792bd390aa0270d59c3b26",
+        "src/rapidxmltodict/_version.py": "2dc27d19a83888874e005d68290caf9c395edc4947b98b2ee79564e93f921195",
+        "vendor/rapidxml/rapidxml.hpp": "e83aa6118e9b0689ab1b54f1fbd33fc435e300e6931b11aebc49732b8b111503",
+        "vendor/rapidxml/rapidxml_lexical.hpp": "8abe9f25bdabffea03c94aa832421484dac6e17f4922ec475898e3b01dc5dd49",
+        "vendor/rapidxml/rapidxml_parse_core.hpp": "b4f3ea1399630842bc4352e96afe6481ed3ef61d7656766d6a816c0f232dbedd",
+        "vendor/rapidxml/rapidxml_stream.hpp": "7945a36e287e2689f0aa45ca027419f139e679b7a1aac858b4421999fd5eaed1"
+      },
+      "native_events": {
+        "pyproject.toml": "8dca44d37d9dbd6a417a349255d0c9d55134e9d25d1ed9ddc0442a4ba3bbb33e",
+        "setup.py": "5dd3d51c3d7c4fac3e77749b482ca3c8962ac249ff47c96c2807a2cb3dc78951",
+        "src/native.cpp": "2313a787f89beab4fe2944287c9fda026d7352c2b7b9627312a06715164713ee",
+        "src/native_events_binding.hpp": "ce4ec872242ff906cdfa2915e346b5021ad191129ce7cc73e8ea617bbe91131f",
+        "src/native_mapping.hpp": "5ccc951bdd6b399573c1003265df2fb48002b7082a064a7750e18e7b42f42f41",
+        "src/rapidxml_events.hpp": "7fc93cdc6f20fb2b3c5d52b7d61d22817ace4136904177d41c3fdbca323ec64e",
+        "src/rapidxmltodict/__init__.py": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+        "src/rapidxmltodict/__init__.pyi": "17aab90b5e72dd5d87640e367083ab93e4ae6789759c4ca16bd0f80675003f3a",
+        "src/rapidxmltodict/_native.cpython-312-x86_64-linux-gnu.so": "aa46a0f583f34a296f3fc465205d4ff47ff7938afb80cdd459ff7398903726d2",
+        "src/rapidxmltodict/_parse.py": "f9da6bc087bea8bd9602ea15c63081e6f21ad464a045c835a49411f109c3b6e9",
+        "src/rapidxmltodict/_serialize.py": "a70e17d97e15fd1e973bc7e07a18f3e7cb94f13ff0792bd390aa0270d59c3b26",
+        "src/rapidxmltodict/_version.py": "2dc27d19a83888874e005d68290caf9c395edc4947b98b2ee79564e93f921195",
+        "vendor/rapidxml/rapidxml.hpp": "e83aa6118e9b0689ab1b54f1fbd33fc435e300e6931b11aebc49732b8b111503",
+        "vendor/rapidxml/rapidxml_lexical.hpp": "8abe9f25bdabffea03c94aa832421484dac6e17f4922ec475898e3b01dc5dd49",
+        "vendor/rapidxml/rapidxml_parse_core.hpp": "b4f3ea1399630842bc4352e96afe6481ed3ef61d7656766d6a816c0f232dbedd",
+        "vendor/rapidxml/rapidxml_stream.hpp": "7945a36e287e2689f0aa45ca027419f139e679b7a1aac858b4421999fd5eaed1"
+      }
+    },
+    "source_and_binary_hashes_unchanged": true,
+    "finished_utc": "2026-10-09T18:49:01Z",
+    "experiment_stage": "Intermediate build4 strict-default native-event optimization; one-worker smoke check, not the final benchmark",
+    "derived_memory_metrics": {
+      "script_sha256": "4c575e3695baea72f16e147a2d57f84d286dcb3fa434769c1ad8c28818c46447",
+      "original_measurements_preserved": true,
+      "incremental_peak_over_current_rss_bytes": "max(0, peak_rss_bytes - baseline_current_rss_bytes)",
+      "incremental_peak_rss_bytes": "Original recorded metric: max(0, peak_rss_bytes - baseline_peak_rss_bytes)",
+      "retained_current_increase_bytes": "Original recorded metric: retained_output_current_rss_bytes - baseline_current_rss_bytes (signed)",
+      "summary": "Each summary is the median of per-sample differences, not a difference of independently calculated medians.",
+      "interpretation": "Arithmetic whole-process RSS comparisons, not isolated allocation attribution. Input-loading transients affect the prior high-water baseline; Linux RSS accounting/sampling can differ slightly."
+    }
+  },
+  "workloads": {
+    "small": {
+      "name": "small",
+      "input_type": "str",
+      "bytes": 1077,
+      "sha256": "2c6cc7dfd743a4e5286a1d207af3727366a4b39fb6ede3435f2935c200668e1c",
+      "description": "6 realistic catalog records",
+      "suite": "standard",
+      "shape": "small",
+      "parse_mode": "direct_str",
+      "retain_callbacks": false,
+      "samples": {
+        "baseline": [
+          {
+            "elapsed_ns": 51046,
+            "baseline_current_rss_bytes": 21610496,
+            "baseline_peak_rss_bytes": 21557248,
+            "peak_rss_bytes": 21557248,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 21651456,
+            "retained_current_increase_bytes": 40960,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "707d87d35ce57042c2fe537169576594fa39d7f418b0fb7937f2abd9380433d5",
+            "output_fingerprint": {
+              "sha256": "7b541b648a36f9e32f5bea833e3d4ce1e5b7d7394ca2d39a19178f3d6debb971",
+              "type_counts": {
+                "dict": 20,
+                "list": 7,
+                "str": 106,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 2237,
+              "batch_ns_per_call": [
+                13251.777827447475,
+                13683.2311130979,
+                12988.436298614215
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 0
+          }
+        ],
+        "iterative_dom": [
+          {
+            "elapsed_ns": 47811,
+            "baseline_current_rss_bytes": 21610496,
+            "baseline_peak_rss_bytes": 21557248,
+            "peak_rss_bytes": 21557248,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 21655552,
+            "retained_current_increase_bytes": 45056,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "547d62437143a7126be70d1395fe8da618b681159433c4c1c341c98812e5eecf",
+            "output_fingerprint": {
+              "sha256": "7b541b648a36f9e32f5bea833e3d4ce1e5b7d7394ca2d39a19178f3d6debb971",
+              "type_counts": {
+                "dict": 20,
+                "list": 7,
+                "str": 106,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 259,
+              "batch_ns_per_call": [
+                19263.984555984556,
+                17506.745173745174,
+                13232.988416988417
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 0
+          }
+        ],
+        "native_events": [
+          {
+            "elapsed_ns": 86658,
+            "baseline_current_rss_bytes": 21626880,
+            "baseline_peak_rss_bytes": 21569536,
+            "peak_rss_bytes": 21569536,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 21700608,
+            "retained_current_increase_bytes": 73728,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict._parse:_parse_native_events",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "aa46a0f583f34a296f3fc465205d4ff47ff7938afb80cdd459ff7398903726d2",
+            "output_fingerprint": {
+              "sha256": "7b541b648a36f9e32f5bea833e3d4ce1e5b7d7394ca2d39a19178f3d6debb971",
+              "type_counts": {
+                "dict": 20,
+                "list": 7,
+                "str": 106,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 1287,
+              "batch_ns_per_call": [
+                23511.88888888889,
+                21100.571872571873,
+                22073.008547008547
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 0
+          }
+        ],
+        "xmltodict": [
+          {
+            "elapsed_ns": 197493,
+            "baseline_current_rss_bytes": 20566016,
+            "baseline_peak_rss_bytes": 21233664,
+            "peak_rss_bytes": 21233664,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 20672512,
+            "retained_current_increase_bytes": 106496,
+            "parser_module_sha256": "701d42ae7298bbdf154163aed261e4f0fd3cc6c803748ec52f312a5bc402c46e",
+            "entrypoint": "xmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "output_fingerprint": {
+              "sha256": "7b541b648a36f9e32f5bea833e3d4ce1e5b7d7394ca2d39a19178f3d6debb971",
+              "type_counts": {
+                "dict": 20,
+                "list": 7,
+                "str": 106,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 280,
+              "batch_ns_per_call": [
+                98177.53571428571,
+                86955.57142857143,
+                91201.18928571428
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 667648
+          }
+        ]
+      },
+      "skipped": {},
+      "all_output_fingerprints_equal": true,
+      "medians": {
+        "baseline": {
+          "elapsed_ns": 51046,
+          "baseline_current_rss_bytes": 21610496,
+          "baseline_peak_rss_bytes": 21557248,
+          "peak_rss_bytes": 21557248,
+          "incremental_peak_rss_bytes": 0,
+          "retained_output_current_rss_bytes": 21651456,
+          "retained_current_increase_bytes": 40960,
+          "timing_median_ns": 13251.777827447475,
+          "timing_min_ns": 12988.436298614215,
+          "timing_max_ns": 13683.2311130979,
+          "incremental_peak_over_current_rss_bytes": 0
+        },
+        "iterative_dom": {
+          "elapsed_ns": 47811,
+          "baseline_current_rss_bytes": 21610496,
+          "baseline_peak_rss_bytes": 21557248,
+          "peak_rss_bytes": 21557248,
+          "incremental_peak_rss_bytes": 0,
+          "retained_output_current_rss_bytes": 21655552,
+          "retained_current_increase_bytes": 45056,
+          "timing_median_ns": 17506.745173745174,
+          "timing_min_ns": 13232.988416988417,
+          "timing_max_ns": 19263.984555984556,
+          "incremental_peak_over_current_rss_bytes": 0
+        },
+        "native_events": {
+          "elapsed_ns": 86658,
+          "baseline_current_rss_bytes": 21626880,
+          "baseline_peak_rss_bytes": 21569536,
+          "peak_rss_bytes": 21569536,
+          "incremental_peak_rss_bytes": 0,
+          "retained_output_current_rss_bytes": 21700608,
+          "retained_current_increase_bytes": 73728,
+          "timing_median_ns": 22073.008547008547,
+          "timing_min_ns": 21100.571872571873,
+          "timing_max_ns": 23511.88888888889,
+          "incremental_peak_over_current_rss_bytes": 0
+        },
+        "xmltodict": {
+          "elapsed_ns": 197493,
+          "baseline_current_rss_bytes": 20566016,
+          "baseline_peak_rss_bytes": 21233664,
+          "peak_rss_bytes": 21233664,
+          "incremental_peak_rss_bytes": 0,
+          "retained_output_current_rss_bytes": 20672512,
+          "retained_current_increase_bytes": 106496,
+          "timing_median_ns": 91201.18928571428,
+          "timing_min_ns": 86955.57142857143,
+          "timing_max_ns": 98177.53571428571,
+          "incremental_peak_over_current_rss_bytes": 667648
+        }
+      }
+    },
+    "medium": {
+      "name": "medium",
+      "input_type": "str",
+      "bytes": 105501,
+      "sha256": "a1f0ca482576f8151786790cd9312667d9ae39462ac8f16b2570152d7e4302fd",
+      "description": "600 realistic catalog records",
+      "suite": "standard",
+      "shape": "medium",
+      "parse_mode": "direct_str",
+      "retain_callbacks": false,
+      "samples": {
+        "baseline": [
+          {
+            "elapsed_ns": 1418434,
+            "baseline_current_rss_bytes": 21610496,
+            "baseline_peak_rss_bytes": 21557248,
+            "peak_rss_bytes": 22343680,
+            "incremental_peak_rss_bytes": 786432,
+            "retained_output_current_rss_bytes": 22319104,
+            "retained_current_increase_bytes": 708608,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "707d87d35ce57042c2fe537169576594fa39d7f418b0fb7937f2abd9380433d5",
+            "output_fingerprint": {
+              "sha256": "e9e9b64ae67c36b24b110e47d4346dafa00bc795b2fbd05bd18834b6e84a3527",
+              "type_counts": {
+                "dict": 1802,
+                "list": 601,
+                "str": 10204,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 25,
+              "batch_ns_per_call": [
+                1143485.16,
+                1123641.28,
+                1140525.92
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 733184
+          }
+        ],
+        "iterative_dom": [
+          {
+            "elapsed_ns": 1326899,
+            "baseline_current_rss_bytes": 21610496,
+            "baseline_peak_rss_bytes": 21557248,
+            "peak_rss_bytes": 22343680,
+            "incremental_peak_rss_bytes": 786432,
+            "retained_output_current_rss_bytes": 22315008,
+            "retained_current_increase_bytes": 704512,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "547d62437143a7126be70d1395fe8da618b681159433c4c1c341c98812e5eecf",
+            "output_fingerprint": {
+              "sha256": "e9e9b64ae67c36b24b110e47d4346dafa00bc795b2fbd05bd18834b6e84a3527",
+              "type_counts": {
+                "dict": 1802,
+                "list": 601,
+                "str": 10204,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 30,
+              "batch_ns_per_call": [
+                1201738.1,
+                1215736.8333333333,
+                1334419.2666666666
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 733184
+          }
+        ],
+        "native_events": [
+          {
+            "elapsed_ns": 3268359,
+            "baseline_current_rss_bytes": 21598208,
+            "baseline_peak_rss_bytes": 21557248,
+            "peak_rss_bytes": 22081536,
+            "incremental_peak_rss_bytes": 524288,
+            "retained_output_current_rss_bytes": 22294528,
+            "retained_current_increase_bytes": 696320,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict._parse:_parse_native_events",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "aa46a0f583f34a296f3fc465205d4ff47ff7938afb80cdd459ff7398903726d2",
+            "output_fingerprint": {
+              "sha256": "e9e9b64ae67c36b24b110e47d4346dafa00bc795b2fbd05bd18834b6e84a3527",
+              "type_counts": {
+                "dict": 1802,
+                "list": 601,
+                "str": 10204,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 16,
+              "batch_ns_per_call": [
+                1862161.875,
+                1839294.1875,
+                1830295.25
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 483328
+          }
+        ],
+        "xmltodict": [
+          {
+            "elapsed_ns": 10407099,
+            "baseline_current_rss_bytes": 20561920,
+            "baseline_peak_rss_bytes": 21233664,
+            "peak_rss_bytes": 21356544,
+            "incremental_peak_rss_bytes": 122880,
+            "retained_output_current_rss_bytes": 21385216,
+            "retained_current_increase_bytes": 823296,
+            "parser_module_sha256": "701d42ae7298bbdf154163aed261e4f0fd3cc6c803748ec52f312a5bc402c46e",
+            "entrypoint": "xmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "output_fingerprint": {
+              "sha256": "e9e9b64ae67c36b24b110e47d4346dafa00bc795b2fbd05bd18834b6e84a3527",
+              "type_counts": {
+                "dict": 1802,
+                "list": 601,
+                "str": 10204,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 3,
+              "batch_ns_per_call": [
+                11409342.333333334,
+                7741397.666666667,
+                10705671.666666666
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 794624
+          }
+        ]
+      },
+      "skipped": {},
+      "all_output_fingerprints_equal": true,
+      "medians": {
+        "baseline": {
+          "elapsed_ns": 1418434,
+          "baseline_current_rss_bytes": 21610496,
+          "baseline_peak_rss_bytes": 21557248,
+          "peak_rss_bytes": 22343680,
+          "incremental_peak_rss_bytes": 786432,
+          "retained_output_current_rss_bytes": 22319104,
+          "retained_current_increase_bytes": 708608,
+          "timing_median_ns": 1140525.92,
+          "timing_min_ns": 1123641.28,
+          "timing_max_ns": 1143485.16,
+          "incremental_peak_over_current_rss_bytes": 733184
+        },
+        "iterative_dom": {
+          "elapsed_ns": 1326899,
+          "baseline_current_rss_bytes": 21610496,
+          "baseline_peak_rss_bytes": 21557248,
+          "peak_rss_bytes": 22343680,
+          "incremental_peak_rss_bytes": 786432,
+          "retained_output_current_rss_bytes": 22315008,
+          "retained_current_increase_bytes": 704512,
+          "timing_median_ns": 1215736.8333333333,
+          "timing_min_ns": 1201738.1,
+          "timing_max_ns": 1334419.2666666666,
+          "incremental_peak_over_current_rss_bytes": 733184
+        },
+        "native_events": {
+          "elapsed_ns": 3268359,
+          "baseline_current_rss_bytes": 21598208,
+          "baseline_peak_rss_bytes": 21557248,
+          "peak_rss_bytes": 22081536,
+          "incremental_peak_rss_bytes": 524288,
+          "retained_output_current_rss_bytes": 22294528,
+          "retained_current_increase_bytes": 696320,
+          "timing_median_ns": 1839294.1875,
+          "timing_min_ns": 1830295.25,
+          "timing_max_ns": 1862161.875,
+          "incremental_peak_over_current_rss_bytes": 483328
+        },
+        "xmltodict": {
+          "elapsed_ns": 10407099,
+          "baseline_current_rss_bytes": 20561920,
+          "baseline_peak_rss_bytes": 21233664,
+          "peak_rss_bytes": 21356544,
+          "incremental_peak_rss_bytes": 122880,
+          "retained_output_current_rss_bytes": 21385216,
+          "retained_current_increase_bytes": 823296,
+          "timing_median_ns": 10705671.666666666,
+          "timing_min_ns": 7741397.666666667,
+          "timing_max_ns": 11409342.333333334,
+          "incremental_peak_over_current_rss_bytes": 794624
+        }
+      }
+    },
+    "large": {
+      "name": "large",
+      "input_type": "str",
+      "bytes": 1055391,
+      "sha256": "b105b19a85dddc0d0261bdb7e96e92c70b2bf08bc7331b1661713e374c2abedb",
+      "description": "6000 realistic catalog records",
+      "suite": "standard",
+      "shape": "large",
+      "parse_mode": "direct_str",
+      "retain_callbacks": false,
+      "samples": {
+        "baseline": [
+          {
+            "elapsed_ns": 15232747,
+            "baseline_current_rss_bytes": 22667264,
+            "baseline_peak_rss_bytes": 23654400,
+            "peak_rss_bytes": 35495936,
+            "incremental_peak_rss_bytes": 11841536,
+            "retained_output_current_rss_bytes": 30556160,
+            "retained_current_increase_bytes": 7888896,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "707d87d35ce57042c2fe537169576594fa39d7f418b0fb7937f2abd9380433d5",
+            "output_fingerprint": {
+              "sha256": "ac1576805f7b1c7181c1bdaa22f6e1c9fc4930dc9e64ac2682d9e97f0e7394ba",
+              "type_counts": {
+                "dict": 18002,
+                "list": 6001,
+                "str": 102004,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 2,
+              "batch_ns_per_call": [
+                12143530.0,
+                11874858.5,
+                11554666.0
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 12828672
+          }
+        ],
+        "iterative_dom": [
+          {
+            "elapsed_ns": 13901052,
+            "baseline_current_rss_bytes": 22667264,
+            "baseline_peak_rss_bytes": 23654400,
+            "peak_rss_bytes": 35495936,
+            "incremental_peak_rss_bytes": 11841536,
+            "retained_output_current_rss_bytes": 30629888,
+            "retained_current_increase_bytes": 7962624,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "547d62437143a7126be70d1395fe8da618b681159433c4c1c341c98812e5eecf",
+            "output_fingerprint": {
+              "sha256": "ac1576805f7b1c7181c1bdaa22f6e1c9fc4930dc9e64ac2682d9e97f0e7394ba",
+              "type_counts": {
+                "dict": 18002,
+                "list": 6001,
+                "str": 102004,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 3,
+              "batch_ns_per_call": [
+                11928909.333333334,
+                10655223.666666666,
+                10989509.333333334
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 12828672
+          }
+        ],
+        "native_events": [
+          {
+            "elapsed_ns": 20609614,
+            "baseline_current_rss_bytes": 22659072,
+            "baseline_peak_rss_bytes": 23654400,
+            "peak_rss_bytes": 33001472,
+            "incremental_peak_rss_bytes": 9347072,
+            "retained_output_current_rss_bytes": 31186944,
+            "retained_current_increase_bytes": 8527872,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict._parse:_parse_native_events",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "aa46a0f583f34a296f3fc465205d4ff47ff7938afb80cdd459ff7398903726d2",
+            "output_fingerprint": {
+              "sha256": "ac1576805f7b1c7181c1bdaa22f6e1c9fc4930dc9e64ac2682d9e97f0e7394ba",
+              "type_counts": {
+                "dict": 18002,
+                "list": 6001,
+                "str": 102004,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 1,
+              "batch_ns_per_call": [
+                20717835.0,
+                20322027.0,
+                19772432.0
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 10342400
+          }
+        ],
+        "xmltodict": [
+          {
+            "elapsed_ns": 102391687,
+            "baseline_current_rss_bytes": 21618688,
+            "baseline_peak_rss_bytes": 22536192,
+            "peak_rss_bytes": 30875648,
+            "incremental_peak_rss_bytes": 8339456,
+            "retained_output_current_rss_bytes": 29036544,
+            "retained_current_increase_bytes": 7417856,
+            "parser_module_sha256": "701d42ae7298bbdf154163aed261e4f0fd3cc6c803748ec52f312a5bc402c46e",
+            "entrypoint": "xmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "output_fingerprint": {
+              "sha256": "ac1576805f7b1c7181c1bdaa22f6e1c9fc4930dc9e64ac2682d9e97f0e7394ba",
+              "type_counts": {
+                "dict": 18002,
+                "list": 6001,
+                "str": 102004,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 1,
+              "batch_ns_per_call": [
+                81987537.0,
+                85328353.0,
+                81884474.0
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 9256960
+          }
+        ]
+      },
+      "skipped": {},
+      "all_output_fingerprints_equal": true,
+      "medians": {
+        "baseline": {
+          "elapsed_ns": 15232747,
+          "baseline_current_rss_bytes": 22667264,
+          "baseline_peak_rss_bytes": 23654400,
+          "peak_rss_bytes": 35495936,
+          "incremental_peak_rss_bytes": 11841536,
+          "retained_output_current_rss_bytes": 30556160,
+          "retained_current_increase_bytes": 7888896,
+          "timing_median_ns": 11874858.5,
+          "timing_min_ns": 11554666.0,
+          "timing_max_ns": 12143530.0,
+          "incremental_peak_over_current_rss_bytes": 12828672
+        },
+        "iterative_dom": {
+          "elapsed_ns": 13901052,
+          "baseline_current_rss_bytes": 22667264,
+          "baseline_peak_rss_bytes": 23654400,
+          "peak_rss_bytes": 35495936,
+          "incremental_peak_rss_bytes": 11841536,
+          "retained_output_current_rss_bytes": 30629888,
+          "retained_current_increase_bytes": 7962624,
+          "timing_median_ns": 10989509.333333334,
+          "timing_min_ns": 10655223.666666666,
+          "timing_max_ns": 11928909.333333334,
+          "incremental_peak_over_current_rss_bytes": 12828672
+        },
+        "native_events": {
+          "elapsed_ns": 20609614,
+          "baseline_current_rss_bytes": 22659072,
+          "baseline_peak_rss_bytes": 23654400,
+          "peak_rss_bytes": 33001472,
+          "incremental_peak_rss_bytes": 9347072,
+          "retained_output_current_rss_bytes": 31186944,
+          "retained_current_increase_bytes": 8527872,
+          "timing_median_ns": 20322027.0,
+          "timing_min_ns": 19772432.0,
+          "timing_max_ns": 20717835.0,
+          "incremental_peak_over_current_rss_bytes": 10342400
+        },
+        "xmltodict": {
+          "elapsed_ns": 102391687,
+          "baseline_current_rss_bytes": 21618688,
+          "baseline_peak_rss_bytes": 22536192,
+          "peak_rss_bytes": 30875648,
+          "incremental_peak_rss_bytes": 8339456,
+          "retained_output_current_rss_bytes": 29036544,
+          "retained_current_increase_bytes": 7417856,
+          "timing_median_ns": 81987537.0,
+          "timing_min_ns": 81884474.0,
+          "timing_max_ns": 85328353.0,
+          "incremental_peak_over_current_rss_bytes": 9256960
+        }
+      }
+    },
+    "unicode_mixed": {
+      "name": "unicode_mixed",
+      "input_type": "str",
+      "bytes": 91903,
+      "sha256": "8776d86160f8a8b2c5c9d4aa7fe370f60ae3fb10b2477c02475cc2d81de67d86",
+      "description": "500 Unicode and mixed-content records; empty/whitespace nodes",
+      "suite": "standard",
+      "shape": "unicode_mixed",
+      "parse_mode": "direct_str",
+      "retain_callbacks": false,
+      "samples": {
+        "baseline": [
+          {
+            "elapsed_ns": 1193210,
+            "baseline_current_rss_bytes": 21966848,
+            "baseline_peak_rss_bytes": 21950464,
+            "peak_rss_bytes": 22474752,
+            "incremental_peak_rss_bytes": 524288,
+            "retained_output_current_rss_bytes": 22503424,
+            "retained_current_increase_bytes": 536576,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "707d87d35ce57042c2fe537169576594fa39d7f418b0fb7937f2abd9380433d5",
+            "output_fingerprint": {
+              "sha256": "93ea12c699f4f743c4059f679b3c7c30514f3793ce59c47f74598ac820eaf4ee",
+              "type_counts": {
+                "dict": 1002,
+                "list": 1,
+                "str": 7502,
+                "none": 1000
+              }
+            },
+            "timing": {
+              "loops_per_batch": 30,
+              "batch_ns_per_call": [
+                978436.5,
+                1010031.3666666667,
+                1010759.4333333333
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 507904
+          }
+        ],
+        "iterative_dom": [
+          {
+            "elapsed_ns": 1189765,
+            "baseline_current_rss_bytes": 21925888,
+            "baseline_peak_rss_bytes": 21913600,
+            "peak_rss_bytes": 22437888,
+            "incremental_peak_rss_bytes": 524288,
+            "retained_output_current_rss_bytes": 22503424,
+            "retained_current_increase_bytes": 577536,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "547d62437143a7126be70d1395fe8da618b681159433c4c1c341c98812e5eecf",
+            "output_fingerprint": {
+              "sha256": "93ea12c699f4f743c4059f679b3c7c30514f3793ce59c47f74598ac820eaf4ee",
+              "type_counts": {
+                "dict": 1002,
+                "list": 1,
+                "str": 7502,
+                "none": 1000
+              }
+            },
+            "timing": {
+              "loops_per_batch": 29,
+              "batch_ns_per_call": [
+                948074.724137931,
+                919297.2068965518,
+                939157.3448275862
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 512000
+          }
+        ],
+        "native_events": [
+          {
+            "elapsed_ns": 1902122,
+            "baseline_current_rss_bytes": 21958656,
+            "baseline_peak_rss_bytes": 21819392,
+            "peak_rss_bytes": 22343680,
+            "incremental_peak_rss_bytes": 524288,
+            "retained_output_current_rss_bytes": 22454272,
+            "retained_current_increase_bytes": 495616,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict._parse:_parse_native_events",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "aa46a0f583f34a296f3fc465205d4ff47ff7938afb80cdd459ff7398903726d2",
+            "output_fingerprint": {
+              "sha256": "93ea12c699f4f743c4059f679b3c7c30514f3793ce59c47f74598ac820eaf4ee",
+              "type_counts": {
+                "dict": 1002,
+                "list": 1,
+                "str": 7502,
+                "none": 1000
+              }
+            },
+            "timing": {
+              "loops_per_batch": 18,
+              "batch_ns_per_call": [
+                1720204.2777777778,
+                1668523.0555555555,
+                1693649.888888889
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 385024
+          }
+        ],
+        "xmltodict": [
+          {
+            "elapsed_ns": 6731096,
+            "baseline_current_rss_bytes": 20914176,
+            "baseline_peak_rss_bytes": 21233664,
+            "peak_rss_bytes": 21491712,
+            "incremental_peak_rss_bytes": 258048,
+            "retained_output_current_rss_bytes": 21491712,
+            "retained_current_increase_bytes": 577536,
+            "parser_module_sha256": "701d42ae7298bbdf154163aed261e4f0fd3cc6c803748ec52f312a5bc402c46e",
+            "entrypoint": "xmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "output_fingerprint": {
+              "sha256": "93ea12c699f4f743c4059f679b3c7c30514f3793ce59c47f74598ac820eaf4ee",
+              "type_counts": {
+                "dict": 1002,
+                "list": 1,
+                "str": 7502,
+                "none": 1000
+              }
+            },
+            "timing": {
+              "loops_per_batch": 5,
+              "batch_ns_per_call": [
+                6741811.4,
+                7246364.0,
+                6568408.2
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 577536
+          }
+        ]
+      },
+      "skipped": {},
+      "all_output_fingerprints_equal": true,
+      "medians": {
+        "baseline": {
+          "elapsed_ns": 1193210,
+          "baseline_current_rss_bytes": 21966848,
+          "baseline_peak_rss_bytes": 21950464,
+          "peak_rss_bytes": 22474752,
+          "incremental_peak_rss_bytes": 524288,
+          "retained_output_current_rss_bytes": 22503424,
+          "retained_current_increase_bytes": 536576,
+          "timing_median_ns": 1010031.3666666667,
+          "timing_min_ns": 978436.5,
+          "timing_max_ns": 1010759.4333333333,
+          "incremental_peak_over_current_rss_bytes": 507904
+        },
+        "iterative_dom": {
+          "elapsed_ns": 1189765,
+          "baseline_current_rss_bytes": 21925888,
+          "baseline_peak_rss_bytes": 21913600,
+          "peak_rss_bytes": 22437888,
+          "incremental_peak_rss_bytes": 524288,
+          "retained_output_current_rss_bytes": 22503424,
+          "retained_current_increase_bytes": 577536,
+          "timing_median_ns": 939157.3448275862,
+          "timing_min_ns": 919297.2068965518,
+          "timing_max_ns": 948074.724137931,
+          "incremental_peak_over_current_rss_bytes": 512000
+        },
+        "native_events": {
+          "elapsed_ns": 1902122,
+          "baseline_current_rss_bytes": 21958656,
+          "baseline_peak_rss_bytes": 21819392,
+          "peak_rss_bytes": 22343680,
+          "incremental_peak_rss_bytes": 524288,
+          "retained_output_current_rss_bytes": 22454272,
+          "retained_current_increase_bytes": 495616,
+          "timing_median_ns": 1693649.888888889,
+          "timing_min_ns": 1668523.0555555555,
+          "timing_max_ns": 1720204.2777777778,
+          "incremental_peak_over_current_rss_bytes": 385024
+        },
+        "xmltodict": {
+          "elapsed_ns": 6731096,
+          "baseline_current_rss_bytes": 20914176,
+          "baseline_peak_rss_bytes": 21233664,
+          "peak_rss_bytes": 21491712,
+          "incremental_peak_rss_bytes": 258048,
+          "retained_output_current_rss_bytes": 21491712,
+          "retained_current_increase_bytes": 577536,
+          "timing_median_ns": 6741811.4,
+          "timing_min_ns": 6568408.2,
+          "timing_max_ns": 7246364.0,
+          "incremental_peak_over_current_rss_bytes": 577536
+        }
+      }
+    },
+    "deep_300": {
+      "name": "deep_300",
+      "suite": "standard",
+      "shape": "deep",
+      "depth": 300,
+      "bytes": 2104,
+      "sha256": "c67a1e874577e8e48e220de6ef1928725407b974c9afa289cc08c92ee9df353f",
+      "parse_mode": "direct_str",
+      "retain_callbacks": false,
+      "description": "300 nested elements, no recursion-limit adjustment",
+      "samples": {
+        "baseline": [
+          {
+            "elapsed_ns": 886155,
+            "baseline_current_rss_bytes": 21610496,
+            "baseline_peak_rss_bytes": 21557248,
+            "peak_rss_bytes": 21950464,
+            "incremental_peak_rss_bytes": 393216,
+            "retained_output_current_rss_bytes": 21995520,
+            "retained_current_increase_bytes": 385024,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "707d87d35ce57042c2fe537169576594fa39d7f418b0fb7937f2abd9380433d5",
+            "output_fingerprint": {
+              "sha256": "a0b036f50c601cb7d6e8eedd769afe0f769a5bc990073ddbfd93d34841d450a9",
+              "type_counts": {
+                "dict": 300,
+                "list": 0,
+                "str": 301,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 49,
+              "batch_ns_per_call": [
+                634086.8163265307,
+                663854.2448979592,
+                644543.7551020408
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 339968
+          }
+        ],
+        "iterative_dom": [
+          {
+            "elapsed_ns": 81300,
+            "baseline_current_rss_bytes": 21610496,
+            "baseline_peak_rss_bytes": 21557248,
+            "peak_rss_bytes": 21557248,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 21680128,
+            "retained_current_increase_bytes": 69632,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "547d62437143a7126be70d1395fe8da618b681159433c4c1c341c98812e5eecf",
+            "output_fingerprint": {
+              "sha256": "a0b036f50c601cb7d6e8eedd769afe0f769a5bc990073ddbfd93d34841d450a9",
+              "type_counts": {
+                "dict": 300,
+                "list": 0,
+                "str": 301,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 763,
+              "batch_ns_per_call": [
+                41070.247706422015,
+                41713.12975098296,
+                41991.36435124509
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 0
+          }
+        ],
+        "native_events": [
+          {
+            "elapsed_ns": 192686,
+            "baseline_current_rss_bytes": 21598208,
+            "baseline_peak_rss_bytes": 21557248,
+            "peak_rss_bytes": 21557248,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 21708800,
+            "retained_current_increase_bytes": 110592,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict._parse:_parse_native_events",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "aa46a0f583f34a296f3fc465205d4ff47ff7938afb80cdd459ff7398903726d2",
+            "output_fingerprint": {
+              "sha256": "a0b036f50c601cb7d6e8eedd769afe0f769a5bc990073ddbfd93d34841d450a9",
+              "type_counts": {
+                "dict": 300,
+                "list": 0,
+                "str": 301,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 383,
+              "batch_ns_per_call": [
+                67745.07310704961,
+                66538.00522193211,
+                68323.60835509139
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 0
+          }
+        ],
+        "xmltodict": [
+          {
+            "elapsed_ns": 713118,
+            "baseline_current_rss_bytes": 20566016,
+            "baseline_peak_rss_bytes": 21233664,
+            "peak_rss_bytes": 21233664,
+            "incremental_peak_rss_bytes": 0,
+            "retained_output_current_rss_bytes": 20795392,
+            "retained_current_increase_bytes": 229376,
+            "parser_module_sha256": "701d42ae7298bbdf154163aed261e4f0fd3cc6c803748ec52f312a5bc402c46e",
+            "entrypoint": "xmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "output_fingerprint": {
+              "sha256": "a0b036f50c601cb7d6e8eedd769afe0f769a5bc990073ddbfd93d34841d450a9",
+              "type_counts": {
+                "dict": 300,
+                "list": 0,
+                "str": 301,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 53,
+              "batch_ns_per_call": [
+                563353.3018867924,
+                516983.30188679247,
+                407031.77358490566
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 667648
+          }
+        ]
+      },
+      "skipped": {},
+      "all_output_fingerprints_equal": true,
+      "medians": {
+        "baseline": {
+          "elapsed_ns": 886155,
+          "baseline_current_rss_bytes": 21610496,
+          "baseline_peak_rss_bytes": 21557248,
+          "peak_rss_bytes": 21950464,
+          "incremental_peak_rss_bytes": 393216,
+          "retained_output_current_rss_bytes": 21995520,
+          "retained_current_increase_bytes": 385024,
+          "timing_median_ns": 644543.7551020408,
+          "timing_min_ns": 634086.8163265307,
+          "timing_max_ns": 663854.2448979592,
+          "incremental_peak_over_current_rss_bytes": 339968
+        },
+        "iterative_dom": {
+          "elapsed_ns": 81300,
+          "baseline_current_rss_bytes": 21610496,
+          "baseline_peak_rss_bytes": 21557248,
+          "peak_rss_bytes": 21557248,
+          "incremental_peak_rss_bytes": 0,
+          "retained_output_current_rss_bytes": 21680128,
+          "retained_current_increase_bytes": 69632,
+          "timing_median_ns": 41713.12975098296,
+          "timing_min_ns": 41070.247706422015,
+          "timing_max_ns": 41991.36435124509,
+          "incremental_peak_over_current_rss_bytes": 0
+        },
+        "native_events": {
+          "elapsed_ns": 192686,
+          "baseline_current_rss_bytes": 21598208,
+          "baseline_peak_rss_bytes": 21557248,
+          "peak_rss_bytes": 21557248,
+          "incremental_peak_rss_bytes": 0,
+          "retained_output_current_rss_bytes": 21708800,
+          "retained_current_increase_bytes": 110592,
+          "timing_median_ns": 67745.07310704961,
+          "timing_min_ns": 66538.00522193211,
+          "timing_max_ns": 68323.60835509139,
+          "incremental_peak_over_current_rss_bytes": 0
+        },
+        "xmltodict": {
+          "elapsed_ns": 713118,
+          "baseline_current_rss_bytes": 20566016,
+          "baseline_peak_rss_bytes": 21233664,
+          "peak_rss_bytes": 21233664,
+          "incremental_peak_rss_bytes": 0,
+          "retained_output_current_rss_bytes": 20795392,
+          "retained_current_increase_bytes": 229376,
+          "timing_median_ns": 516983.30188679247,
+          "timing_min_ns": 407031.77358490566,
+          "timing_max_ns": 563353.3018867924,
+          "incremental_peak_over_current_rss_bytes": 667648
+        }
+      }
+    },
+    "deep_10000": {
+      "name": "deep_10000",
+      "suite": "standard",
+      "shape": "deep",
+      "depth": 10000,
+      "bytes": 70004,
+      "sha256": "c74f43bfbfd03bfc5bc10fabc8a16929f7c6047e6e57e4afc8831ead924a4a02",
+      "parse_mode": "direct_str",
+      "retain_callbacks": false,
+      "description": "10000 nested elements, no recursion-limit adjustment",
+      "samples": {
+        "baseline": [
+          {
+            "elapsed_ns": 19867013,
+            "baseline_current_rss_bytes": 21618688,
+            "baseline_peak_rss_bytes": 21557248,
+            "peak_rss_bytes": 25505792,
+            "incremental_peak_rss_bytes": 3948544,
+            "retained_output_current_rss_bytes": 25288704,
+            "retained_current_increase_bytes": 3670016,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "707d87d35ce57042c2fe537169576594fa39d7f418b0fb7937f2abd9380433d5",
+            "output_fingerprint": {
+              "sha256": "ff7c10717e69d9ee435f98022d6bc1f2e6fbdd5a76fc5e30154060d64dd8dd49",
+              "type_counts": {
+                "dict": 10000,
+                "list": 0,
+                "str": 10001,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 1,
+              "batch_ns_per_call": [
+                23599551.0,
+                17393504.0,
+                17658717.0
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 3887104
+          }
+        ],
+        "iterative_dom": [
+          {
+            "elapsed_ns": 2884009,
+            "baseline_current_rss_bytes": 21610496,
+            "baseline_peak_rss_bytes": 21557248,
+            "peak_rss_bytes": 25092096,
+            "incremental_peak_rss_bytes": 3534848,
+            "retained_output_current_rss_bytes": 24444928,
+            "retained_current_increase_bytes": 2834432,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "547d62437143a7126be70d1395fe8da618b681159433c4c1c341c98812e5eecf",
+            "output_fingerprint": {
+              "sha256": "ff7c10717e69d9ee435f98022d6bc1f2e6fbdd5a76fc5e30154060d64dd8dd49",
+              "type_counts": {
+                "dict": 10000,
+                "list": 0,
+                "str": 10001,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 14,
+              "batch_ns_per_call": [
+                2582105.6428571427,
+                2268577.714285714,
+                2264360.714285714
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 3481600
+          }
+        ],
+        "native_events": [
+          {
+            "elapsed_ns": 3224013,
+            "baseline_current_rss_bytes": 21598208,
+            "baseline_peak_rss_bytes": 21557248,
+            "peak_rss_bytes": 23937024,
+            "incremental_peak_rss_bytes": 2379776,
+            "retained_output_current_rss_bytes": 23760896,
+            "retained_current_increase_bytes": 2162688,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict._parse:_parse_native_events",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "aa46a0f583f34a296f3fc465205d4ff47ff7938afb80cdd459ff7398903726d2",
+            "output_fingerprint": {
+              "sha256": "ff7c10717e69d9ee435f98022d6bc1f2e6fbdd5a76fc5e30154060d64dd8dd49",
+              "type_counts": {
+                "dict": 10000,
+                "list": 0,
+                "str": 10001,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 10,
+              "batch_ns_per_call": [
+                2420644.2,
+                2389953.6,
+                2489765.7
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 2338816
+          }
+        ],
+        "xmltodict": [
+          {
+            "elapsed_ns": 16307423,
+            "baseline_current_rss_bytes": 20561920,
+            "baseline_peak_rss_bytes": 21233664,
+            "peak_rss_bytes": 25423872,
+            "incremental_peak_rss_bytes": 4190208,
+            "retained_output_current_rss_bytes": 25473024,
+            "retained_current_increase_bytes": 4911104,
+            "parser_module_sha256": "701d42ae7298bbdf154163aed261e4f0fd3cc6c803748ec52f312a5bc402c46e",
+            "entrypoint": "xmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "output_fingerprint": {
+              "sha256": "ff7c10717e69d9ee435f98022d6bc1f2e6fbdd5a76fc5e30154060d64dd8dd49",
+              "type_counts": {
+                "dict": 10000,
+                "list": 0,
+                "str": 10001,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 2,
+              "batch_ns_per_call": [
+                18647099.0,
+                19590794.0,
+                18442099.5
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 4861952
+          }
+        ]
+      },
+      "skipped": {},
+      "all_output_fingerprints_equal": true,
+      "medians": {
+        "baseline": {
+          "elapsed_ns": 19867013,
+          "baseline_current_rss_bytes": 21618688,
+          "baseline_peak_rss_bytes": 21557248,
+          "peak_rss_bytes": 25505792,
+          "incremental_peak_rss_bytes": 3948544,
+          "retained_output_current_rss_bytes": 25288704,
+          "retained_current_increase_bytes": 3670016,
+          "timing_median_ns": 17658717.0,
+          "timing_min_ns": 17393504.0,
+          "timing_max_ns": 23599551.0,
+          "incremental_peak_over_current_rss_bytes": 3887104
+        },
+        "iterative_dom": {
+          "elapsed_ns": 2884009,
+          "baseline_current_rss_bytes": 21610496,
+          "baseline_peak_rss_bytes": 21557248,
+          "peak_rss_bytes": 25092096,
+          "incremental_peak_rss_bytes": 3534848,
+          "retained_output_current_rss_bytes": 24444928,
+          "retained_current_increase_bytes": 2834432,
+          "timing_median_ns": 2268577.714285714,
+          "timing_min_ns": 2264360.714285714,
+          "timing_max_ns": 2582105.6428571427,
+          "incremental_peak_over_current_rss_bytes": 3481600
+        },
+        "native_events": {
+          "elapsed_ns": 3224013,
+          "baseline_current_rss_bytes": 21598208,
+          "baseline_peak_rss_bytes": 21557248,
+          "peak_rss_bytes": 23937024,
+          "incremental_peak_rss_bytes": 2379776,
+          "retained_output_current_rss_bytes": 23760896,
+          "retained_current_increase_bytes": 2162688,
+          "timing_median_ns": 2420644.2,
+          "timing_min_ns": 2389953.6,
+          "timing_max_ns": 2489765.7,
+          "incremental_peak_over_current_rss_bytes": 2338816
+        },
+        "xmltodict": {
+          "elapsed_ns": 16307423,
+          "baseline_current_rss_bytes": 20561920,
+          "baseline_peak_rss_bytes": 21233664,
+          "peak_rss_bytes": 25423872,
+          "incremental_peak_rss_bytes": 4190208,
+          "retained_output_current_rss_bytes": 25473024,
+          "retained_current_increase_bytes": 4911104,
+          "timing_median_ns": 18647099.0,
+          "timing_min_ns": 18442099.5,
+          "timing_max_ns": 19590794.0,
+          "incremental_peak_over_current_rss_bytes": 4861952
+        }
+      }
+    },
+    "late_deep_60000_siblings": {
+      "name": "late_deep_60000_siblings",
+      "suite": "standard",
+      "shape": "late_deep",
+      "depth": 1502,
+      "preceding_siblings": 60000,
+      "bytes": 6299424,
+      "sha256": "12fda7ae341056097419918610e49dbd724fd3aa7b5566aaf13ae27d91d60be1",
+      "parse_mode": "direct_str",
+      "retain_callbacks": false,
+      "description": "Deep branch after many completed shallow siblings",
+      "samples": {
+        "baseline": [
+          {
+            "elapsed_ns": 640343392,
+            "baseline_current_rss_bytes": 27910144,
+            "baseline_peak_rss_bytes": 34140160,
+            "peak_rss_bytes": 103899136,
+            "incremental_peak_rss_bytes": 69758976,
+            "retained_output_current_rss_bytes": 103964672,
+            "retained_current_increase_bytes": 76054528,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "707d87d35ce57042c2fe537169576594fa39d7f418b0fb7937f2abd9380433d5",
+            "output_fingerprint": {
+              "sha256": "4b823a96d9888fe6641784831ee0e03b8fa58aa4a15c3ed1b2a846ff23a50e8c",
+              "type_counts": {
+                "dict": 121502,
+                "list": 60001,
+                "str": 481504,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 1,
+              "batch_ns_per_call": [
+                757007127.0,
+                740556260.0,
+                799267810.0
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 75988992
+          }
+        ],
+        "iterative_dom": [
+          {
+            "elapsed_ns": 106237052,
+            "baseline_current_rss_bytes": 27914240,
+            "baseline_peak_rss_bytes": 34140160,
+            "peak_rss_bytes": 113618944,
+            "incremental_peak_rss_bytes": 79478784,
+            "retained_output_current_rss_bytes": 107503616,
+            "retained_current_increase_bytes": 79589376,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "547d62437143a7126be70d1395fe8da618b681159433c4c1c341c98812e5eecf",
+            "output_fingerprint": {
+              "sha256": "4b823a96d9888fe6641784831ee0e03b8fa58aa4a15c3ed1b2a846ff23a50e8c",
+              "type_counts": {
+                "dict": 121502,
+                "list": 60001,
+                "str": 481504,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 1,
+              "batch_ns_per_call": [
+                138534392.0,
+                110445170.0,
+                104213760.0
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 85704704
+          }
+        ],
+        "native_events": [
+          {
+            "elapsed_ns": 181023862,
+            "baseline_current_rss_bytes": 27901952,
+            "baseline_peak_rss_bytes": 34140160,
+            "peak_rss_bytes": 94134272,
+            "incremental_peak_rss_bytes": 59994112,
+            "retained_output_current_rss_bytes": 94347264,
+            "retained_current_increase_bytes": 66445312,
+            "parser_module_sha256": "ade9879154ce955e77301bded1c31433476641de218bf110b29d64da503d6e7a",
+            "entrypoint": "rapidxmltodict._parse:_parse_native_events",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "loaded_extension_sha256": "aa46a0f583f34a296f3fc465205d4ff47ff7938afb80cdd459ff7398903726d2",
+            "output_fingerprint": {
+              "sha256": "4b823a96d9888fe6641784831ee0e03b8fa58aa4a15c3ed1b2a846ff23a50e8c",
+              "type_counts": {
+                "dict": 121502,
+                "list": 60001,
+                "str": 481504,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 1,
+              "batch_ns_per_call": [
+                146386781.0,
+                148047436.0,
+                157342465.0
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 66232320
+          }
+        ],
+        "xmltodict": [
+          {
+            "elapsed_ns": 603520161,
+            "baseline_current_rss_bytes": 26861568,
+            "baseline_peak_rss_bytes": 33026048,
+            "peak_rss_bytes": 79241216,
+            "incremental_peak_rss_bytes": 46215168,
+            "retained_output_current_rss_bytes": 79388672,
+            "retained_current_increase_bytes": 52527104,
+            "parser_module_sha256": "701d42ae7298bbdf154163aed261e4f0fd3cc6c803748ec52f312a5bc402c46e",
+            "entrypoint": "xmltodict:parse",
+            "cpu_affinity": [
+              8
+            ],
+            "gc_enabled": true,
+            "xmltodict_version": "1.0.4",
+            "output_fingerprint": {
+              "sha256": "4b823a96d9888fe6641784831ee0e03b8fa58aa4a15c3ed1b2a846ff23a50e8c",
+              "type_counts": {
+                "dict": 121502,
+                "list": 60001,
+                "str": 481504,
+                "none": 0
+              }
+            },
+            "timing": {
+              "loops_per_batch": 1,
+              "batch_ns_per_call": [
+                592021818.0,
+                539159747.0,
+                531357422.0
+              ]
+            },
+            "incremental_peak_over_current_rss_bytes": 52379648
+          }
+        ]
+      },
+      "skipped": {},
+      "all_output_fingerprints_equal": true,
+      "medians": {
+        "baseline": {
+          "elapsed_ns": 640343392,
+          "baseline_current_rss_bytes": 27910144,
+          "baseline_peak_rss_bytes": 34140160,
+          "peak_rss_bytes": 103899136,
+          "incremental_peak_rss_bytes": 69758976,
+          "retained_output_current_rss_bytes": 103964672,
+          "retained_current_increase_bytes": 76054528,
+          "timing_median_ns": 757007127.0,
+          "timing_min_ns": 740556260.0,
+          "timing_max_ns": 799267810.0,
+          "incremental_peak_over_current_rss_bytes": 75988992
+        },
+        "iterative_dom": {
+          "elapsed_ns": 106237052,
+          "baseline_current_rss_bytes": 27914240,
+          "baseline_peak_rss_bytes": 34140160,
+          "peak_rss_bytes": 113618944,
+          "incremental_peak_rss_bytes": 79478784,
+          "retained_output_current_rss_bytes": 107503616,
+          "retained_current_increase_bytes": 79589376,
+          "timing_median_ns": 110445170.0,
+          "timing_min_ns": 104213760.0,
+          "timing_max_ns": 138534392.0,
+          "incremental_peak_over_current_rss_bytes": 85704704
+        },
+        "native_events": {
+          "elapsed_ns": 181023862,
+          "baseline_current_rss_bytes": 27901952,
+          "baseline_peak_rss_bytes": 34140160,
+          "peak_rss_bytes": 94134272,
+          "incremental_peak_rss_bytes": 59994112,
+          "retained_output_current_rss_bytes": 94347264,
+          "retained_current_increase_bytes": 66445312,
+          "timing_median_ns": 148047436.0,
+          "timing_min_ns": 146386781.0,
+          "timing_max_ns": 157342465.0,
+          "incremental_peak_over_current_rss_bytes": 66232320
+        },
+        "xmltodict": {
+          "elapsed_ns": 603520161,
+          "baseline_current_rss_bytes": 26861568,
+          "baseline_peak_rss_bytes": 33026048,
+          "peak_rss_bytes": 79241216,
+          "incremental_peak_rss_bytes": 46215168,
+          "retained_output_current_rss_bytes": 79388672,
+          "retained_current_increase_bytes": 52527104,
+          "timing_median_ns": 539159747.0,
+          "timing_min_ns": 531357422.0,
+          "timing_max_ns": 592021818.0,
+          "incremental_peak_over_current_rss_bytes": 52379648
+        }
+      }
+    }
+  },
+  "run_order": [
+    {
+      "workload": "small",
+      "repetition": 0,
+      "variant": "baseline",
+      "available_memory_bytes": 8560209920
+    },
+    {
+      "workload": "small",
+      "repetition": 0,
+      "variant": "iterative_dom",
+      "available_memory_bytes": 8559972352
+    },
+    {
+      "workload": "small",
+      "repetition": 0,
+      "variant": "native_events",
+      "available_memory_bytes": 8559972352
+    },
+    {
+      "workload": "small",
+      "repetition": 0,
+      "variant": "xmltodict",
+      "available_memory_bytes": 8559972352
+    },
+    {
+      "workload": "medium",
+      "repetition": 0,
+      "variant": "iterative_dom",
+      "available_memory_bytes": 8561487872
+    },
+    {
+      "workload": "medium",
+      "repetition": 0,
+      "variant": "native_events",
+      "available_memory_bytes": 8561487872
+    },
+    {
+      "workload": "medium",
+      "repetition": 0,
+      "variant": "xmltodict",
+      "available_memory_bytes": 8561487872
+    },
+    {
+      "workload": "medium",
+      "repetition": 0,
+      "variant": "baseline",
+      "available_memory_bytes": 8561487872
+    },
+    {
+      "workload": "large",
+      "repetition": 0,
+      "variant": "native_events",
+      "available_memory_bytes": 8571019264
+    },
+    {
+      "workload": "large",
+      "repetition": 0,
+      "variant": "xmltodict",
+      "available_memory_bytes": 8554442752
+    },
+    {
+      "workload": "large",
+      "repetition": 0,
+      "variant": "baseline",
+      "available_memory_bytes": 8563589120
+    },
+    {
+      "workload": "large",
+      "repetition": 0,
+      "variant": "iterative_dom",
+      "available_memory_bytes": 8547012608
+    },
+    {
+      "workload": "unicode_mixed",
+      "repetition": 0,
+      "variant": "xmltodict",
+      "available_memory_bytes": 8564133888
+    },
+    {
+      "workload": "unicode_mixed",
+      "repetition": 0,
+      "variant": "baseline",
+      "available_memory_bytes": 8563900416
+    },
+    {
+      "workload": "unicode_mixed",
+      "repetition": 0,
+      "variant": "iterative_dom",
+      "available_memory_bytes": 8563900416
+    },
+    {
+      "workload": "unicode_mixed",
+      "repetition": 0,
+      "variant": "native_events",
+      "available_memory_bytes": 8563900416
+    },
+    {
+      "workload": "deep_300",
+      "repetition": 0,
+      "variant": "baseline",
+      "available_memory_bytes": 8563585024
+    },
+    {
+      "workload": "deep_300",
+      "repetition": 0,
+      "variant": "iterative_dom",
+      "available_memory_bytes": 8572121088
+    },
+    {
+      "workload": "deep_300",
+      "repetition": 0,
+      "variant": "native_events",
+      "available_memory_bytes": 8568152064
+    },
+    {
+      "workload": "deep_300",
+      "repetition": 0,
+      "variant": "xmltodict",
+      "available_memory_bytes": 8568152064
+    },
+    {
+      "workload": "deep_10000",
+      "repetition": 0,
+      "variant": "iterative_dom",
+      "available_memory_bytes": 8556126208
+    },
+    {
+      "workload": "deep_10000",
+      "repetition": 0,
+      "variant": "native_events",
+      "available_memory_bytes": 8554811392
+    },
+    {
+      "workload": "deep_10000",
+      "repetition": 0,
+      "variant": "xmltodict",
+      "available_memory_bytes": 8552583168
+    },
+    {
+      "workload": "deep_10000",
+      "repetition": 0,
+      "variant": "baseline",
+      "available_memory_bytes": 8560312320
+    },
+    {
+      "workload": "late_deep_60000_siblings",
+      "repetition": 0,
+      "variant": "native_events",
+      "available_memory_bytes": 8551673856
+    },
+    {
+      "workload": "late_deep_60000_siblings",
+      "repetition": 0,
+      "variant": "xmltodict",
+      "available_memory_bytes": 8494628864
+    },
+    {
+      "workload": "late_deep_60000_siblings",
+      "repetition": 0,
+      "variant": "baseline",
+      "available_memory_bytes": 8571301888
+    },
+    {
+      "workload": "late_deep_60000_siblings",
+      "repetition": 0,
+      "variant": "iterative_dom",
+      "available_memory_bytes": 8527200256
+    }
+  ]
+}

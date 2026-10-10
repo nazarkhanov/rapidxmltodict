@@ -11,10 +11,10 @@ requires-python = ">=3.9"
 license = "MIT"
 license-files = ["LICENSE", "vendor/rapidxml/license.txt"]
 authors = [{name = "Alisher Nazarkhanov"}]
-dependencies = ["xmltodict>=0.14.2,<2"]
+dependencies = []
 
 [project.optional-dependencies]
-test = ["pytest>=8", "build", "packaging>=24"]
+test = ["pytest>=8", "build", "packaging>=24", "xmltodict==1.0.4"]
 typing = ["mypy>=1.14,<2", "pyright>=1.1.390", "typing_extensions>=4.12", "jedi>=0.19"]
 
 [project.urls]
@@ -33,5 +33,5 @@ tag_regex = '^v(?P<version>[0-9]+\.[0-9]+\.[0-9]+(?:(?:a|b|rc)[0-9]+)?(?:\.post[
 [tool.cibuildwheel]
 build = "cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
 skip = "*-musllinux* *-win32 *-manylinux_i686"
-test-requires = ["pytest>=8", "packaging>=24"]
+test-requires = ["pytest>=8", "packaging>=24", "xmltodict==1.0.4"]
 test-command = "python -m pytest {project}/tests -q"

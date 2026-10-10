@@ -1,6 +1,12 @@
 #ifndef RAPIDXML_HPP_INCLUDED
 #define RAPIDXML_HPP_INCLUDED
 
+#include "rapidxml_lexical.hpp"
+#include "rapidxml_parse_core.hpp"
+#include <cstring>
+#include <string_view>
+#include <unordered_set>
+
 // Copyright (C) 2006, 2009 Marcin Kalicinski
 // Version 1.13
 // Revision $DateTime: 2009/05/13 01:46:17 $
@@ -101,6 +107,21 @@ namespace rapidxml
         const char *m_what;
         void *m_where;
 
+    };
+
+    // Strict XML diagnostics preserve a pointer into the original source even
+    // when earlier attribute/text spans have been normalized in-place.
+    class strict_parse_error: public parse_error
+    {
+    public:
+        int code;
+        strict_parse_error(const char *what, int value, void *where)
+            : parse_error(what, where), code(value) {}
+    };
+    class strict_unsupported: public std::exception
+    {
+    public:
+        const char *what() const throw() { return "use the incremental XML parser"; }
     };
 }
 
@@ -257,6 +278,16 @@ namespace rapidxml
     //! <br><br>
     //! See xml_document::parse() function.
     const int parse_default = 0;
+
+    // Validate XML while the existing DOM parser consumes each token. Strict
+    // mode requires an explicit length and UTF-8 char input.
+    const int parse_strict = 0x1000;
+    // Keep the first text span in its element, with nodes only for later spans.
+    // This preserves mixed content without a preliminary shape scan.
+    const int parse_compact_data = 0x2000;
+    // Strict bounded parsing into read-only raw spans. XML normalization is
+    // deferred to the consumer; value_flags() records the required operations.
+    const int parse_readonly_spans = 0x4000;
     
     //! A combination of parse flags that forbids any modifications of the source text. 
     //! This also results in faster parsing. However, note that the following will occur:
@@ -508,13 +539,17 @@ namespace rapidxml
 
             // Clone name and value
             result->name(source->name(), source->name_size());
-            result->value(source->value(), source->value_size());
+            result->value(source->value(), source->value_size(), source->value_flags());
 
             // Clone child nodes and attributes
             for (xml_node<Ch> *child = source->first_node(); child; child = child->next_sibling())
                 result->append_node(clone_node(child));
             for (xml_attribute<Ch> *attr = source->first_attribute(); attr; attr = attr->next_attribute())
-                result->append_attribute(allocate_attribute(attr->name(), attr->value(), attr->name_size(), attr->value_size()));
+            {
+                xml_attribute<Ch> *copy = allocate_attribute(attr->name(), 0, attr->name_size());
+                copy->value(attr->value(), attr->value_size(), attr->value_flags());
+                result->append_attribute(copy);
+            }
 
             return result;
         }
@@ -699,7 +734,15 @@ namespace rapidxml
         //! \return Size of node value, in characters.
         std::size_t value_size() const
         {
-            return m_value ? m_value_size : 0;
+            return m_value ? (m_value_size & value_size_mask) : 0;
+        }
+
+        // Read-only strict spans carry metadata in the existing size word;
+        // this adds no bytes to xml_node or xml_attribute. Ordinary values have
+        // no flags. The input must outlive the document and must not be changed.
+        unsigned value_flags() const
+        {
+            return m_value ? static_cast<unsigned>(m_value_size >> value_flag_shift) : 0;
         }
 
         ///////////////////////////////////////////////////////////////////////////
@@ -750,8 +793,16 @@ namespace rapidxml
         //! \param size Size of value, in characters. This does not include zero terminator, if one is present.
         void value(const Ch *value, std::size_t size)
         {
+            this->value(value, size, 0);
+        }
+
+        // Assign a validated raw span and its normalization metadata.
+        void value(const Ch *value, std::size_t size, unsigned flags)
+        {
+            if (size > value_size_mask) throw std::length_error("RapidXML value span is too large");
+            assert((flags & ~15u) == 0);
             m_value = const_cast<Ch *>(value);
-            m_value_size = size;
+            m_value_size = size | (static_cast<std::size_t>(flags) << value_flag_shift);
         }
 
         //! Sets value of node to a zero-terminated string.
@@ -781,6 +832,8 @@ namespace rapidxml
             return &zero;
         }
 
+        static constexpr unsigned value_flag_shift = sizeof(std::size_t) * 8 - 4;
+        static constexpr std::size_t value_size_mask = (std::size_t(1) << value_flag_shift) - 1;
         Ch *m_name;                         // Name of node, or 0 if no name
         Ch *m_value;                        // Value of node, or 0 if no value
         std::size_t m_name_size;            // Length of node name, or undefined of no name
@@ -1366,6 +1419,18 @@ namespace rapidxml
         {
         }
 
+        // Parse an explicitly bounded immutable UTF-8 buffer. This uses the
+        // same consuming strict grammar and iterative DOM traversal as parse;
+        // it neither copies the input nor writes terminators/normalized values.
+        // value()/value_size() are raw spans, with value_flags() describing XML
+        // normalization required by the consumer. Names are already final UTF-8.
+        template<int Flags = 0>
+        void parse_readonly(const Ch *text, std::size_t length)
+        {
+            parse<Flags | parse_strict | parse_readonly_spans | parse_no_string_terminators>(
+                const_cast<Ch *>(text), length);
+        }
+
         //! Parses zero-terminated XML string according to given flags.
         //! Passed string will be modified by the parser, unless rapidxml::parse_non_destructive flag is used.
         //! The string must persist for the lifetime of the document.
@@ -1378,24 +1443,41 @@ namespace rapidxml
         //! Each new call to parse removes previous nodes and attributes (if any), but does not clear memory pool.
         //! \param text XML data to parse; pointer is non-const to denote fact that this data may be modified by the parser.
         template<int Flags>
-        void parse(Ch *text)
+        void parse(Ch *text, std::size_t length = static_cast<std::size_t>(-1))
         {
             assert(text);
-            
+            static_assert(!(Flags & parse_readonly_spans) || (Flags & parse_strict),
+                          "read-only raw spans require strict bounded parsing");
+            if constexpr (Flags & parse_strict)
+            {
+                static_assert(sizeof(Ch) == 1, "strict parsing requires UTF-8 bytes");
+                assert(length != static_cast<std::size_t>(-1));
+                m_begin = text;
+                m_end = text + length;
+                m_depth = 0;
+                m_root_seen = false;
+            }
+
             // Remove current contents
             this->remove_all_nodes();
             this->remove_all_attributes();
             
             // Parse BOM, if any
             parse_bom<Flags>(text);
+            if constexpr (Flags & parse_strict) m_declaration_start = text;
             
             // Parse children
             while (1)
             {
                 // Skip whitespace before node
-                skip<whitespace_pred, Flags>(text);
-                if (*text == 0)
-                    break;
+                if constexpr (Flags & parse_strict) strict_space(text);
+                else skip<whitespace_pred, Flags>(text);
+                if constexpr (Flags & parse_strict)
+                {
+                    if (text == m_end) break;
+                    if (!*text) strict_fail(4, text);
+                }
+                else if (*text == 0) break;
 
                 // Parse and append new child
                 if (*text == Ch('<'))
@@ -1405,8 +1487,17 @@ namespace rapidxml
                         this->append_node(node);
                 }
                 else
+                {
+                    if constexpr (Flags & parse_strict)
+                    {
+                        uint32_t cp;
+                        strict_scalar(text, cp);
+                        strict_fail(m_root_seen ? 9 : 2, text);
+                    }
                     RAPIDXML_PARSE_ERROR("expected <", text);
+                }
             }
+            if ((Flags & parse_strict) && !m_root_seen) strict_fail(3, text);
 
         }
 
@@ -1420,6 +1511,225 @@ namespace rapidxml
         }
         
     private:
+
+        Ch *m_begin = 0, *m_end = 0, *m_declaration_start = 0;
+        std::size_t m_depth = 0;
+        bool m_root_seen = false, m_header_self_closing = false;
+
+        template<int Flags>
+        struct strict_header_receiver
+        {
+            xml_document *document;
+            xml_node<Ch> *node;
+            Ch *token;
+            bool closing;
+            bool closing_match = true;
+            xml_attribute<Ch> *attribute = 0;
+            Ch *value = 0, *write = 0;
+            void element_name(std::string_view name, std::size_t offset)
+            {
+                if (closing)
+                {
+                    closing_match = internal::compare(node->name(), node->name_size(), name.data(), name.size(), true);
+                }
+                else node->name(token + offset, name.size());
+            }
+            void attribute_name(std::string_view name, std::size_t offset)
+            {
+                attribute = document->allocate_attribute();
+                attribute->name(token + offset, name.size());
+                node->append_attribute(attribute);
+            }
+            void attribute_begin(std::size_t offset) { value = write = token + offset; }
+            void attribute_character(const char *data, std::size_t size)
+            {
+                static_assert(!(Flags & parse_readonly_spans), "read-only attributes must stay raw");
+                // Source and destination can overlap after entity/CRLF expansion.
+                while (size--) *write++ = *data++;
+            }
+            void attribute_reference(std::string_view, std::size_t)
+            {
+                // Expat attributes report unresolved entities at the opening
+                // element token, matching the streaming grammar receiver.
+                document->strict_fail(11, token);
+            }
+            void attribute_end() { attribute->value(value, write - value); }
+            void attribute_end(std::size_t offset, unsigned flags)
+            {
+                attribute->value(value, (token + offset) - value, flags);
+            }
+        };
+
+        [[noreturn]] void strict_fail(int code, Ch *where) const
+        {
+            const char *message = "not well-formed (invalid token)";
+            switch (code)
+            {
+            case 2: message = "syntax error"; break;
+            case 3: message = "no element found"; break;
+            case 5: message = "unclosed token"; break;
+            case 6: message = "partial character"; break;
+            case 7: message = "mismatched tag"; break;
+            case 8: message = "duplicate attribute"; break;
+            case 9: message = "junk after document element"; break;
+            case 11: message = "undefined entity"; break;
+            case 14: message = "reference to invalid character number"; break;
+            case 17: message = "XML or text declaration not at start of entity"; break;
+            case 20: message = "unclosed CDATA section"; break;
+            case 30: message = "XML declaration not well-formed"; break;
+            }
+            throw strict_parse_error(message, code, where);
+        }
+        bool strict_starts(Ch *text, const char *literal) const
+        {
+            const std::size_t size = std::strlen(literal);
+            return std::size_t(m_end - text) >= size && !std::memcmp(text, literal, size);
+        }
+        void strict_space(Ch *&text) const
+        {
+            while (text != m_end && whitespace_pred::test(*text)) ++text;
+        }
+        std::size_t strict_scalar(Ch *text, uint32_t &cp) const
+        {
+            const char *error;
+            int width = lexical::decode(reinterpret_cast<const char *>(text),
+                                        reinterpret_cast<const char *>(m_end), cp, error);
+            if (width < 0) strict_fail(-width, const_cast<Ch *>(reinterpret_cast<const Ch *>(error)));
+            return static_cast<std::size_t>(width);
+        }
+        void strict_name(Ch *&text, Ch *token_start) const
+        {
+            if (text == m_end) strict_fail(5, token_start);
+            uint32_t cp;
+            std::size_t width = strict_scalar(text, cp);
+            if (!lexical::name_start(cp)) strict_fail(4, text);
+            text += width;
+            while (text != m_end)
+            {
+                unsigned char byte = static_cast<unsigned char>(*text);
+                if (byte < 0x80)
+                {
+                    if (!lexical::name_char(byte)) break;
+                    ++text;
+                }
+                else
+                {
+                    width = strict_scalar(text, cp);
+                    if (!lexical::name_char(cp)) break;
+                    text += width;
+                }
+            }
+        }
+        // Consume and validate one reference. Mutable mode expands it in place;
+        // read-only mode retains its raw span for the output consumer.
+        template<int Flags>
+        void strict_reference(Ch *&src, Ch *&dest, unsigned &metadata) const
+        {
+            Ch *start = src++;
+            if (src == m_end) strict_fail(5, start);
+            if (*src == '#')
+            {
+                ++src;
+                unsigned base = 10;
+                if (src != m_end && *src == 'x') { base = 16; ++src; }
+                Ch *digits = src;
+                uint32_t value = 0;
+                while (src != m_end && *src != ';')
+                {
+                    unsigned digit;
+                    unsigned char c = static_cast<unsigned char>(*src);
+                    if (c >= '0' && c <= '9') digit = c - '0';
+                    else if (base == 16 && c >= 'a' && c <= 'f') digit = c - 'a' + 10;
+                    else if (base == 16 && c >= 'A' && c <= 'F') digit = c - 'A' + 10;
+                    else strict_fail(4, start);
+                    if (value > (0x10ffff - digit) / base) strict_fail(14, start);
+                    value = value * base + digit;
+                    ++src;
+                }
+                if (src == m_end) strict_fail(5, start);
+                if (src == digits) strict_fail(4, start);
+                if (!lexical::xml_char(value)) strict_fail(14, start);
+                ++src;
+                if constexpr (Flags & parse_readonly_spans)
+                {
+                    if (value >= 0x80) metadata |= value_non_ascii;
+                }
+                else insert_coded_character<0>(dest, value);
+                return;
+            }
+            Ch *name = src;
+            strict_name(src, start);
+            if (src == m_end) strict_fail(5, start);
+            if (*src != ';') strict_fail(4, start);
+            std::string_view key(name, src - name);
+            ++src;
+            Ch value;
+            if (key == "amp") value = '&';
+            else if (key == "lt") value = '<';
+            else if (key == "gt") value = '>';
+            else if (key == "quot") value = '"';
+            else if (key == "apos") value = '\'';
+            else strict_fail(11, start);
+            if constexpr (!(Flags & parse_readonly_spans)) *dest++ = value;
+        }
+        // Validation happens during the traversal that identifies the value's end.
+        // Read-only spans defer materialization, keeping only operation flags.
+        template<int Flags>
+        Ch *strict_value(Ch *&text, unsigned &metadata)
+        {
+            Ch *dest = text;
+            while (text != m_end && *text != '<')
+            {
+                unsigned char byte = static_cast<unsigned char>(*text);
+                if (byte == '&')
+                {
+                    if constexpr (Flags & parse_readonly_spans) metadata |= value_has_references;
+                    strict_reference<Flags>(text, dest, metadata);
+                    continue;
+                }
+                if (byte == ']' && strict_starts(text, "]]>")) strict_fail(4, text + 2);
+                if (byte == '\r')
+                {
+                    ++text;
+                    if (text != m_end && *text == '\n') ++text;
+                    if constexpr (Flags & parse_readonly_spans) metadata |= value_normalize_lines;
+                    else *dest++ = '\n';
+                }
+                else if (byte < 0x80)
+                {
+                    if (!lexical::xml_char(byte)) strict_fail(4, text);
+                    if constexpr (!(Flags & parse_readonly_spans)) *dest++ = *text;
+                    ++text;
+                }
+                else
+                {
+                    uint32_t cp;
+                    std::size_t width = strict_scalar(text, cp);
+                    if constexpr (Flags & parse_readonly_spans)
+                    {
+                        metadata |= value_non_ascii;
+                        text += width;
+                    }
+                    else while (width--) *dest++ = *text++;
+                }
+            }
+            if constexpr (Flags & parse_readonly_spans) return text;
+            else return dest;
+        }
+        template<int Flags>
+        void strict_append_text(xml_node<Ch> *node, Ch *value, std::size_t size, node_type type = node_data, unsigned metadata = 0)
+        {
+            if (!size) return;
+            if ((Flags & parse_compact_data) && !node->value_size()) node->value(value, size, metadata);
+            else if (!(Flags & parse_no_data_nodes))
+            {
+                xml_node<Ch> *data = this->allocate_node(type);
+                data->value(value, size, metadata);
+                node->append_node(data);
+                if (!(Flags & (parse_no_element_values | parse_compact_data)) && !node->value_size())
+                    node->value(value, size, metadata);
+            }
+        }
 
         ///////////////////////////////////////////////////////////////////////
         // Internal character utility functions
@@ -1724,6 +2034,17 @@ namespace rapidxml
         template<int Flags>
         void parse_bom(Ch *&text)
         {
+            if constexpr (Flags & parse_strict)
+            {
+                if (m_end - text < 3)
+                {
+                    // An unfinished initial UTF-8 BOM is an unclosed token;
+                    // an ordinary unfinished UTF-8 scalar is handled later.
+                    if (text != m_end && static_cast<unsigned char>(text[0]) == 0xef &&
+                        (m_end - text == 1 || static_cast<unsigned char>(text[1]) == 0xbb)) strict_fail(5, text);
+                    return;
+                }
+            }
             // UTF-8?
             if (static_cast<unsigned char>(text[0]) == 0xEF && 
                 static_cast<unsigned char>(text[1]) == 0xBB && 
@@ -1737,6 +2058,75 @@ namespace rapidxml
         template<int Flags>
         xml_node<Ch> *parse_xml_declaration(Ch *&text)
         {
+            if constexpr (Flags & parse_strict)
+            {
+                Ch *token = m_declaration_start;
+                if (text == m_end) strict_fail(5, token);
+                if (!whitespace_pred::test(*text)) strict_fail(30, text);
+                strict_space(text);
+                unsigned stage = 0;
+                xml_node<Ch> *declaration = (Flags & parse_declaration_node) ? this->allocate_node(node_declaration) : 0;
+                while (!strict_starts(text, "?>"))
+                {
+                    if (text == m_end) strict_fail(5, token);
+                    Ch *name = text;
+                    strict_name(text, token);
+                    std::string_view key(name, text - name);
+                    strict_space(text);
+                    if (text == m_end) strict_fail(5, token);
+                    if (*text++ != '=') strict_fail(30, token);
+                    strict_space(text);
+                    if (text == m_end) strict_fail(5, token);
+                    Ch quote = *text++;
+                    if (quote != '\'' && quote != '"') strict_fail(30, token);
+                    Ch *value = text;
+                    bool version = stage == 0 && key == "version";
+                    bool encoding = stage == 1 && key == "encoding";
+                    bool standalone = (stage == 1 || stage == 2) && key == "standalone";
+                    if (!version && !encoding && !standalone) strict_fail(30, token);
+                    bool version_ok = true;
+                    while (text != m_end && *text != quote)
+                    {
+                        const unsigned char c = static_cast<unsigned char>(*text);
+                        const bool alpha = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+                        const bool digit = c >= '0' && c <= '9';
+                        if (!alpha && !digit && c != '_' && c != '.' && c != '-') strict_fail(30, version ? text : token);
+                        std::size_t at = text - value;
+                        if (version && (at == 0 ? c != '1' : at == 1 ? c != '.' : !digit)) version_ok = false;
+                        if (encoding && at == 0 && !alpha) strict_fail(30, token);
+                        ++text;
+                    }
+                    if (text == m_end) strict_fail(5, token);
+                    std::size_t size = text - value;
+                    if (version && (!version_ok || size < 3)) strict_fail(30, value);
+                    if (encoding && !size) strict_fail(30, token);
+                    if (standalone && std::string_view(value, size) != "yes" && std::string_view(value, size) != "no") strict_fail(30, token);
+                    stage = version ? 1 : encoding ? 2 : 3;
+                    ++text;
+                    if (declaration)
+                    {
+                        xml_attribute<Ch> *attribute = this->allocate_attribute();
+                        attribute->name(name, key.size()); attribute->value(value, size);
+                        declaration->append_attribute(attribute);
+                    }
+                    Ch *before = text;
+                    strict_space(text);
+                    if (text == m_end) strict_fail(5, token);
+                    if (*text == '?' && !strict_starts(text, "?>"))
+                    {
+                        // Error-only completion check: an unfinished declaration
+                        // reports its opening token, not a premature grammar error.
+                        Ch *invalid = text;
+                        while (text != m_end && !strict_starts(text, "?>")) ++text;
+                        if (text == m_end) strict_fail(5, token);
+                        strict_fail(30, invalid);
+                    }
+                    if (before == text && !strict_starts(text, "?>")) strict_fail(30, token);
+                }
+                if (!stage) strict_fail(30, token + 5);
+                text += 2;
+                return declaration;
+            }
             // If parsing of declaration is disabled
             if (!(Flags & parse_declaration_node))
             {
@@ -1772,6 +2162,42 @@ namespace rapidxml
         template<int Flags>
         xml_node<Ch> *parse_comment(Ch *&text)
         {
+            if constexpr (Flags & parse_strict)
+            {
+                Ch *token = text - 4, *value = text, *dest = text;
+                unsigned metadata = 0;
+                while (text != m_end)
+                {
+                    if (strict_starts(text, "--"))
+                    {
+                        if (m_end - text < 3) strict_fail(5, token);
+                        if (!strict_starts(text, "-->")) strict_fail(4, text + 2);
+                        if constexpr (Flags & parse_readonly_spans) dest = text;
+                        text += 3;
+                        if (!(Flags & parse_comment_nodes)) return 0;
+                        xml_node<Ch> *node = this->allocate_node(node_comment);
+                        node->value(value, dest - value, metadata);
+                        return node;
+                    }
+                    if (*text == '\r')
+                    {
+                        ++text; if (text != m_end && *text == '\n') ++text;
+                        if constexpr (Flags & parse_readonly_spans) metadata |= value_normalize_lines;
+                        else *dest++ = '\n';
+                    }
+                    else
+                    {
+                        uint32_t cp; std::size_t width = strict_scalar(text, cp);
+                        if constexpr (Flags & parse_readonly_spans)
+                        {
+                            if (cp >= 0x80) metadata |= value_non_ascii;
+                            text += width;
+                        }
+                        else while (width--) *dest++ = *text++;
+                    }
+                }
+                strict_fail(5, token);
+            }
             // If parsing of comments is disabled
             if (!(Flags & parse_comment_nodes))
             {
@@ -1813,6 +2239,12 @@ namespace rapidxml
         template<int Flags>
         xml_node<Ch> *parse_doctype(Ch *&text)
         {
+            if constexpr (Flags & parse_strict)
+            {
+                // The event parser owns DTD declarations and entity expansion.
+                // Discover this while parsing, never by scanning the document.
+                throw strict_unsupported();
+            }
             // Remember value start
             Ch *value = text;
 
@@ -1879,6 +2311,58 @@ namespace rapidxml
         template<int Flags>
         xml_node<Ch> *parse_pi(Ch *&text)
         {
+            if constexpr (Flags & parse_strict)
+            {
+                Ch *token = text - 2, *name = text;
+                strict_name(text, token);
+                std::string_view target(name, text - name);
+                if (text != m_end && *text == '?' && !strict_starts(text, "?>"))
+                {
+                    if (m_end - text < 2) strict_fail(5, token);
+                    strict_fail(4, text + 1);
+                }
+                if (target.size() == 3 && (target[0] == 'x' || target[0] == 'X') &&
+                    (target[1] == 'm' || target[1] == 'M') && (target[2] == 'l' || target[2] == 'L'))
+                {
+                    if (target != "xml" || token != m_declaration_start) strict_fail(17, token);
+                    return parse_xml_declaration<Flags>(text);
+                }
+                if (text == m_end) strict_fail(5, token);
+                if (!strict_starts(text, "?>") && !whitespace_pred::test(*text)) strict_fail(4, text);
+                strict_space(text);
+                Ch *value = text, *dest = text;
+                unsigned metadata = 0;
+                while (text != m_end)
+                {
+                    if (strict_starts(text, "?>"))
+                    {
+                        if constexpr (Flags & parse_readonly_spans) dest = text;
+                        text += 2;
+                        if (!(Flags & parse_pi_nodes)) return 0;
+                        xml_node<Ch> *node = this->allocate_node(node_pi);
+                        node->name(name, target.size());
+                        node->value(value, dest - value, metadata);
+                        return node;
+                    }
+                    if (*text == '\r')
+                    {
+                        ++text; if (text != m_end && *text == '\n') ++text;
+                        if constexpr (Flags & parse_readonly_spans) metadata |= value_normalize_lines;
+                        else *dest++ = '\n';
+                    }
+                    else
+                    {
+                        uint32_t cp; std::size_t width = strict_scalar(text, cp);
+                        if constexpr (Flags & parse_readonly_spans)
+                        {
+                            if (cp >= 0x80) metadata |= value_non_ascii;
+                            text += width;
+                        }
+                        else while (width--) *dest++ = *text++;
+                    }
+                }
+                strict_fail(5, token);
+            }
             // If creation of PI nodes is enabled
             if (Flags & parse_pi_nodes)
             {
@@ -1939,6 +2423,14 @@ namespace rapidxml
         template<int Flags>
         Ch parse_and_append_data(xml_node<Ch> *node, Ch *&text, Ch *contents_start)
         {
+            if constexpr (Flags & parse_strict)
+            {
+                Ch *value = text;
+                unsigned metadata = 0;
+                Ch *end = strict_value<Flags>(text, metadata);
+                strict_append_text<Flags>(node, value, end - value, node_data, metadata);
+                return text == m_end ? Ch(0) : *text;
+            }
             // Backup to contents start if whitespace trimming is disabled
             if (!(Flags & parse_trim_whitespace))
                 text = contents_start;     
@@ -1995,8 +2487,46 @@ namespace rapidxml
 
         // Parse CDATA
         template<int Flags>
-        xml_node<Ch> *parse_cdata(Ch *&text)
+        xml_node<Ch> *parse_cdata(Ch *&text, xml_node<Ch> *parent = 0)
         {
+            if constexpr (Flags & parse_strict)
+            {
+                Ch *value = text, *dest = text;
+                unsigned metadata = 0;
+                while (text != m_end)
+                {
+                    if (strict_starts(text, "]]>"))
+                    {
+                        if constexpr (Flags & parse_readonly_spans) dest = text;
+                        text += 3;
+                        if (parent)
+                        {
+                            strict_append_text<Flags>(parent, value, dest - value, node_cdata, metadata);
+                            return 0;
+                        }
+                        xml_node<Ch> *node = this->allocate_node(node_cdata);
+                        node->value(value, dest - value, metadata);
+                        return node;
+                    }
+                    if (*text == '\r')
+                    {
+                        ++text; if (text != m_end && *text == '\n') ++text;
+                        if constexpr (Flags & parse_readonly_spans) metadata |= value_normalize_lines;
+                        else *dest++ = '\n';
+                    }
+                    else
+                    {
+                        uint32_t cp; std::size_t width = strict_scalar(text, cp);
+                        if constexpr (Flags & parse_readonly_spans)
+                        {
+                            if (cp >= 0x80) metadata |= value_non_ascii;
+                            text += width;
+                        }
+                        else while (width--) *dest++ = *text++;
+                    }
+                }
+                strict_fail(20, text);
+            }
             // If CDATA is disabled
             if (Flags & parse_no_data_nodes)
             {
@@ -2036,6 +2566,22 @@ namespace rapidxml
         template<int Flags>
         xml_node<Ch> *parse_element(Ch *&text)
         {
+            if constexpr (Flags & parse_strict)
+            {
+                Ch *token = text - 1;
+                if (!m_depth)
+                {
+                    if (m_root_seen) strict_fail(9, token);
+                    m_root_seen = true;
+                }
+                xml_node<Ch> *element = this->allocate_node(node_element);
+                parse_node_attributes<Flags>(text, element);
+                const bool empty = m_header_self_closing;
+                ++m_depth;
+                if (!empty) parse_node_contents<Flags>(text, element);
+                --m_depth;
+                return element;
+            }
             // Create element node
             xml_node<Ch> *element = this->allocate_node(node_element);
 
@@ -2078,8 +2624,32 @@ namespace rapidxml
 
         // Determine node type, and parse it
         template<int Flags>
-        xml_node<Ch> *parse_node(Ch *&text)
+        xml_node<Ch> *parse_node(Ch *&text, xml_node<Ch> *parent = 0)
         {
+            if constexpr (Flags & parse_strict)
+            {
+                Ch *token = text - 1;
+                if (text == m_end) strict_fail(5, token);
+                if (*text == '?') { ++text; return parse_pi<Flags>(text); }
+                if (*text != '!') return parse_element<Flags>(text);
+                if (strict_starts(text, "!--")) { text += 3; return parse_comment<Flags>(text); }
+                if (strict_starts(text, "![CDATA["))
+                {
+                    if (!m_depth) strict_fail(2, token);
+                    text += 8;
+                    return parse_cdata<Flags>(text, parent);
+                }
+                if (strict_starts(text, "!DOCTYPE"))
+                {
+                    if (m_depth || m_root_seen) strict_fail(2, token);
+                    return parse_doctype<Flags>(text);
+                }
+                // Preserve unclosed-token diagnostics for partial delimiters.
+                const std::string_view tail(text, m_end - text);
+                for (std::string_view prefix : {std::string_view("!--"), std::string_view("![CDATA["), std::string_view("!DOCTYPE")})
+                    if (tail.size() < prefix.size() && prefix.substr(0, tail.size()) == tail) strict_fail(5, token);
+                strict_fail(4, token);
+            }
             // Parse proper node type
             switch (text[0])
             {
@@ -2166,6 +2736,48 @@ namespace rapidxml
         template<int Flags>
         void parse_node_contents(Ch *&text, xml_node<Ch> *node)
         {
+            if constexpr (Flags & parse_strict)
+            {
+                // The DOM's parent links are the open-element stack. Attach
+                // each child before descending, and return to its parent when
+                // its closing tag is consumed. Strict parsing never recurses
+                // or restarts an already-consumed deep document.
+                xml_node<Ch> *root = node;
+                while (text != m_end)
+                {
+                    if (*text != '<') { parse_and_append_data<Flags>(node, text, text); continue; }
+                    if (strict_starts(text, "</"))
+                    {
+                        Ch *token = text;
+                        strict_header_receiver<Flags> receiver{this, node, token, true};
+                        internal::element_header_parser header;
+                        try { header.parse<(Flags & parse_readonly_spans) != 0>(std::string_view(token, m_end - token), true, receiver); }
+                        catch (const internal::header_error &error) { strict_fail(error.code, token + error.offset); }
+                        if (!receiver.closing_match) strict_fail(7, token + 2);
+                        text = token + header.consumed();
+                        if (node == root) return;
+                        node = node->parent();
+                        --m_depth;
+                        continue;
+                    }
+                    ++text;
+                    if (text == m_end) strict_fail(5, text - 1);
+                    if (*text != '!' && *text != '?')
+                    {
+                        xml_node<Ch> *child = this->allocate_node(node_element);
+                        parse_node_attributes<Flags>(text, child);
+                        node->append_node(child);
+                        if (!m_header_self_closing)
+                        {
+                            node = child;
+                            ++m_depth;
+                        }
+                    }
+                    else if (xml_node<Ch> *child = parse_node<Flags>(text, node))
+                        node->append_node(child);
+                }
+                strict_fail(3, text);
+            }
             // For all children and text
             while (1)
             {
@@ -2236,6 +2848,24 @@ namespace rapidxml
         template<int Flags>
         void parse_node_attributes(Ch *&text, xml_node<Ch> *node)
         {
+            if constexpr (Flags & parse_strict)
+            {
+                Ch *token = text - 1;
+                strict_header_receiver<Flags> receiver{this, node, token, false};
+                internal::element_header_parser header;
+                try
+                {
+                    header.parse<(Flags & parse_readonly_spans) != 0>(std::string_view(token, m_end - token), true, receiver);
+                }
+                catch (const internal::header_error &error)
+                {
+                    strict_fail(error.code, token + error.offset);
+                }
+                if (header.closing()) strict_fail(7, token + 2);
+                text = token + header.consumed();
+                m_header_self_closing = header.self_closing();
+                return;
+            }
             // For all attributes 
             while (attribute_name_pred::test(*text))
             {

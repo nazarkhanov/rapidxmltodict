@@ -263,21 +263,15 @@ def test_streaming_callback_can_interrupt():
     def stop(path, item):
         calls.append(deepcopy((path, item)))
         return False
-    with pytest.raises(xmltodict.ParsingInterrupted):
+    with pytest.raises(rapidxmltodict.ParsingInterrupted):
         rapidxmltodict.parse('<root><item>one</item><item>two</item></root>', item_depth=2, item_callback=stop)
     assert len(calls) == 1
     assert calls[0][1] == 'one'
 
 
-def test_custom_expat_is_honored():
-    calls = []
-    class RecordingExpat:
-        @staticmethod
-        def ParserCreate(*args):
-            calls.append(args)
-            return expat.ParserCreate(*args)
-    assert rapidxmltodict.parse('<root/>', expat=RecordingExpat) == {'root': None}
-    assert len(calls) == 1
+def test_removed_expat_parameter_is_rejected():
+    with pytest.raises(TypeError):
+        rapidxmltodict.parse('<root/>', expat=expat)
 
 
 def test_unknown_keyword_rejected():

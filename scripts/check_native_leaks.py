@@ -23,8 +23,9 @@ def main():
         package = directory / "rapidxmltodict"
         package.mkdir()
         installed = Path(rapidxmltodict.__file__).parent
-        for name in ("__init__.py", "_version.py"):
-            shutil.copy2(installed / name, package / name)
+        for source in installed.iterdir():
+            if source.suffix in (".py", ".pyi") or source.name == "py.typed":
+                shutil.copy2(source, package / source.name)
         flags = [compiler, "-O1", "-g", "-fsanitize=address,undefined",
                  "-fno-omit-frame-pointer", "-shared", "-fPIC", "-std=c++17"]
         subprocess.run(flags + ["-I" + sysconfig.get_path("include"),
@@ -59,6 +60,18 @@ extern "C" void intentional_python_leak() {
                    UBSAN_OPTIONS="halt_on_error=1:print_stacktrace=1",
                    PYTHONMALLOC="malloc", PYTHONPATH=str(directory),
                    SAN_ROOT=str(directory))
+        # A native executable proves the DOM accepts truly read-only, bounded
+        # input, including a page boundary with no readable sentinel byte.
+        readonly = directory / "readonly_input"
+        subprocess.run([compiler, "-O1", "-g", "-std=c++17",
+                        "-fsanitize=address,undefined", "-fno-omit-frame-pointer",
+                        "-I" + str(ROOT / "vendor"),
+                        str(ROOT / "tests/native_readonly_input.cpp"),
+                        "-o", str(readonly)], check=True)
+        native_env = dict(env)
+        native_env.pop("LD_PRELOAD", None)  # executable already links ASan first
+        subprocess.run([str(readonly)], env=native_env, check=True)
+        print("PASS: read-only bounded DOM spans with ASan/UBSan/LSan", flush=True)
         command = [sys.executable, str(ROOT / "tests/native_leak_workload.py")]
         # First prove the identical Python/runtime configuration detects a known
         # leak. A crash, unavailable LSan, or unrelated error is NOT a pass.
@@ -77,6 +90,35 @@ extern "C" void intentional_python_leak() {
         print("PASS: Python cleanup guard detected intentional leaked reference", flush=True)
         subprocess.run(command, env=env, check=True)
         print("PASS: native workload exited cleanly with ASan/UBSan/LSan enabled", flush=True)
+        # Also instrument every differential test and inherited Python subprocess.
+        # A startup hook performs the same real pre-finalization LSan checkpoint;
+        # pytest itself retains interpreter objects until shutdown, so no broad
+        # allocator-stack suppressions are appropriate.
+        (directory / "sitecustomize.py").write_text('''import atexit
+import ctypes
+import gc
+import os
+LSAN_CHECKPOINT_ACTIVE = True
+def _checkpoint():
+    try:
+        gc.collect()
+        check = ctypes.CDLL(None).__lsan_do_leak_check
+        check.argtypes = []
+        check.restype = None
+        check()
+    except BaseException:
+        os._exit(25)
+atexit.register(_checkpoint)
+''')
+        program = (
+            "import sitecustomize; assert sitecustomize.LSAN_CHECKPOINT_ACTIVE; "
+            "import pytest; raise SystemExit(pytest.main([" + repr(str(ROOT / "tests")) + ", '-q']))"
+        )
+        subprocess.run([sys.executable, "-c", program], env=env, check=True)
+        print("PASS: complete differential suite under ASan/UBSan/LSan", flush=True)
+        subprocess.run([sys.executable, str(ROOT / "scripts/check_native_mapping.py")],
+                       env=env, check=True)
+        print("PASS: forced native mapping corpus under ASan/UBSan/LSan", flush=True)
 
 
 if __name__ == "__main__":

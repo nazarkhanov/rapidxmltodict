@@ -7,8 +7,8 @@
 Fast XML-to-dictionary parsing for Python, powered by RapidXML.
 
 `rapidxmltodict` combines a C++ parser with the familiar `xmltodict` API and
-output format. Common UTF-8 documents use native acceleration; advanced
-options are handled by `xmltodict`.
+output format. Parsing, streaming callbacks and serialization are implemented
+locally, with no xmltodict or Expat runtime dependency.
 
 ## Installation
 
@@ -20,7 +20,8 @@ Requires **CPython 3.9+**. Wheels are available for CPython **3.9–3.14** on
 Linux x86-64 (manylinux), Windows x64, and macOS Intel/Apple Silicon.
 Source builds require a C++17 compiler and Python development headers.
 
-`xmltodict>=0.14.2,<2` is installed automatically as a runtime dependency.
+There are no third-party Python runtime dependencies. Tests use xmltodict 1.0.4
+as the compatibility reference.
 
 ## Quick start
 
@@ -43,11 +44,13 @@ Values remain strings; leading and trailing text whitespace is stripped.
 ```python
 from pathlib import Path
 
-data = rapidxmltodict.parse(Path("catalog.xml").read_bytes())
+with Path("catalog.xml").open("rb") as stream:
+    data = rapidxmltodict.parse(stream)
 ```
 
-This loads the whole file into memory. Binary file objects and chunk generators
-are also supported through `xmltodict`, including its streaming callbacks.
+Binary files and chunk generators are read incrementally; the complete returned
+dictionary still stays in memory. Use `item_callback` without retaining emitted
+items when the output should be processed incrementally too.
 
 ### Use parsing options
 
@@ -66,41 +69,62 @@ assert data == {"catalog": {"book": ["Python"]}}
 xml = rapidxmltodict.unparse(data, pretty=True)
 ```
 
-`unparse` is provided by `xmltodict`. XML round trips are not lossless.
+`unparse` follows xmltodict 1.0.4 serialization rules. XML round trips are not lossless.
 
 ## Compatibility
 
-Native acceleration handles UTF-8 `str` and `bytes` with default options,
-including attributes, repeated elements, namespace prefixes, Unicode and CDATA.
+The compatibility target is **xmltodict 1.0.4**, including namespace mappings,
+comments, postprocessors, custom dictionaries, callbacks and serialization.
+Default UTF-8 documents use a native dictionary fast path; other inputs/options
+use direct C++ event-to-Python construction without an intermediate DOM.
+Native work holds the GIL.
 
-Custom options such as `force_list`, namespace processing, comments and
-postprocessors use the installed `xmltodict`. Extra options passed through
-`**kwargs` trigger fallback even when explicitly set to their defaults.
+Intentional differences:
+- The `expat` parameter is removed; parser injection is unsupported.
+- Catch `rapidxmltodict.ParseError` and `rapidxmltodict.ParsingInterrupted`.
+  They are independent classes, not the exceptions exported by Expat/xmltodict.
+- XML declaration versions must match `1.[0-9]+`, following the modern reference.
+- Chunk-sensitive text joining follows the pinned modern reference behavior;
+  older Expat builds can place a nonempty `cdata_separator` differently.
 
-File objects, generators, non-UTF-8 input, DTDs, nesting beyond 256 elements,
-and certain mixed-content or XML-name edge cases also use fallback.
-Behavior follows the installed dependency version; these calls may be slower
-than calling `xmltodict` directly. Native conversion holds the GIL.
+The test oracle is pinned to CPython 3.12.15 / Expat 2.8.5; neither is a parser
+dependency. See the [compatibility contract](docs/compatibility.md).
+
+With `item_depth` and `item_callback`, completed items are delivered incrementally
+and are not accumulated in the parent result. Keeping them in your callback will
+still retain memory. Inputs, a single unfinished token and the current item can
+also require substantial memory; parser name/entity tables may grow with the
+document vocabulary. See [API details](docs/typing.md).
 
 ## Performance
 
-Recorded synthetic catalog benchmarks on **CPython 3.12.14 / Linux x86-64**,
-compared with **xmltodict 0.14.2**:
+Same-host measurements on **CPython 3.12.14 / Linux x86-64**, compared with
+**xmltodict 1.0.4**, using the default in-memory parser:
 
 | Input size | rapidxmltodict | xmltodict | Speedup |
 | --- | ---: | ---: | ---: |
-| 1,077 bytes | 0.026 ms | 0.134 ms | 5.09× |
-| 105,501 bytes | 2.166 ms | 11.383 ms | 5.26× |
-| 1,055,391 bytes | 26.866 ms | 120.036 ms | 4.47× |
+| 1,077 bytes | 0.0129 ms | 0.0893 ms | 6.93× |
+| 105,501 bytes | 1.0750 ms | 7.8811 ms | 7.33× |
+| 1,055,391 bytes | 11.7156 ms | 90.1815 ms | 7.70× |
 
-Outputs are checked for equality before timing complete parse calls, including
-validation and conversion. Results depend on the workload and machine.
+These catalog-shaped inputs are checked for equal output before timing complete
+parse calls, including validation and conversion. Results depend on input shape,
+options and machine; they are not universal speedup claims.
 
-**Faster parsing can use more memory.** The ~1 MiB case used 35.75 MiB
-whole-process peak RSS versus 28.75 MiB for `xmltodict`.
+**Memory depends on how input is supplied.** The ~1 MiB string case peaked at
+33.85 MiB versus 29.44 MiB for `xmltodict`. At 100 MiB, record-shaped strings
+peaked at 1405.2 versus 920.4 MiB. For the same-size binary-file workload, native
+event construction used 627.7 versus 718.1 MiB and took 3.258 versus 10.048 seconds.
+Retaining all callback items grows memory; discarding them avoids accumulating
+the complete result.
 
-See the [benchmark guide](benchmarks/README.md) for reproduction commands,
-methodology and [full results](benchmarks/results.md).
+The iterative DOM remains the default for ordinary strings because it is faster
+than the direct-event alternative on the measured string workloads. Files and
+mapping options use native events. See the [complete architecture comparison](benchmarks/architecture-results.md)
+for all 348 samples, deeper trees, 10/50/100 MiB inputs, both pre-parse RSS
+baselines, retained memory, reproduction scripts and slower cases.
+The benchmark reference uses Expat 2.8.3; the separate compatibility gate uses
+the exact modern oracle described above.
 
 ## Type hints
 
@@ -110,9 +134,9 @@ Nested XML values remain dynamic. See [typing details](docs/typing.md).
 
 ## Security
 
-The native path validates XML with Expat before parsing. External entities are
-not fetched by the default path; DTD and entity behavior follows the installed
-`xmltodict`. Keep `disable_entities=True` for untrusted input.
+XML is validated by the native parser; Expat is not loaded. External entities
+are not fetched. Keep `disable_entities=True` to reject entity declarations for
+untrusted input.
 
 There is no application-level input-size or output-size limit. Enforce suitable
 size, time and memory limits when processing untrusted documents.
